@@ -152,6 +152,11 @@
   .ws-bar .label{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
   .btn-print{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--ink);color:var(--paper);border:none;border-radius:7px;padding:9px 16px;cursor:pointer;transition:.15s;}
   .btn-print:hover{background:var(--green);}
+  .code-block{position:relative;margin:0 0 20px;}
+  .code-block pre{margin:0;}
+  .btn-copy{position:absolute;top:10px;right:10px;z-index:2;font-family:'JetBrains Mono',monospace;font-size:11.5px;background:rgba(255,255,255,.12);color:var(--paper);border:1px solid rgba(255,255,255,.28);border-radius:6px;padding:5px 11px;cursor:pointer;transition:.15s;}
+  .btn-copy:hover{background:var(--green);border-color:var(--green);}
+  .btn-copy.copied{background:var(--green);border-color:var(--green);}
 
   .dl-row{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 16px;}
   .dl{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--green);color:#fff;padding:9px 16px;border-radius:8px;transition:.15s;border:1px solid var(--green);}
@@ -250,7 +255,7 @@
 
   /* ---------- print ---------- */
   @media print{
-    .sidebar,.topbar,.btn-print,.ws-bar .label,.next-prev{display:none !important;}
+    .sidebar,.topbar,.btn-print,.btn-copy,.ws-bar .label,.next-prev{display:none !important;}
     main{margin:0;}
     .wrap{max-width:100%;padding:0;}
     .page{display:none !important;}
@@ -736,65 +741,77 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   <p class="cmd-note">The examples below all use the <code>hello</code> repository you pushed to Gitee in the Setup Lab smoke test (<code>git@gitee.com:adasuper/hello.git</code> — swap in your own username). Imagine you are coming back to it on a fresh machine to make a small change.</p>
 
   <h4><code>git clone &lt;url&gt;</code></h4>
-  <p><strong>When</strong> — once per project, to make a local copy of a repository that already exists on Gitee.</p>
-  <p><strong>How</strong> — run it in the folder where you want the project to land. It creates a new sub-folder, downloads the full history, and wires up the remote (named <code>origin</code>) for you, so <code>git init</code> + <code>git remote add</code> are unnecessary.</p>
-  <p><strong>Example</strong> — grab your <code>hello</code> repo onto a new machine and step into it:</p>
+  <p><strong>When</strong>: once per project, to make a local copy of a repository that already exists on Gitee.</p>
+  <p><strong>How</strong>: run it in the folder where you want the project to land. It creates a new sub-folder, downloads the full history, and wires up the remote (named <code>origin</code>) for you, so <code>git init</code> + <code>git remote add</code> are unnecessary.</p>
+  <p><strong>Example</strong>: grab your <code>hello</code> repo onto a new machine and step into it:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> clone git@gitee.com:adasuper/hello.git
 <span class="k">cd</span> hello</code></pre>
 
   <h4><code>git status</code></h4>
-  <p><strong>When</strong> — constantly, before and after almost every other command. It is your map of where each file currently lives.</p>
-  <p><strong>How</strong> — it needs no arguments and changes nothing; it lists files that are modified but unstaged, files staged for the next commit, and files Git isn't tracking yet.</p>
-  <p><strong>Example</strong> — after editing <code>hello.cpp</code> to print a friendlier message:</p>
+  <p><strong>When</strong>: constantly, before and after almost every other command. It is your map of where each file currently lives.</p>
+  <p><strong>How</strong>: it needs no arguments and changes nothing; it lists files that are modified but unstaged, files staged for the next commit, and files Git isn't tracking yet.</p>
+  <p><strong>Example</strong>: after editing <code>hello.cpp</code> to print a friendlier message:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> status
 <span class="c"># Changes not staged for commit:</span>
 <span class="c">#   modified:   hello.cpp</span></code></pre>
 
   <h4><code>git add &lt;file&gt;</code></h4>
-  <p><strong>When</strong> — after editing, to mark exactly which changes belong in your next commit (<em>workspace → staging</em>).</p>
-  <p><strong>How</strong> — name specific files to stage them deliberately, or use <code>.</code> to stage everything changed. Staging is what lets you commit two edits separately even if you made them at the same time.</p>
-  <p><strong>Example</strong> — stage your edited <code>hello.cpp</code>:</p>
+  <p><strong>When</strong>: after editing, to mark exactly which changes belong in your next commit (<em>workspace → staging</em>).</p>
+  <p><strong>How</strong>: name specific files to stage them deliberately, or use <code>.</code> to stage everything changed. Staging is what lets you commit two edits separately even if you made them at the same time.</p>
+  <p><strong>Example</strong>: stage your edited <code>hello.cpp</code>:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> add hello.cpp         <span class="c"># just this file</span>
 <span class="k">git</span> add .                  <span class="c"># everything changed in the hello folder</span></code></pre>
 
   <h4><code>git reset &lt;file&gt;</code></h4>
-  <p><strong>When</strong> — you staged something by mistake and want to take it back out of the next commit (<em>staging → workspace</em>).</p>
-  <p><strong>How</strong> — it unstages the file while <strong>keeping your edits</strong>: your file on disk is untouched, it just won't be in the next commit. It is the exact undo of <code>git add</code> (which is why Lab 1 has you add then unstage).</p>
-  <p><strong>Example</strong> — you staged <code>hello.cpp</code> but realise you aren't done editing it:</p>
+  <p><strong>When</strong>: you staged something by mistake and want to take it back out of the next commit (<em>staging → workspace</em>).</p>
+  <p><strong>How</strong>: it unstages the file while <strong>keeping your edits</strong>: your file on disk is untouched, it just won't be in the next commit. It is the exact undo of <code>git add</code> (which is why Lab 1 has you add then unstage).</p>
+  <p><strong>Example</strong>: you staged <code>hello.cpp</code> but realise you aren't done editing it:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> reset hello.cpp        <span class="c"># back to unstaged; your edits remain</span></code></pre>
 
+  <h4><code>git reset --soft</code> vs <code>git reset --hard</code></h4>
+  <p><code>git reset</code> can also rewind a whole <em>commit</em> by pointing the branch at an earlier one. The mode flag decides how far the undo reaches across the three locations — and this is where you can lose work, so understand it before using it.</p>
+  <ul>
+    <li><strong><code>--soft</code></strong>: moves the branch back, but <em>keeps everything staged</em>. The commit is undone; its changes sit ready in the staging area as if you'd just run <code>git add</code>. Use it to redo a commit message or fold several commits into one. <em>Nothing is lost.</em></li>
+    <li><strong><code>--mixed</code></strong> (the default, what you get with no flag): moves the branch back and <em>unstages</em> the changes, but leaves your edits in the workspace. This is the same family as the file-level <code>git reset &lt;file&gt;</code> above. <em>Nothing is lost.</em></li>
+    <li><strong><code>--hard</code></strong>: moves the branch back and <em>throws away</em> the changes in both the staging area and the workspace, resetting your files on disk to match the target commit. <em>This permanently deletes uncommitted work</em> — there is no undo.</li>
+  </ul>
+  <pre style="margin:8px 0"><code><span class="k">git</span> reset --soft HEAD~1    <span class="c"># undo last commit, keep changes staged</span>
+<span class="k">git</span> reset HEAD~1           <span class="c"># (--mixed) undo last commit, keep changes in workspace</span>
+<span class="k">git</span> reset --hard HEAD~1    <span class="c"># undo last commit AND discard the changes — careful!</span></code></pre>
+  <div class="callout warn"><span class="tag">Handle --hard with care</span><p><code>--hard</code> is the only one of the three that destroys work you haven't committed. Reach for <code>--soft</code> or the default <code>--mixed</code> unless you are absolutely certain you want those edits gone. <code>HEAD~1</code> means "one commit before the current tip"; <code>HEAD~2</code> would go back two, and so on.</p></div>
+
   <h4><code>git commit -m "message"</code></h4>
-  <p><strong>When</strong> — once a staged set of changes forms one complete, logical unit of work (<em>staging → local repository</em>).</p>
-  <p><strong>How</strong> — always include a clear message with <code>-m</code>. The commit is a permanent snapshot in your local history — it is <em>not</em> on Gitee yet until you push.</p>
-  <p><strong>Example</strong> — record your greeting change as a commit:</p>
+  <p><strong>When</strong>: once a staged set of changes forms one complete, logical unit of work (<em>staging → local repository</em>).</p>
+  <p><strong>How</strong>: always include a clear message with <code>-m</code>. The commit is a permanent snapshot in your local history — it is <em>not</em> on Gitee yet until you push.</p>
+  <p><strong>Example</strong>: record your greeting change as a commit:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> commit -m <span class="s">"print a friendlier greeting"</span></code></pre>
 
   <h4><code>git push</code></h4>
-  <p><strong>When</strong> — after committing, to publish your local commits so teammates and the CI pipeline can see them (<em>local → remote</em>).</p>
-  <p><strong>How</strong> — the first push of a new branch needs <code>-u origin &lt;branch&gt;</code> to link it; after that, a bare <code>git push</code> is enough.</p>
-  <p><strong>Example</strong> — the smoke test already ran the first form, so from now on a bare push is all you need:</p>
+  <p><strong>When</strong>: after committing, to publish your local commits so teammates and the CI pipeline can see them (<em>local → remote</em>).</p>
+  <p><strong>How</strong>: the first push of a new branch needs <code>-u origin &lt;branch&gt;</code> to link it; after that, a bare <code>git push</code> is enough.</p>
+  <p><strong>Example</strong>: the smoke test already ran the first form, so from now on a bare push is all you need:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> push -u origin master    <span class="c"># first time (done in the smoke test)</span>
 <span class="k">git</span> push                      <span class="c"># every push to hello after that</span></code></pre>
 
   <h4><code>git pull</code> <span style="font-weight:400">(and <code>git fetch</code>)</span></h4>
-  <p><strong>When</strong> — before you start working, and whenever a teammate has pushed to <code>hello</code>, to bring their commits into your copy.</p>
-  <p><strong>How</strong> — run it with a clean workspace (commit or stash your own changes first) to avoid merge conflicts. The distinction matters: <code>git fetch</code> only <em>downloads</em> new commits into your local repository (<em>remote → local repo</em>) and leaves your working files untouched, so you can inspect what changed first. <code>git pull</code> is <code>fetch</code> followed by <code>merge</code> — it goes one step further and updates the files on your disk too (<em>remote → local repo → workspace</em>).</p>
-  <p><strong>Example</strong> — sync the <code>hello</code> repo before adding your next change:</p>
+  <p><strong>When</strong>: before you start working, and whenever a teammate has pushed to <code>hello</code>, to bring their commits into your copy.</p>
+  <p><strong>How</strong>: run it with a clean workspace (commit or stash your own changes first) to avoid merge conflicts. The distinction matters: <code>git fetch</code> only <em>downloads</em> new commits into your local repository (<em>remote → local repo</em>) and leaves your working files untouched, so you can inspect what changed first. <code>git pull</code> is <code>fetch</code> followed by <code>merge</code> — it goes one step further and updates the files on your disk too (<em>remote → local repo → workspace</em>).</p>
+  <p><strong>Example</strong>: sync the <code>hello</code> repo before adding your next change:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> fetch                   <span class="c"># download new commits, hello.cpp on disk unchanged</span>
 <span class="k">git</span> pull                    <span class="c"># download AND update hello.cpp on disk</span></code></pre>
 
   <h4><code>git log</code></h4>
-  <p><strong>When</strong> — any time you need to see the history of a repository: what was changed, by whom, and when.</p>
-  <p><strong>How</strong> — it lists past commits newest-first with author, date, and message. Add <code>--oneline</code> for a compact one-row-per-commit view.</p>
-  <p><strong>Example</strong> — review the history of <code>hello</code> after your new commit:</p>
+  <p><strong>When</strong>: any time you need to see the history of a repository: what was changed, by whom, and when.</p>
+  <p><strong>How</strong>: it lists past commits newest-first with author, date, and message. Add <code>--oneline</code> for a compact one-row-per-commit view.</p>
+  <p><strong>Example</strong>: review the history of <code>hello</code> after your new commit:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> log --oneline
 <span class="c"># a1b2c3d  print a friendlier greeting</span>
 <span class="c"># e4f5a6b  first commit: hello</span></code></pre>
 
   <h4><code>git diff</code></h4>
-  <p><strong>When</strong> — to review the exact line-by-line changes you've made, typically right before <code>git add</code> or <code>git commit</code>.</p>
-  <p><strong>How</strong> — <code>git diff</code> alone shows unstaged edits (workspace vs. staging); <code>git diff --staged</code> shows what's already staged for the next commit (staging vs. last commit).</p>
-  <p><strong>Example</strong> — check what you changed in <code>hello.cpp</code> before staging it:</p>
+  <p><strong>When</strong>: to review the exact line-by-line changes you've made, typically right before <code>git add</code> or <code>git commit</code>.</p>
+  <p><strong>How</strong>: <code>git diff</code> alone shows unstaged edits (workspace vs. staging); <code>git diff --staged</code> shows what's already staged for the next commit (staging vs. last commit).</p>
+  <p><strong>Example</strong>: check what you changed in <code>hello.cpp</code> before staging it:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> diff                    <span class="c"># unstaged edits to hello.cpp</span>
 <span class="k">git</span> diff --staged           <span class="c"># what the next commit will record</span></code></pre>
 
@@ -803,11 +820,16 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
 
   <h3>Good habits</h3>
   <ul>
-    <li>Commit small, logical units of work — not "everything at once."</li>
-    <li>Write clear messages: <em>"add input prompt"</em>, not <em>"stuff"</em>.</li>
-    <li>Run <code>git status</code> often; it is your map.</li>
-    <li>Keep a useful <code>README.md</code> describing the project.</li>
+    <li><strong>Commit small, logical units of work — not "everything at once."</strong><br>A commit that does one thing is easy to understand, and if it introduces a bug you can undo just that change without losing unrelated work. A giant "did lots of stuff" commit hides what actually happened and is painful to reverse.</li>
+    <li><strong>Write clear messages: <em>"add input prompt"</em>, not <em>"stuff"</em>.</strong><br>Months later, the message is often the only clue to <em>why</em> a change was made. A good message lets you (and teammates) scan the history and find the right commit without reading every line of code.</li>
+    <li><strong>Run <code>git status</code> often; it is your map.</strong><br>It tells you exactly which files are modified, staged, or untracked before you act. Checking first prevents the common mistakes of committing the wrong file or forgetting to stage one you meant to include.</li>
+    <li><strong>Always <code>git pull</code> before you start working, and pull once more right before you push.</strong><br>Pulling first means you build on your teammates' latest work instead of an outdated copy. Pulling again just before pushing catches anything that landed while you were coding, so conflicts surface locally where they are easy to fix — rather than your push being rejected because the remote moved ahead.</li>
+    <li><strong>Keep a useful <code>README.md</code> describing the project.</strong><br>It is the first thing anyone (including future you) reads to learn what the project does and how to build and run it. A clear README turns a pile of files into a project someone can actually pick up.</li>
   </ul>
+
+  <h3>Going further</h3>
+  <p>This lecture covers the handful of commands you need day to day. When you want the complete, authoritative reference for any Git command and its options, consult the official documentation:</p>
+  <div class="dl-row"><a class="dl" href="https://git-scm.com/docs" target="_blank" rel="noopener"><span class="arr">↗</span> Official Git documentation — git-scm.com/docs</a></div>
 
   <div class="next-prev">
     <a href="#m1-lab">← Setup Lab</a>
@@ -821,29 +843,69 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   <h2 class="page-title">Lab 1 — Tracking Files Across Locations</h2>
   <p class="sub-meta">Execute each instruction with the right Git command, then record the state of all four locations.</p>
 
-  <p>You will create the seed of the course project — a single file <code>tictactoe.cpp</code> — and version it. <strong>For every step, record the equivalent Git command and the contents of each location after the command runs.</strong> The first two steps are filled in for you as examples. Type directly into the cells; use the print button to save your completed worksheet as a PDF to submit.</p>
+  <div class="callout warn">
+    <span class="tag">Open this lab in a new tab first</span>
+    <p>Your worksheet answers are typed directly into this page and are <strong>not saved</strong> — navigating away (for example, back to the lecture notes to look something up) will <strong>erase everything you've entered</strong>. Before you start, right-click this page and choose <em>"Open in new tab/window"</em> (or press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> and click a nav link) so you can read the lecture in one tab and keep your log safe in another. When you're done, use the print button to save a PDF.</p>
+  </div>
+
+  <p>You will create the seed of the course project — a single file <code>tictactoe.cpp</code> — and version it. <strong>For every step, record the equivalent Git command and the contents of each location after the command runs.</strong> Steps 0–2 are filled in for you as examples. Type directly into the cells; use the print button to save your completed worksheet as a PDF to submit.</p>
 
   <div class="callout tip">
     <span class="tag">The file you will track</span>
     <p>When a step says to create <code>tictactoe.cpp</code>, paste the seed game below (a two-player hot-seat board — win detection arrives in Lab 2). For tracking purposes, write it in the table as <code>tictactoe.cpp ("seed")</code>.</p>
   </div>
-  <pre><code><span class="c">// tictactoe.cpp — seed (hot-seat, no win detection yet)</span>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c">// tictactoe.cpp — seed (hot-seat, no win detection yet)</span>
 <span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
 <span class="k">#include</span> <span class="s">&lt;array&gt;</span>
-<span class="k">int</span> main(){
-  std::array&lt;char,9&gt; b={'1','2','3','4','5','6','7','8','9'};
-  <span class="k">char</span> p='X'; <span class="k">int</span> filled=0;
-  <span class="k">auto</span> draw=[&amp;]{ <span class="k">for</span>(<span class="k">int</span> r=0;r&lt;3;++r){
-    std::cout&lt;&lt;' '&lt;&lt;b[r*3]&lt;&lt;'|'&lt;&lt;b[r*3+1]&lt;&lt;'|'&lt;&lt;b[r*3+2]&lt;&lt;'\n'; } };
-  <span class="k">while</span>(filled&lt;9){ draw();
-    std::cout&lt;&lt;<span class="s">"Player "</span>&lt;&lt;p&lt;&lt;<span class="s">", cell 1-9: "</span>; <span class="k">int</span> c; std::cin&gt;&gt;c;
-    <span class="k">if</span>(c&lt;1||c&gt;9||b[c-1]=='X'||b[c-1]=='O'){ std::cout&lt;&lt;<span class="s">"invalid\n"</span>; <span class="k">continue</span>; }
-    b[c-1]=p; ++filled; p=(p=='X')?'O':'X'; }
-  draw(); std::cout&lt;&lt;<span class="s">"Board full — draw (win detection in Lab 2)\n"</span>; }</code></pre>
+
+<span class="k">int</span> main() {
+    std::array&lt;<span class="k">char</span>, 9&gt; board = {<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>};
+    <span class="k">char</span> player = <span class="s">'X'</span>;
+    <span class="k">int</span>  filled = 0;
+
+    <span class="k">auto</span> draw = [&amp;] {
+        <span class="k">for</span> (<span class="k">int</span> r = 0; r &lt; 3; ++r) {
+            std::cout &lt;&lt; <span class="s">' '</span> &lt;&lt; board[r * 3]
+                      &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r * 3 + 1]
+                      &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r * 3 + 2] &lt;&lt; <span class="s">'\n'</span>;
+        }
+    };
+
+    <span class="k">while</span> (filled &lt; 9) {
+        draw();
+        std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">", cell 1-9: "</span>;
+
+        <span class="k">int</span> cell;
+        std::cin &gt;&gt; cell;
+
+        <span class="k">if</span> (cell &lt; 1 || cell &gt; 9 || board[cell - 1] == <span class="s">'X'</span> || board[cell - 1] == <span class="s">'O'</span>) {
+            std::cout &lt;&lt; <span class="s">"invalid\n"</span>;
+            <span class="k">continue</span>;
+        }
+
+        board[cell - 1] = player;
+        ++filled;
+        player = (player == <span class="s">'X'</span>) ? <span class="s">'O'</span> : <span class="s">'X'</span>;
+    }
+
+    draw();
+    std::cout &lt;&lt; <span class="s">"Board full — draw (win detection in Lab 2)\n"</span>;
+}</code></pre>
+  </div>
 
   <div class="ws-bar">
     <span class="label">// Lab 1 worksheet — fillable &amp; printable</span>
     <button class="btn-print" data-print>⎙ Print / Save as PDF</button>
+  </div>
+
+  <!-- STEP 0 (given) -->
+  <div class="step">
+    <div class="head"><span class="badge">Step 0</span><span class="instr">On <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a>, create a new <strong>empty</strong> repository named <code>tictactoe</code> (don't initialize it with a README or any files). This is the remote you'll clone in Step 1.</span></div>
+    <div class="cmd-line">Command: <b>N/A (done on the Gitee website)</b></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill given">(empty)</div></td><td><div class="fill given">(empty)</div></td><td><div class="fill given">(empty)</div></td><td><div class="fill given">(empty repo created)</div></td></tr></tbody></table>
   </div>
 
   <!-- STEP 1 (given) -->
@@ -864,7 +926,7 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
 
   <!-- STEPS 3-14 (blank) -->
   <div class="step">
-    <div class="head"><span class="badge">Step 3</span><span class="instr">Add the file to the staging area.</span></div>
+    <div class="head"><span class="badge">Step 3</span><span class="instr">Add <strong>only</strong> <code>tictactoe.cpp</code> to the staging area — name the file explicitly (don't use <code>git add .</code>) so nothing else slips in.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
@@ -878,7 +940,7 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   </div>
 
   <div class="step">
-    <div class="head"><span class="badge">Step 5</span><span class="instr">Add the file to the staging area again.</span></div>
+    <div class="head"><span class="badge">Step 5</span><span class="instr">Add <strong>only</strong> <code>tictactoe.cpp</code> to the staging area again — again name the file explicitly, not <code>git add .</code>, so you stage just this one file.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
@@ -892,7 +954,7 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   </div>
 
   <div class="step">
-    <div class="head"><span class="badge">Step 7</span><span class="instr">Undo the commit, keeping the change staged (<code>git reset --soft HEAD^</code>).</span></div>
+    <div class="head"><span class="badge">Step 7</span><span class="instr">Undo the commit, keeping the change staged.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
@@ -1467,6 +1529,16 @@ stages:
     }
   });
   document.querySelectorAll('[data-print]').forEach(b => b.addEventListener('click', () => window.print()));
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => {
+    const code = b.parentElement.querySelector('pre code') || b.parentElement.querySelector('pre');
+    if(!code) return;
+    navigator.clipboard.writeText(code.innerText).then(() => {
+      const original = b.textContent;
+      b.textContent = '✓ Copied';
+      b.classList.add('copied');
+      setTimeout(() => { b.textContent = original; b.classList.remove('copied'); }, 1500);
+    });
+  }));
 </script>
 </body>
 </html>
