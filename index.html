@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction to CI/CD — A Short Summer Course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f2e9;
+    --paper-2:#fffdf7;
+    --ink:#1c1a14;
+    --muted:#6f6a5c;
+    --line:#ded7c6;
+    --green:#13864a;
+    --green-bright:#1fae64;
+    --coral:#df4f2a;
+    --amber:#d99312;
+    --sidebar:#16150f;
+    --sidebar-fg:#e9e4d5;
+    --sidebar-muted:#9a9484;
+    --code-bg:#1a1812;
+    --code-fg:#e9e4d5;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Hanken Grotesk',sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* ---------- layout ---------- */
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;width:288px;
+    background:var(--sidebar);color:var(--sidebar-fg);
+    padding:30px 0 40px;overflow-y:auto;z-index:40;
+    border-right:1px solid #000;
+  }
+  .brand{padding:0 26px 22px;border-bottom:1px solid #2c2a20;margin-bottom:14px;}
+  .brand a{text-decoration:none;color:inherit;}
+  .brand .status{
+    display:inline-flex;align-items:center;gap:7px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;
+    color:var(--green-bright);text-transform:uppercase;margin-bottom:12px;
+  }
+  .brand .status .dot{width:8px;height:8px;border-radius:50%;background:var(--green-bright);box-shadow:0 0 10px var(--green-bright);}
+  .brand h1{font-family:'Fraunces',serif;font-weight:900;font-size:26px;line-height:1.05;margin:0;letter-spacing:-.01em;}
+  .brand p{margin:8px 0 0;color:var(--sidebar-muted);font-size:13px;}
+  nav .group-label{
+    padding:16px 26px 6px;font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sidebar-muted);
+  }
+  .nav-link{
+    display:block;padding:7px 26px;color:var(--sidebar-fg);text-decoration:none;
+    font-size:14.5px;border-left:3px solid transparent;transition:.15s;
+  }
+  .nav-link .mod-num{font-family:'JetBrains Mono',monospace;color:var(--sidebar-muted);font-size:12px;margin-right:8px;}
+  .nav-link.sub{padding-left:42px;font-size:13.5px;color:var(--sidebar-muted);}
+  .nav-link:hover{background:#21201700;color:#fff;border-left-color:#3a3829;}
+  .nav-link.current{background:#211f16;color:#fff;border-left-color:var(--green-bright);}
+  .nav-link.current .mod-num{color:var(--green-bright);}
+
+  main{margin-left:288px;padding:0;min-height:100vh;}
+  .wrap{max-width:860px;margin:0 auto;padding:62px 52px 120px;}
+
+  .topbar{display:none;}
+
+  /* ---------- pages ---------- */
+  .page{display:none;}
+  .page.active{display:block;animation:fade .4s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:14px;}
+  h2.page-title{font-family:'Fraunces',serif;font-weight:900;font-size:42px;line-height:1.05;letter-spacing:-.02em;margin:0 0 10px;}
+  .sub-meta{color:var(--muted);font-size:15px;margin:0 0 34px;font-style:italic;font-family:'Fraunces',serif;}
+  h3{font-family:'Fraunces',serif;font-weight:600;font-size:25px;margin:42px 0 14px;letter-spacing:-.01em;}
+  h4{font-family:'Hanken Grotesk';font-weight:700;font-size:18px;margin:28px 0 8px;}
+  p{margin:0 0 16px;}
+  ul,ol{margin:0 0 18px;padding-left:24px;}
+  li{margin:0 0 9px;}
+  strong{font-weight:700;}
+  a.inline{color:var(--green);text-decoration:underline;text-underline-offset:2px;}
+  .lead{font-size:19px;line-height:1.6;color:#2c291f;}
+
+  code{font-family:'JetBrains Mono',monospace;font-size:.86em;background:#ece6d6;padding:2px 6px;border-radius:4px;color:#3a3526;}
+  pre{
+    background:var(--code-bg);color:var(--code-fg);padding:20px 22px;border-radius:10px;
+    overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.6;
+    margin:0 0 20px;border:1px solid #000;box-shadow:0 6px 22px rgba(0,0,0,.12);
+  }
+  pre code{background:none;padding:0;color:inherit;font-size:inherit;}
+  pre .c{color:#8f8a78;} /* comment */
+  pre .k{color:var(--green-bright);} /* keyword/command */
+  pre .s{color:var(--amber);} /* string */
+
+  .callout{border-left:4px solid var(--green);background:var(--paper-2);padding:16px 20px;border-radius:0 8px 8px 0;margin:0 0 22px;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+  .callout.warn{border-left-color:var(--coral);}
+  .callout.tip{border-left-color:var(--amber);}
+  .callout .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);display:block;margin-bottom:6px;}
+  .callout.warn .tag{color:var(--coral);}
+  .callout.tip .tag{color:var(--amber);}
+  .callout p:last-child{margin-bottom:0;}
+
+  .timing{display:flex;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line);}
+  .timing .t{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--green);white-space:nowrap;min-width:92px;font-weight:500;}
+
+  /* ---------- homepage ---------- */
+  .hero{padding:30px 0 8px;}
+  .hero .status{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:22px;}
+  .hero .status .dot{width:9px;height:9px;border-radius:50%;background:var(--green-bright);box-shadow:0 0 12px var(--green-bright);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+  .hero h1{font-family:'Fraunces',serif;font-weight:900;font-size:68px;line-height:.98;letter-spacing:-.03em;margin:0 0 6px;}
+  .hero h1 .slash{color:var(--green);}
+  .hero .tagline{font-family:'Fraunces',serif;font-style:italic;font-size:23px;color:var(--muted);margin:0 0 26px;}
+  .hero .desc{max-width:620px;font-size:18px;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 8px;}
+  .pill{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:#54503f;}
+  .pill b{color:var(--green);font-weight:700;}
+
+  .toc-head{display:flex;align-items:baseline;justify-content:space-between;margin:60px 0 4px;border-top:2px solid var(--ink);padding-top:18px;}
+  .toc-head h2{font-family:'Fraunces',serif;font-weight:900;font-size:30px;margin:0;letter-spacing:-.01em;}
+  .toc-head span{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.08em;}
+
+  .module-card{
+    display:grid;grid-template-columns:54px 1fr auto;gap:20px;align-items:center;
+    padding:22px 4px;border-bottom:1px solid var(--line);
+  }
+  .module-card .num{font-family:'Fraunces',serif;font-weight:900;font-size:30px;color:var(--green);line-height:1;}
+  .module-card .info h3{font-family:'Hanken Grotesk';font-weight:700;font-size:19px;margin:0 0 3px;}
+  .module-card .info p{margin:0;color:var(--muted);font-size:13.5px;font-family:'JetBrains Mono',monospace;letter-spacing:.02em;}
+  .module-card .links{display:flex;gap:8px;flex-shrink:0;}
+  .module-card .links a{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;text-decoration:none;
+    padding:7px 13px;border-radius:7px;border:1px solid var(--line);color:var(--ink);transition:.15s;white-space:nowrap;
+  }
+  .module-card .links a.lecture:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .module-card .links a.lab{background:var(--green);color:#fff;border-color:var(--green);}
+  .module-card .links a.lab:hover{background:#0d6638;}
+  .module-card .links a.lab.solo{}
+
+  .footer-note{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px;}
+
+  /* ---------- activity worksheets ---------- */
+  .ws-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:0 0 22px;flex-wrap:wrap;}
+  .ws-bar .label{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  .btn-print{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--ink);color:var(--paper);border:none;border-radius:7px;padding:9px 16px;cursor:pointer;transition:.15s;}
+  .btn-print:hover{background:var(--green);}
+
+  .step{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:0 0 16px;background:var(--paper-2);}
+  .step .head{display:flex;gap:12px;align-items:baseline;margin-bottom:10px;}
+  .step .badge{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--green);color:#fff;border-radius:6px;padding:3px 10px;white-space:nowrap;}
+  .step .instr{font-weight:600;}
+  .step .cmd-line{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);margin:6px 0 12px;}
+  .step .cmd-line b{color:var(--ink);}
+
+  table.loc{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 2px;}
+  table.loc th{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;text-transform:uppercase;font-weight:500;padding:8px 10px;text-align:left;border:1px solid var(--ink);}
+  table.loc td{border:1px solid var(--line);padding:0;vertical-align:top;}
+  .fill{min-height:38px;padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;}
+  .fill:focus{background:#fff7df;}
+  .fill.given{background:#eef6ef;color:#1c3a26;}
+  td.cmd-cell .fill{color:var(--green);}
+
+  table.log{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0 18px;}
+  table.log th{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;text-transform:uppercase;font-weight:500;padding:9px 11px;text-align:left;border:1px solid var(--ink);}
+  table.log td{border:1px solid var(--line);padding:10px 11px;vertical-align:top;}
+  table.log td.n{font-family:'JetBrains Mono',monospace;color:var(--green);text-align:center;width:34px;font-weight:700;}
+  table.log .fill{min-height:30px;}
+  table.log td.desc{width:42%;}
+
+  .scroll-x{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:0 0 18px;}
+  table.wide{border-collapse:collapse;font-size:11.5px;min-width:1180px;width:100%;}
+  table.wide th{background:var(--ink);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.02em;text-transform:uppercase;font-weight:500;padding:7px 7px;text-align:left;border:1px solid #2c2a20;}
+  table.wide th.grp-r{background:#0d6638;}
+  table.wide th.grp-2{background:#7a3417;}
+  table.wide td{border:1px solid var(--line);padding:0;vertical-align:top;}
+  table.wide .fill{min-height:30px;font-size:10.5px;padding:5px 6px;}
+  table.wide td.instr-c{padding:6px 8px;font-size:11.5px;background:#faf7ee;font-family:'Hanken Grotesk';min-width:200px;}
+  table.wide .fill.given{background:#eef6ef;color:#1c3a26;}
+  table.wide .fill.conflict{background:#fbe6df;color:#8a2c12;}
+
+  .rubric{width:100%;border-collapse:collapse;margin:0 0 20px;font-size:14.5px;}
+  .rubric th{text-align:left;background:var(--ink);color:var(--paper);padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:500;}
+  .rubric td{border-bottom:1px solid var(--line);padding:11px 14px;}
+  .rubric td.pct{font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:700;text-align:right;white-space:nowrap;}
+
+  .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 20px;}
+  .opt{border:1px solid var(--line);border-radius:9px;padding:14px 16px;background:var(--paper-2);}
+  .opt .lvl{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .opt .lvl.easy{color:var(--green);}
+  .opt .lvl.med{color:var(--amber);}
+  .opt .lvl.hard{color:var(--coral);}
+  .opt b{display:block;margin-bottom:3px;}
+  .opt p{margin:0;font-size:13.5px;color:var(--muted);}
+
+  .next-prev{display:flex;justify-content:space-between;margin-top:58px;padding-top:22px;border-top:1px solid var(--line);gap:14px;}
+  .next-prev a{text-decoration:none;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:13px;padding:10px 16px;border:1px solid var(--line);border-radius:8px;transition:.15s;}
+  .next-prev a:hover{background:var(--ink);color:var(--paper);}
+  .next-prev a.spacer{visibility:hidden;}
+
+  .menu-btn{display:none;}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:980px){
+    .sidebar{transform:translateX(-100%);transition:transform .25s;width:280px;}
+    body.nav-open .sidebar{transform:none;box-shadow:0 0 40px rgba(0,0,0,.4);}
+    main{margin-left:0;}
+    .topbar{display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:30;background:var(--sidebar);color:var(--sidebar-fg);padding:13px 18px;border-bottom:1px solid #000;}
+    .menu-btn{display:inline-flex;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:4px;}
+    .menu-btn span{width:22px;height:2px;background:var(--sidebar-fg);display:block;}
+    .topbar .ttl{font-family:'Fraunces',serif;font-weight:900;font-size:18px;}
+    .topbar .ttl .slash{color:var(--green-bright);}
+    .wrap{padding:34px 22px 90px;}
+    .hero h1{font-size:46px;}
+    .hero .tagline{font-size:19px;}
+    h2.page-title{font-size:33px;}
+    .opt-grid{grid-template-columns:1fr;}
+    .module-card{grid-template-columns:40px 1fr;gap:14px;}
+    .module-card .links{grid-column:1/-1;margin-top:10px;}
+  }
+  @media(max-width:980px){body.nav-open::after{content:"";position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:35;}}
+
+  /* ---------- print ---------- */
+  @media print{
+    .sidebar,.topbar,.btn-print,.ws-bar .label,.next-prev{display:none !important;}
+    main{margin:0;}
+    .wrap{max-width:100%;padding:0;}
+    .page{display:none !important;}
+    .page.active{display:block !important;}
+    pre{box-shadow:none;}
+    .fill{border:none;}
+    body{font-size:12px;background:#fff;}
+    table.wide{min-width:0;font-size:9px;}
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <a href="#home">
+      <span class="status"><span class="dot"></span>build: passing</span>
+      <h1>Introduction<br>to CI/CD</h1>
+      <p>A short summer course · 4 days</p>
+    </a>
+  </div>
+  <nav>
+    <a class="nav-link" href="#home">Home &amp; Table of Contents</a>
+
+    <div class="group-label">Module 1 · Foundations</div>
+    <a class="nav-link sub" href="#m1-lecture">Lecture · Intro to CI/CD &amp; DevOps</a>
+    <a class="nav-link sub" href="#m1-lab">Setup Lab · Tool installation</a>
+
+    <div class="group-label">Module 2 · Git Basics</div>
+    <a class="nav-link sub" href="#m2-lecture">Lecture · Git fundamentals</a>
+    <a class="nav-link sub" href="#m2-lab">Lab 1 · File location tracking</a>
+
+    <div class="group-label">Module 3 · .gitignore &amp; Conflicts</div>
+    <a class="nav-link sub" href="#m3-lecture">Lecture · Ignoring &amp; resolving</a>
+    <a class="nav-link sub" href="#m3-lab">Lab 2 · gitignore + conflicts</a>
+
+    <div class="group-label">Module 4 · Branching</div>
+    <a class="nav-link sub" href="#m4-lecture">Lecture · Branches &amp; PRs</a>
+    <a class="nav-link sub" href="#m4-lab">Lab 3 · Branching log</a>
+
+    <div class="group-label">Module 5 · CMake</div>
+    <a class="nav-link sub" href="#m5-lecture">Lecture · Build systems</a>
+    <a class="nav-link sub" href="#m5-lab">Lab 4 · CMake the project</a>
+
+    <div class="group-label">Module 6 · CI/CD Config</div>
+    <a class="nav-link sub" href="#m6-lecture">Lecture · Pipelines &amp; tests</a>
+    <a class="nav-link sub" href="#m6-lab">Lab 5 · Gitee Go pipeline</a>
+
+    <div class="group-label">Module 7 · Capstone</div>
+    <a class="nav-link sub" href="#m7">Final Project</a>
+  </nav>
+</aside>
+
+<div class="topbar">
+  <button class="menu-btn" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  <span class="ttl">Intro to CI<span class="slash">/</span>CD</span>
+</div>
+
+<main>
+<div class="wrap">
+
+<!-- ============================== HOME ============================== -->
+<section class="page" id="home">
+  <div class="hero">
+    <span class="status"><span class="dot"></span>build: passing · 4 days · 7 modules</span>
+    <h1>Introduction to CI<span class="slash">/</span>CD</h1>
+    <p class="tagline">A short summer course</p>
+    <p class="desc lead">A hands-on, four-day introduction to version control, build systems, and continuous integration &amp; delivery — taught entirely around one small C++ project: a console <strong>Tic-Tac-Toe</strong> game that grows, lab by lab, into an automatically built and tested pipeline on <strong>Gitee</strong>.</p>
+    <div class="meta-row">
+      <span class="pill">Audience: <b>EE sophomores</b></span>
+      <span class="pill">Prereq: <b>basic C++</b></span>
+      <span class="pill">Tools: <b>Git · Gitee · CMake · Gitee&nbsp;Go</b></span>
+      <span class="pill">Format: <b>lecture + lab</b></span>
+    </div>
+  </div>
+
+  <div class="toc-head">
+    <h2>Table of Contents</h2>
+    <span>16 classes × 45 min</span>
+  </div>
+
+  <div class="module-card">
+    <div class="num">01</div>
+    <div class="info"><h3>Intro to CI/CD &amp; DevOps</h3><p>Day 1 · Classes 1–2 · Tool installation</p></div>
+    <div class="links"><a class="lecture" href="#m1-lecture">Lecture</a><a class="lab solo" href="#m1-lab">Setup Lab</a></div>
+  </div>
+  <div class="module-card">
+    <div class="num">02</div>
+    <div class="info"><h3>Git Basics</h3><p>Day 1 · Classes 3–4 · Lab 1</p></div>
+    <div class="links"><a class="lecture" href="#m2-lecture">Lecture</a><a class="lab" href="#m2-lab">Lab 1</a></div>
+  </div>
+  <div class="module-card">
+    <div class="num">03</div>
+    <div class="info"><h3>.gitignore &amp; Conflict Resolution</h3><p>Day 2 · Classes 5–6 · Lab 2</p></div>
+    <div class="links"><a class="lecture" href="#m3-lecture">Lecture</a><a class="lab" href="#m3-lab">Lab 2</a></div>
+  </div>
+  <div class="module-card">
+    <div class="num">04</div>
+    <div class="info"><h3>Git Branching</h3><p>Day 2 · Classes 7–8 · Lab 3</p></div>
+    <div class="links"><a class="lecture" href="#m4-lecture">Lecture</a><a class="lab" href="#m4-lab">Lab 3</a></div>
+  </div>
+  <div class="module-card">
+    <div class="num">05</div>
+    <div class="info"><h3>CMake</h3><p>Day 3 · Classes 9–10 · Lab 4</p></div>
+    <div class="links"><a class="lecture" href="#m5-lecture">Lecture</a><a class="lab" href="#m5-lab">Lab 4</a></div>
+  </div>
+  <div class="module-card">
+    <div class="num">06</div>
+    <div class="info"><h3>CI/CD Configuration</h3><p>Day 3 · Classes 11–12 · Lab 5</p></div>
+    <div class="links"><a class="lecture" href="#m6-lecture">Lecture</a><a class="lab" href="#m6-lab">Lab 5</a></div>
+  </div>
+  <div class="module-card">
+    <div class="num">07</div>
+    <div class="info"><h3>Final Project</h3><p>Day 4 · Classes 13–16 · Discussion &amp; implementation</p></div>
+    <div class="links"><a class="lab" href="#m7">Project Brief</a></div>
+  </div>
+
+  <p class="footer-note">The course project thread: a single Tic-Tac-Toe codebase carried across every module — versioned in Lab 1, kept clean and conflict-free in Lab 2, branched in Lab 3, built with CMake in Lab 4, and put behind an automated build-and-test pipeline in Lab 5, before teams extend it in the final project.</p>
+</section>
+
+<!-- ============================== M1 LECTURE ============================== -->
+<section class="page" id="m1-lecture">
+  <div class="eyebrow">Module 1 · Lecture · Class 1</div>
+  <h2 class="page-title">Intro to CI/CD &amp; DevOps</h2>
+  <p class="sub-meta">What the pipeline is, why it exists, and the tools we will use to build one.</p>
+
+  <p class="lead">Modern software is rarely written once and shipped once. It is changed constantly, by many people, and each change has to be integrated, built, tested, and delivered without breaking what already works. <strong>DevOps</strong> is the culture and set of practices that make this fast and reliable; <strong>CI/CD</strong> is the automation at its heart.</p>
+
+  <h3>Key ideas</h3>
+  <h4>DevOps</h4>
+  <p>A way of working that unites <em>development</em> (writing code) and <em>operations</em> (building, testing, releasing, running) so that software moves from a developer's machine to its users smoothly and repeatedly. The goals are short feedback loops, automation of repetitive steps, and shared responsibility for quality.</p>
+
+  <h4>Continuous Integration (CI)</h4>
+  <p>Every change is merged into a shared repository frequently, and <em>each merge automatically triggers a build and a set of tests</em>. If a change breaks the build or fails a test, the team finds out within minutes instead of weeks. CI is the antidote to "integration hell," where code that worked in isolation collapses when combined.</p>
+
+  <h4>Continuous Delivery / Deployment (CD)</h4>
+  <p>CD extends CI: once a change passes all checks, the system automatically prepares it for release (delivery) or even releases it (deployment). The payoff is that shipping becomes a routine, low-risk button-press rather than a stressful manual event.</p>
+
+  <h3>The pipeline, end to end</h3>
+  <p>A CI/CD <strong>pipeline</strong> is an automated sequence that runs on every change:</p>
+  <pre><code><span class="k">source control</span>  →  <span class="k">build</span>  →  <span class="k">test</span>  →  <span class="k">integrate</span>  →  <span class="k">deliver</span></code></pre>
+  <p>This course builds each stage from the ground up, and the last lab wires them together into a working pipeline.</p>
+
+  <h3>The toolchain we will use</h3>
+  <ul>
+    <li><strong>Git</strong> — the version-control system that records every change to the code.</li>
+    <li><strong>Gitee (码云)</strong> — our remote host for repositories, pull requests, issue tracking, <em>and</em> CI/CD. We use Gitee because it is fast and reliable from within China, where GitHub access is often slow or unstable.</li>
+    <li><strong>A C++ compiler (g++) + CMake</strong> — to compile the project in a structured, repeatable way.</li>
+    <li><strong>Gitee Go</strong> — Gitee's built-in CI/CD service, which runs our build and tests automatically on every push.</li>
+  </ul>
+
+  <div class="callout">
+    <span class="tag">Course project</span>
+    <p>Everything is taught around one small program: a <strong>console Tic-Tac-Toe game</strong> in C++. It starts as a single file you version with Git, becomes a structured CMake project, and finishes as a repository whose every commit is automatically built and tested by Gitee Go.</p>
+  </div>
+
+  <h3>Glossary to remember</h3>
+  <ul>
+    <li><strong>Repository (repo)</strong> — a project tracked by Git, including its full history.</li>
+    <li><strong>Commit</strong> — a recorded snapshot of changes, with a message.</li>
+    <li><strong>Branch</strong> — an independent line of development.</li>
+    <li><strong>Merge</strong> — combining the work of two branches.</li>
+    <li><strong>Pipeline</strong> — the automated build/test/deliver sequence.</li>
+    <li><strong>Unit test</strong> — a small automated check that one piece of code behaves correctly.</li>
+    <li><strong>Artifact</strong> — a file produced by the build (e.g. a compiled program).</li>
+  </ul>
+
+  <div class="next-prev">
+    <a href="#home">← Home</a>
+    <a href="#m1-lab">Setup Lab →</a>
+  </div>
+</section>
+
+<!-- ============================== M1 LAB ============================== -->
+<section class="page" id="m1-lab">
+  <div class="eyebrow">Module 1 · Setup Lab · Class 2</div>
+  <h2 class="page-title">Setup Lab — Get Your Machine Ready</h2>
+  <p class="sub-meta">Install and verify the full toolchain. Nothing later works until this does, so finish every checkpoint.</p>
+
+  <div class="callout tip">
+    <span class="tag">Goal</span>
+    <p>By the end of this lab you have a working C++ toolchain, a Gitee account with SSH access, and you have successfully pushed a small program to a Gitee repository.</p>
+  </div>
+
+  <h3>1 · Install Git</h3>
+  <p>Download <strong>Git for Windows</strong> (which includes Git Bash) from the official site, or install via your package manager on macOS/Linux. Then set your identity:</p>
+  <pre><code><span class="k">git</span> --version
+<span class="k">git</span> config --global user.name <span class="s">"Your Name"</span>
+<span class="k">git</span> config --global user.email <span class="s">"you@example.com"</span></code></pre>
+
+  <h3>2 · Install a C++ compiler</h3>
+  <p>On <strong>Windows</strong>, install MinGW-w64 (e.g. via MSYS2). On macOS use <code>xcode-select --install</code>; on Linux <code>sudo apt install build-essential</code>. Verify:</p>
+  <pre><code><span class="k">g++</span> --version</code></pre>
+  <div class="callout tip"><span class="tag">China tip</span><p>If downloads are slow, point your package manager at a domestic mirror (Tsinghua TUNA, USTC, or Aliyun).</p></div>
+
+  <h3>3 · Install CMake</h3>
+  <pre><code><span class="k">cmake</span> --version</code></pre>
+
+  <h3>4 · Install VS Code</h3>
+  <p>Install <strong>Visual Studio Code</strong>, then add the <strong>C/C++</strong> and <strong>CMake Tools</strong> extensions.</p>
+
+  <h3>5 · Create a Gitee account &amp; SSH key</h3>
+  <ol>
+    <li>Register at <code>gitee.com</code>.</li>
+    <li>Generate an SSH key: <code>ssh-keygen -t ed25519 -C "you@example.com"</code></li>
+    <li>Copy the public key (<code>~/.ssh/id_ed25519.pub</code>) into Gitee → Settings → SSH Keys.</li>
+    <li>Test the connection: <code>ssh -T git@gitee.com</code></li>
+  </ol>
+
+  <h3>6 · Smoke test (the checkpoint)</h3>
+  <p>Prove the whole toolchain works end-to-end:</p>
+  <pre><code><span class="c"># compile and run a hello program</span>
+<span class="k">echo</span> <span class="s">'#include &lt;iostream&gt;
+int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
+<span class="k">g++</span> hello.cpp -o hello
+./hello
+
+<span class="c"># version it and push to a new empty Gitee repo</span>
+<span class="k">git</span> init
+<span class="k">git</span> add hello.cpp
+<span class="k">git</span> commit -m <span class="s">"first commit: hello"</span>
+<span class="k">git</span> remote add origin git@gitee.com:&lt;your-user&gt;/hello.git
+<span class="k">git</span> push -u origin master</code></pre>
+
+  <div class="callout">
+    <span class="tag">Done when</span>
+    <p>You can run <code>./hello</code>, and <code>hello.cpp</code> appears in your repository on the Gitee website.</p>
+  </div>
+
+  <div class="next-prev">
+    <a href="#m1-lecture">← Lecture</a>
+    <a href="#m2-lecture">Module 2 →</a>
+  </div>
+</section>
+
+<!-- ============================== M2 LECTURE ============================== -->
+<section class="page" id="m2-lecture">
+  <div class="eyebrow">Module 2 · Lecture · Class 3</div>
+  <h2 class="page-title">Git Basics</h2>
+  <p class="sub-meta">How Git tracks your work across four locations — the mental model behind Lab 1.</p>
+
+  <p class="lead">Git is a <strong>version-control system</strong>: it records snapshots of your project over time so you can review history, undo mistakes, and collaborate without overwriting each other's work. The key to using it confidently is understanding <em>where a file lives at any moment</em>.</p>
+
+  <h3>The four locations</h3>
+  <p>Every change moves through four places. Today's lab is built entirely around tracking files across them:</p>
+  <ul>
+    <li><strong>Workspace</strong> (working directory) — the actual files you edit on disk.</li>
+    <li><strong>Staging Area</strong> (index) — a holding area for changes you have marked to include in the next commit.</li>
+    <li><strong>Local Repository</strong> — the committed history stored on your own machine.</li>
+    <li><strong>Remote Repository</strong> — the shared copy on Gitee that your team pulls from and pushes to.</li>
+  </ul>
+
+  <h3>The core commands</h3>
+  <pre><code><span class="k">git clone</span> &lt;url&gt;     <span class="c"># copy a remote repo to your workspace</span>
+<span class="k">git status</span>          <span class="c"># what changed, and where it lives now</span>
+<span class="k">git add</span> &lt;file&gt;       <span class="c"># workspace  → staging area</span>
+<span class="k">git reset</span>           <span class="c"># staging area → workspace (unstage)</span>
+<span class="k">git commit</span>          <span class="c"># staging area → local repository</span>
+<span class="k">git push</span>            <span class="c"># local repo  → remote repository</span>
+<span class="k">git pull</span>            <span class="c"># remote repo → local + workspace</span>
+<span class="k">git log</span>             <span class="c"># view commit history</span>
+<span class="k">git diff</span>            <span class="c"># view exact changes</span></code></pre>
+
+  <h3>The journey of a change</h3>
+  <p>You edit a file (workspace) → <code>git add</code> it (staging) → <code>git commit</code> it (local repo) → <code>git push</code> it (remote). Each command moves the change one step closer to being shared. Knowing which command moves a file between which two locations is the whole game — and the worksheet in Lab 1 makes you trace it explicitly.</p>
+
+  <h3>Good habits</h3>
+  <ul>
+    <li>Commit small, logical units of work — not "everything at once."</li>
+    <li>Write clear messages: <em>"add input prompt"</em>, not <em>"stuff"</em>.</li>
+    <li>Run <code>git status</code> often; it is your map.</li>
+    <li>Keep a useful <code>README.md</code> describing the project.</li>
+  </ul>
+
+  <div class="next-prev">
+    <a href="#m1-lab">← Setup Lab</a>
+    <a href="#m2-lab">Lab 1 →</a>
+  </div>
+</section>
+
+<!-- ============================== M2 LAB (LAB 1) ============================== -->
+<section class="page" id="m2-lab">
+  <div class="eyebrow">Module 2 · Lab 1 · Class 4</div>
+  <h2 class="page-title">Lab 1 — Tracking Files Across Locations</h2>
+  <p class="sub-meta">Execute each instruction with the right Git command, then record the state of all four locations.</p>
+
+  <p>You will create the seed of the course project — a single file <code>tictactoe.cpp</code> — and version it. <strong>For every step, record the equivalent Git command and the contents of each location after the command runs.</strong> The first two steps are filled in for you as examples. Type directly into the cells; use the print button to save your completed worksheet as a PDF to submit.</p>
+
+  <div class="callout tip">
+    <span class="tag">The file you will track</span>
+    <p>When a step says to create <code>tictactoe.cpp</code>, paste the seed game below (a two-player hot-seat board — win detection arrives in Lab 2). For tracking purposes, write it in the table as <code>tictactoe.cpp ("seed")</code>.</p>
+  </div>
+  <pre><code><span class="c">// tictactoe.cpp — seed (hot-seat, no win detection yet)</span>
+<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
+<span class="k">#include</span> <span class="s">&lt;array&gt;</span>
+<span class="k">int</span> main(){
+  std::array&lt;char,9&gt; b={'1','2','3','4','5','6','7','8','9'};
+  <span class="k">char</span> p='X'; <span class="k">int</span> filled=0;
+  <span class="k">auto</span> draw=[&amp;]{ <span class="k">for</span>(<span class="k">int</span> r=0;r&lt;3;++r){
+    std::cout&lt;&lt;' '&lt;&lt;b[r*3]&lt;&lt;'|'&lt;&lt;b[r*3+1]&lt;&lt;'|'&lt;&lt;b[r*3+2]&lt;&lt;'\n'; } };
+  <span class="k">while</span>(filled&lt;9){ draw();
+    std::cout&lt;&lt;<span class="s">"Player "</span>&lt;&lt;p&lt;&lt;<span class="s">", cell 1-9: "</span>; <span class="k">int</span> c; std::cin&gt;&gt;c;
+    <span class="k">if</span>(c&lt;1||c&gt;9||b[c-1]=='X'||b[c-1]=='O'){ std::cout&lt;&lt;<span class="s">"invalid\n"</span>; <span class="k">continue</span>; }
+    b[c-1]=p; ++filled; p=(p=='X')?'O':'X'; }
+  draw(); std::cout&lt;&lt;<span class="s">"Board full — draw (win detection in Lab 2)\n"</span>; }</code></pre>
+
+  <div class="ws-bar">
+    <span class="label">// Lab 1 worksheet — fillable &amp; printable</span>
+    <button class="btn-print" data-print>⎙ Print / Save as PDF</button>
+  </div>
+
+  <!-- STEP 1 (given) -->
+  <div class="step">
+    <div class="head"><span class="badge">Step 1</span><span class="instr">Clone your repository to your workspace.</span></div>
+    <div class="cmd-line">Command: <b>git clone &lt;repository url&gt;</b></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill given">(empty)</div></td><td><div class="fill given">(empty)</div></td><td><div class="fill given">(empty)</div></td><td><div class="fill given">(empty)</div></td></tr></tbody></table>
+  </div>
+
+  <!-- STEP 2 (given) -->
+  <div class="step">
+    <div class="head"><span class="badge">Step 2</span><span class="instr">Create <code>tictactoe.cpp</code> in your workspace with the seed game above.</span></div>
+    <div class="cmd-line">Command: <b>N/A</b></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill given">tictactoe.cpp ("seed")</div></td><td><div class="fill given"></div></td><td><div class="fill given"></div></td><td><div class="fill given"></div></td></tr></tbody></table>
+  </div>
+
+  <!-- STEPS 3-14 (blank) -->
+  <div class="step">
+    <div class="head"><span class="badge">Step 3</span><span class="instr">Add the file to the staging area.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 4</span><span class="instr">Remove the file from the staging area (unstage it).</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 5</span><span class="instr">Add the file to the staging area again.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 6</span><span class="instr">Commit the file to the local repository.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 7</span><span class="instr">Undo the commit, keeping the change staged (<code>git reset --soft HEAD^</code>).</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 8</span><span class="instr">Commit the file to the local repository again.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 9</span><span class="instr">Push the file to the remote repository.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <h4>Part II — modifying a tracked file</h4>
+  <div class="step">
+    <div class="head"><span class="badge">Step 10</span><span class="instr">Change the code in your workspace (e.g. edit the prompt text).</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)">N/A</span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+  <div class="step">
+    <div class="head"><span class="badge">Step 11</span><span class="instr">Add the changed file to the staging area.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+  <div class="step">
+    <div class="head"><span class="badge">Step 12</span><span class="instr">Commit the change to the local repository.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+  <div class="step">
+    <div class="head"><span class="badge">Step 13</span><span class="instr">Push the change to the remote repository.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="callout"><span class="tag">Submit</span><p>Print this completed worksheet to PDF, plus a screenshot of <code>git log</code> showing your commit history on Gitee.</p></div>
+
+  <div class="next-prev">
+    <a href="#m2-lecture">← Lecture</a>
+    <a href="#m3-lecture">Module 3 →</a>
+  </div>
+</section>
+
+<!-- ============================== M3 LECTURE ============================== -->
+<section class="page" id="m3-lecture">
+  <div class="eyebrow">Module 3 · Lecture · Class 5</div>
+  <h2 class="page-title">.gitignore &amp; Conflict Resolution</h2>
+  <p class="sub-meta">Keeping junk out of the repository, and reconciling changes when two people edit the same lines.</p>
+
+  <h3>What does <em>not</em> belong in a repository</h3>
+  <p>A repository should contain <strong>source</strong>, not the things you can regenerate from it. Compiled binaries, object files, and build folders bloat the repo, cause needless conflicts, and differ per machine. You exclude them with a <code>.gitignore</code> file.</p>
+  <pre><code><span class="c"># .gitignore for a C++ / CMake project</span>
+build/
+*.o
+*.exe
+*.out
+ttt
+.vscode/</code></pre>
+  <p>Patterns match file or folder names; a trailing <code>/</code> matches a directory. <code>.gitignore</code> itself <em>is</em> committed, so the whole team shares the same rules.</p>
+
+  <div class="callout warn">
+    <span class="tag">Important</span>
+    <p><code>.gitignore</code> only stops Git from tracking files it is <em>not already</em> tracking. If you already committed a build artifact, you must stop tracking it explicitly:</p>
+    <pre style="margin-top:10px"><code><span class="k">git rm</span> --cached &lt;file&gt;   <span class="c"># untrack but keep on disk</span></code></pre>
+  </div>
+
+  <h3>How conflicts happen</h3>
+  <p>When two people change the <em>same lines</em> of the same file and both try to push, Git cannot decide which version wins. The second push is rejected (a "non-fast-forward" error). After <code>git pull</code>, Git marks the clash with conflict markers:</p>
+  <pre><code><span class="k">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> HEAD
+your version of the line
+<span class="k">=======</span>
+their version of the line
+<span class="k">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> origin/main</code></pre>
+
+  <h3>Resolving a conflict</h3>
+  <ol>
+    <li><code>git pull</code> — bring in the remote changes; Git reports the conflict.</li>
+    <li>Open the file (VS Code's merge editor is ideal) and edit it so it contains the correct <em>combined</em> result. Delete all three marker lines.</li>
+    <li><code>git add &lt;file&gt;</code> to mark it resolved.</li>
+    <li><code>git commit</code> then <code>git push</code>.</li>
+  </ol>
+  <p><code>git status</code> guides you the entire time — it lists exactly which files are still in conflict.</p>
+
+  <div class="next-prev">
+    <a href="#m2-lab">← Lab 1</a>
+    <a href="#m3-lab">Lab 2 →</a>
+  </div>
+</section>
+
+<!-- ============================== M3 LAB (LAB 2) ============================== -->
+<section class="page" id="m3-lab">
+  <div class="eyebrow">Module 3 · Lab 2 · Class 6</div>
+  <h2 class="page-title">Lab 2 — .gitignore &amp; Conflict Resolution</h2>
+  <p class="sub-meta">Two activities on one repository: clean up an accidentally-committed build artifact, then resolve a merge conflict.</p>
+
+  <h3>Prerequisites — two clones of your project</h3>
+  <ol>
+    <li>Create two folders on your desktop: <strong>Repo1</strong> and <strong>Repo2</strong>.</li>
+    <li>Open a Git Bash window in each.</li>
+    <li>Clone your Tic-Tac-Toe repository into both folders.</li>
+    <li>Navigate each Git Bash window into its clone. Repo1 and Repo2 act as two different teammates sharing one remote.</li>
+  </ol>
+
+  <!-- Activity A: gitignore -->
+  <h3>Activity A — The accidentally-committed build artifact</h3>
+  <div class="callout">
+    <span class="tag">Scenario</span>
+    <p>You are working with a teammate. While building the game you produced a compiled artifact — <code>ttt.exe</code> — in your workspace that should never be committed (an anonymous professor deducts 2.5 points for committed build artifacts). You have <em>already pushed it</em> to the remote, and only then created a <code>.gitignore</code>. You push everything, but the artifact is still on the remote — and your teammate has already pulled it. Now you must both fix your repositories.</p>
+  </div>
+
+  <h4>Steps to reproduce the problem</h4>
+  <ol>
+    <li>In Repo1, create a file <code>ttt.exe</code> (a stand-in for a compiled binary — just make a small file with this exact name).</li>
+    <li>In Repo1, add, commit, and push <code>ttt.exe</code>.</li>
+    <li>In Repo1, create a <code>.gitignore</code> file with an entry that ignores <code>ttt.exe</code>. (Ensure the file's extension really is <code>.gitignore</code>, not <code>.txt</code> — enable "show file extensions.")</li>
+    <li>In Repo1, add, commit, and push the <code>.gitignore</code>.</li>
+    <li>In Repo2, pull from the remote. (Repo2 now also has the unwanted artifact.)</li>
+  </ol>
+
+  <div class="callout tip">
+    <span class="tag">Desired end state</span>
+    <p>• Both workspaces still <em>have</em> <code>ttt.exe</code> on disk. &nbsp;• Both workspaces have a <code>.gitignore</code> ignoring it. &nbsp;• The remote has the <code>.gitignore</code> (with the entry) but contains <strong>no</strong> build artifact.</p>
+  </div>
+
+  <h4>How to resolve — your task</h4>
+  <p><strong>Step 1 is given as an example. Add as many steps as necessary to reach the desired end state. Describe each action clearly with the exact Git command(s), explain <em>why</em> you are doing it, and attach screenshot(s).</strong></p>
+
+  <div class="ws-bar"><span class="label">// Activity A worksheet</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 1</span><span class="instr">In Repo1, remove the <code>.gitignore</code> entry for the artifact.</span></div>
+    <p style="margin:0 0 6px"><strong>Explanation:</strong> To change anything about a file on the remote, that file cannot be ignored. So first <em>un-ignore</em> the artifact you intend to delete. (Alternatively, leave the entry and force-add with <code>git add --force</code>.)</p>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 2</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+    <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    <p style="margin:8px 0 0;color:var(--muted);font-size:13px">⟶ paste screenshot(s) here</p>
+  </div>
+  <div class="step">
+    <div class="head"><span class="badge">Step 3</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+    <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    <p style="margin:8px 0 0;color:var(--muted);font-size:13px">⟶ paste screenshot(s) here</p>
+  </div>
+  <div class="step">
+    <div class="head"><span class="badge">Step 4</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+    <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    <p style="margin:8px 0 0;color:var(--muted);font-size:13px">⟶ paste screenshot(s) here</p>
+  </div>
+  <div class="step">
+    <div class="head"><span class="badge">Step 5</span><span class="instr" contenteditable="true" style="flex:1">&lt;add more steps as needed&gt;</span></div>
+    <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    <p style="margin:8px 0 0;color:var(--muted);font-size:13px">⟶ paste screenshot(s) here</p>
+  </div>
+
+  <!-- Activity B: conflict resolution table -->
+  <h3 style="margin-top:54px">Activity B — Resolve a merge conflict</h3>
+  <p>Now trace a conflict location-by-location. Using a file <code>ConflictPractice.txt</code> inside your project repo, two workspaces edit the <em>same line</em>. Fill in the command used and the contents of every location after each instruction. The reset command <strong>cannot</strong> be used. The required <strong>final state</strong> is given on the last row — add the resolution rows <em>before</em> it.</p>
+  <p>The target final content of the file in every location is: <code>OriginalText Workspace1 Workspace2</code>.</p>
+
+  <div class="ws-bar"><span class="label">// Activity B worksheet — scroll horizontally</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
+
+  <div class="scroll-x">
+  <table class="wide">
+    <thead><tr>
+      <th>Instruction</th><th>Cmd&nbsp;(WS1)</th><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th>
+      <th class="grp-r">Remote Repo</th>
+      <th class="grp-2">Cmd&nbsp;(WS2)</th><th class="grp-2">Workspace 2</th><th class="grp-2">Staging 2</th><th class="grp-2">Local Repo 2</th><th>Stash</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="instr-c">Create <code>ConflictPractice.txt</code> in workspace 1</td>
+        <td class="cmd-cell"><div class="fill given">N/A</div></td><td><div class="fill given">CP.txt</div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">Add text "OriginalText" to the file</td>
+        <td class="cmd-cell"><div class="fill given">N/A</div></td><td><div class="fill given">CP.txt – "OriginalText"</div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS1: add the file to the staging area</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS1: commit to the local repository</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS1: push to the remote repository</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">Pull from remote into workspace 2</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS1: on the same line, append "Workspace1"</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS1: add to staging</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS1: commit</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS1: push</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS2: on the same line, append "Workspace2"</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS2: add to staging</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS2: commit</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c">WS2: pull from remote → <b>CONFLICT</b></td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill conflict"contenteditable="true">CONFLICTED</div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c" style="color:var(--coral)"><b>↓ add your resolution steps below (no reset!) ↓</b></td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c" contenteditable="true">&lt;your step&gt;</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c" contenteditable="true">&lt;your step&gt;</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c" contenteditable="true">&lt;your step&gt;</td>
+        <td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td class="cmd-cell"><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="instr-c"><b>FINAL STATE</b> (given)</td>
+        <td class="cmd-cell"><div class="fill given">git pull</div></td><td><div class="fill given">…W1 W2</div></td><td><div class="fill given"></div></td><td><div class="fill given">…W1 W2</div></td><td><div class="fill given">…W1 W2</div></td><td class="cmd-cell"><div class="fill given"></div></td><td><div class="fill given">…W1 W2</div></td><td><div class="fill given"></div></td><td><div class="fill given">…W1 W2</div></td><td><div class="fill given"></div></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">("…W1 W2" abbreviates the full final content <code>OriginalText Workspace1 Workspace2</code>.)</p>
+
+  <div class="next-prev">
+    <a href="#m3-lecture">← Lecture</a>
+    <a href="#m4-lecture">Module 4 →</a>
+  </div>
+</section>
+
+<!-- ============================== M4 LECTURE ============================== -->
+<section class="page" id="m4-lecture">
+  <div class="eyebrow">Module 4 · Lecture · Class 7</div>
+  <h2 class="page-title">Git Branching</h2>
+  <p class="sub-meta">Working on features in parallel without destabilising the main line.</p>
+
+  <p class="lead">A <strong>branch</strong> is an independent line of development. It lets you build a new feature while <code>main</code> stays stable and shippable. When the feature is ready, you <strong>merge</strong> it back.</p>
+
+  <h3>The mental model</h3>
+  <p>A branch is just a movable pointer to a commit. Creating a branch is cheap; switching between them changes which version of the files you see. The discipline is simple: <em>keep <code>main</code> always working, do risky work on feature branches.</em></p>
+
+  <h3>Core commands</h3>
+  <pre><code><span class="k">git branch</span>                 <span class="c"># list branches</span>
+<span class="k">git checkout -b</span> feature/x    <span class="c"># create and switch to a new branch</span>
+<span class="k">git switch</span> main             <span class="c"># switch back to main</span>
+<span class="k">git merge</span> feature/x        <span class="c"># merge a branch into the current one</span>
+<span class="k">git branch -d</span> feature/x     <span class="c"># delete a merged local branch</span>
+<span class="k">git push -u origin</span> feature/x <span class="c"># publish a branch to the remote</span></code></pre>
+
+  <h3>Fast-forward vs. merge commit</h3>
+  <p>If <code>main</code> hasn't moved since you branched, Git can simply slide its pointer forward — a <strong>fast-forward</strong>. If both branches have new commits, Git creates a <strong>merge commit</strong> that ties the two histories together (and may require resolving a conflict, exactly as in Lab 2).</p>
+
+  <h3>The Pull Request workflow on Gitee</h3>
+  <ol>
+    <li>Push your feature branch to Gitee.</li>
+    <li>Open a <strong>Pull Request</strong> (PR) proposing to merge it into <code>main</code>.</li>
+    <li>A teammate reviews the changes and comments.</li>
+    <li>Merge the PR; delete the branch; everyone pulls the updated <code>main</code>.</li>
+  </ol>
+  <p>PRs are where code review happens, and — once we add CI in Module 6 — where automated tests gate the merge. PRs can also be linked to <strong>issues</strong> so a merge automatically closes the task it addressed.</p>
+
+  <div class="next-prev">
+    <a href="#m3-lab">← Lab 2</a>
+    <a href="#m4-lab">Lab 3 →</a>
+  </div>
+</section>
+
+<!-- ============================== M4 LAB (LAB 3) ============================== -->
+<section class="page" id="m4-lab">
+  <div class="eyebrow">Module 4 · Lab 3 · Class 8</div>
+  <h2 class="page-title">Lab 3 — Git Branching Log</h2>
+  <p class="sub-meta">Follow the Alice &amp; Ben branching scenario. For each step, record the Git command(s) and any non-Git operations.</p>
+
+  <p>Two developers, <strong>Alice</strong> and <strong>Ben</strong>, collaborate on one Gitee repository through a <code>dev</code> branch, a <code>bugfix</code> branch, and finally a clean merge back to <code>main</code>. Work through the scenario on your own machine using two workspaces, and <strong>fill in the Git command(s) and non-Git operations for every step.</strong></p>
+
+  <div class="ws-bar"><span class="label">// Lab 3 branching log — fillable &amp; printable</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
+
+  <table class="log">
+    <thead><tr><th>#</th><th class="desc">Description</th><th>Git command(s)</th><th>Non-git operations</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td class="desc">Alice created a project on <strong>gitee.com</strong> and cloned the repository to her local workspace "Repo1". Start with a fresh workspace whose remote has only a <code>main</code> branch.</td>
+        <td><div class="fill given">git clone git@gitee.com:&lt;user&gt;/&lt;proj&gt;.git</div></td><td><div class="fill given">Create a folder "Repo1"</div></td></tr>
+      <tr><td class="n">2</td><td class="desc">Alice created a new local branch "dev" and switched to it.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">3</td><td class="desc">Alice created a new file "work.txt", saved, added, and committed it to the local repository.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">4</td><td class="desc">Alice pushed all local changes to the remote repository.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">5</td><td class="desc">Ben cloned the remote repository to his local workspace "Repo2".</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">6</td><td class="desc">Ben started working on the dev branch. He wrote "Ben" in work.txt, saved, added, committed, and pushed to the remote.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">7</td><td class="desc">Alice wrote "Alice" in work.txt, saved, added, committed.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">8</td><td class="desc">Alice resolved the conflict when trying to push, and successfully pushed. The remote dev branch's work.txt now has both Alice's and Ben's work.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">9</td><td class="desc">Ben was assigned a bug fix. Following good practice he first pulled to his dev branch, then created a new branch "bugfix" off dev and switched to it.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">10</td><td class="desc">Alice continued working on work.txt and added new text. She saved, added, committed, and pushed.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">11</td><td class="desc">Ben fixed the bug by adding a line "bug fixed" in work.txt. He saved, added, and committed to his local bugfix branch.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">12</td><td class="desc">Ben merged the bug fix into dev and deleted the bugfix branch locally.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">13</td><td class="desc">Ben wanted to push dev to remote. He first pulled to check for changes, found Alice had pushed more work, resolved the conflict, and pushed the bug fix to remote dev.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">14</td><td class="desc">Development is finished. Alice cleaned up: she pulled to dev for the latest work, merged dev into main, and pushed main to remote.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+      <tr><td class="n">15</td><td class="desc">Alice deleted the remote dev branch; both deleted their local dev branch. The final remote has only <code>main</code>, containing all work plus the bug fix.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout"><span class="tag">Submit</span><p>After completing all operations, include a screenshot of your commit graph: run <code>git log --graph --oneline --all</code> in your local workspace (or open the commit graph on Gitee). It should show the dev/bugfix branches merging into a single <code>main</code>.</p></div>
+
+  <div class="next-prev">
+    <a href="#m4-lecture">← Lecture</a>
+    <a href="#m5-lecture">Module 5 →</a>
+  </div>
+</section>
+
+<!-- ============================== M5 LECTURE ============================== -->
+<section class="page" id="m5-lecture">
+  <div class="eyebrow">Module 5 · Lecture · Class 9</div>
+  <h2 class="page-title">CMake</h2>
+  <p class="sub-meta">Why manual <code>g++</code> doesn't scale, and how to describe a build once and run it anywhere.</p>
+
+  <p class="lead">As soon as a project has more than one source file, typing <code>g++</code> commands by hand becomes error-prone and unrepeatable. <strong>CMake</strong> lets you describe your build in one file; it then generates the right commands for whatever compiler and platform you're on.</p>
+
+  <h3>The anatomy of CMakeLists.txt</h3>
+  <pre><code><span class="k">cmake_minimum_required</span>(VERSION 3.16)
+<span class="k">project</span>(tictactoe CXX)
+<span class="k">set</span>(CMAKE_CXX_STANDARD 17)
+
+<span class="k">add_library</span>(game src/board.cpp)          <span class="c"># reusable game logic</span>
+<span class="k">target_include_directories</span>(game PUBLIC include)
+
+<span class="k">add_executable</span>(tictactoe src/main.cpp)    <span class="c"># the playable program</span>
+<span class="k">target_link_libraries</span>(tictactoe PRIVATE game)</code></pre>
+
+  <h3>Out-of-source builds</h3>
+  <p>CMake keeps all generated files in a separate <code>build/</code> folder, so your source tree stays clean (and <code>build/</code> goes in <code>.gitignore</code>):</p>
+  <pre><code><span class="k">cmake</span> -B build        <span class="c"># configure: generate the build system</span>
+<span class="k">cmake</span> --build build   <span class="c"># compile</span></code></pre>
+
+  <h3>Why split a library from the executable?</h3>
+  <p>We move the pure game <em>logic</em> (board state, move validation, win detection) into a <code>game</code> library, and keep only input/output in the executable. This separation is what makes the logic <strong>testable</strong> — in Module 6 the automated pipeline links tests against the <code>game</code> library without needing a keyboard. A clean structure today is what makes CI possible tomorrow:</p>
+  <pre><code>tictactoe/
+├── include/board.h
+├── src/board.cpp      <span class="c"># pure logic → library</span>
+├── src/main.cpp       <span class="c"># I/O loop → executable</span>
+├── tests/test_board.cpp
+└── CMakeLists.txt</code></pre>
+
+  <div class="next-prev">
+    <a href="#m4-lab">← Lab 3</a>
+    <a href="#m5-lab">Lab 4 →</a>
+  </div>
+</section>
+
+<!-- ============================== M5 LAB (LAB 4) ============================== -->
+<section class="page" id="m5-lab">
+  <div class="eyebrow">Module 5 · Lab 4 · Class 10</div>
+  <h2 class="page-title">Lab 4 — Turn the Game into a CMake Project</h2>
+  <p class="sub-meta">Restructure the single file into a library + executable, and build it out-of-source.</p>
+
+  <h3>1 · Restructure the files</h3>
+  <p>Split the seed into pure logic and I/O. Create <code>include/board.h</code>:</p>
+  <pre><code><span class="k">#pragma once</span>
+<span class="k">#include</span> <span class="s">&lt;array&gt;</span>
+<span class="k">struct</span> Board { std::array&lt;char,9&gt; cells; };
+<span class="k">bool</span> isValidMove(<span class="k">const</span> Board&amp; b, <span class="k">int</span> i);
+<span class="k">void</span> applyMove(Board&amp; b, <span class="k">int</span> i, <span class="k">char</span> player);
+<span class="k">bool</span> isFull(<span class="k">const</span> Board&amp; b);
+<span class="k">char</span> checkWinner(<span class="k">const</span> Board&amp; b);  <span class="c">// 'X', 'O', or ' '</span></code></pre>
+  <p>Put the implementations in <code>src/board.cpp</code> (including the win-detection logic from Lab 2), and keep the game loop — printing the board and reading input — in <code>src/main.cpp</code>, calling these functions.</p>
+
+  <h3>2 · Write CMakeLists.txt</h3>
+  <pre><code><span class="k">cmake_minimum_required</span>(VERSION 3.16)
+<span class="k">project</span>(tictactoe CXX)
+<span class="k">set</span>(CMAKE_CXX_STANDARD 17)
+<span class="k">set</span>(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+<span class="k">add_library</span>(game src/board.cpp)
+<span class="k">target_include_directories</span>(game PUBLIC include)
+
+<span class="k">add_executable</span>(tictactoe src/main.cpp)
+<span class="k">target_link_libraries</span>(tictactoe PRIVATE game)</code></pre>
+
+  <h3>3 · Build out-of-source &amp; run</h3>
+  <pre><code><span class="k">cmake</span> -B build
+<span class="k">cmake</span> --build build
+./build/tictactoe        <span class="c"># (build\tictactoe.exe on Windows)</span></code></pre>
+
+  <h3>4 · Keep the repo clean &amp; commit via a PR</h3>
+  <ol>
+    <li>Add <code>build/</code> to your <code>.gitignore</code>.</li>
+    <li>Create a branch <code>feature/cmake</code>, commit the restructure, push it, and open a Pull Request on Gitee (reinforcing Lab 3). Merge it into <code>main</code>.</li>
+  </ol>
+
+  <div class="callout"><span class="tag">Done when</span><p>The project builds with two CMake commands, produces a working <code>tictactoe</code> executable, <code>build/</code> is ignored, and the restructure is merged into <code>main</code> via a PR.</p></div>
+
+  <div class="next-prev">
+    <a href="#m5-lecture">← Lecture</a>
+    <a href="#m6-lecture">Module 6 →</a>
+  </div>
+</section>
+
+<!-- ============================== M6 LECTURE ============================== -->
+<section class="page" id="m6-lecture">
+  <div class="eyebrow">Module 6 · Lecture · Class 11</div>
+  <h2 class="page-title">CI/CD Configuration</h2>
+  <p class="sub-meta">Automating the build and tests on every change with Gitee Go.</p>
+
+  <p class="lead">We now connect everything: a build system (CMake), tests, and a remote host (Gitee) become an automated <strong>pipeline</strong> that runs on every push and protects <code>main</code> from broken code.</p>
+
+  <h3>Testing pure functions</h3>
+  <p>Because Lab 4 moved the game logic into a library, we can test it directly — no keyboard required. A test program calls functions like <code>checkWinner</code> with known inputs and verifies the outputs. Crucially, it signals success or failure through its <strong>exit code</strong>: <code>0</code> means all tests passed, non-zero means something failed. That exit code is what the pipeline watches.</p>
+
+  <h3>CTest</h3>
+  <p>CMake's testing tool, CTest, runs your test programs and reports pass/fail:</p>
+  <pre><code><span class="k">enable_testing</span>()
+<span class="k">add_executable</span>(test_board tests/test_board.cpp)
+<span class="k">target_link_libraries</span>(test_board PRIVATE game)
+<span class="k">add_test</span>(NAME board_tests COMMAND test_board)</code></pre>
+  <p>Then <code>ctest --test-dir build</code> runs them.</p>
+
+  <h3>Gitee Go</h3>
+  <p>Gitee Go is Gitee's built-in CI/CD. You enable it on the repository, and it stores pipeline definitions as YAML files in a <code>.workflow/</code> folder. A typical pipeline has stages that run on every push:</p>
+  <pre><code><span class="k">checkout</span> → <span class="k">install tools</span> → <span class="k">cmake configure</span> → <span class="k">build</span> → <span class="k">ctest</span></code></pre>
+  <ul>
+    <li>Each push triggers the pipeline; you watch it run and read the logs.</li>
+    <li>A passing run is <span style="color:var(--green);font-weight:700">green</span>; a failing one is <span style="color:var(--coral);font-weight:700">red</span>.</li>
+    <li>Gitee Go provides free build minutes — generous for a class — so every student can run pipelines.</li>
+    <li>A <strong>PR pipeline</strong> can <em>gate</em> merges: a Pull Request whose tests fail cannot be merged.</li>
+  </ul>
+
+  <div class="callout tip"><span class="tag">This is CD too</span><p>Without Docker, "delivery" here means the pipeline produces a verified, runnable build (an artifact) and you tag a release on Gitee — a reliable, automated path from commit to shippable program.</p></div>
+
+  <div class="next-prev">
+    <a href="#m5-lab">← Lab 4</a>
+    <a href="#m6-lab">Lab 5 →</a>
+  </div>
+</section>
+
+<!-- ============================== M6 LAB (LAB 5) ============================== -->
+<section class="page" id="m6-lab">
+  <div class="eyebrow">Module 6 · Lab 5 · Class 12</div>
+  <h2 class="page-title">Lab 5 — Build &amp; Test Pipeline on Gitee Go</h2>
+  <p class="sub-meta">Add unit tests, wire them into CTest, then automate everything in a pipeline. Watch it go red, then green.</p>
+
+  <h3>1 · Write a test program</h3>
+  <p>Create <code>tests/test_board.cpp</code> — a tiny, dependency-free harness (no external framework needed, which avoids download problems):</p>
+  <pre><code><span class="k">#include</span> <span class="s">"board.h"</span>
+<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
+<span class="k">static int</span> failures = 0;
+<span class="k">#define</span> CHECK(c) <span class="k">do</span>{ <span class="k">if</span>(!(c)){ std::cerr&lt;&lt;<span class="s">"FAIL: "</span> #c &lt;&lt;<span class="s">" @"</span>&lt;&lt;__LINE__&lt;&lt;<span class="s">"\n"</span>; ++failures; } }<span class="k">while</span>(0)
+
+<span class="k">int</span> main(){
+  Board top{{'X','X','X',' ',' ',' ',' ',' ',' '}};
+  CHECK(checkWinner(top)=='X');                 <span class="c">// row win</span>
+  Board col{{'O',' ',' ','O',' ',' ','O',' ',' '}};
+  CHECK(checkWinner(col)=='O');                 <span class="c">// column win</span>
+  Board diag{{'X',' ',' ',' ','X',' ',' ',' ','X'}};
+  CHECK(checkWinner(diag)=='X');                <span class="c">// diagonal win</span>
+  Board none{{'X','O','X',' ',' ',' ',' ',' ',' '}};
+  CHECK(checkWinner(none)==' ');                <span class="c">// no winner</span>
+  Board draw{{'X','O','X','X','O','O','O','X','X'}};
+  CHECK(isFull(draw) &amp;&amp; checkWinner(draw)==' '); <span class="c">// draw</span>
+  Board g{{'X',' ',' ',' ',' ',' ',' ',' ',' '}};
+  CHECK(!isValidMove(g,0)); CHECK(isValidMove(g,1));
+
+  <span class="k">if</span>(failures==0){ std::cout&lt;&lt;<span class="s">"All tests passed!\n"</span>; <span class="k">return</span> 0; }
+  std::cerr&lt;&lt;failures&lt;&lt;<span class="s">" test(s) failed.\n"</span>; <span class="k">return</span> 1;
+}</code></pre>
+
+  <h3>2 · Wire it into CMake / CTest</h3>
+  <p>Add to <code>CMakeLists.txt</code>, then verify locally with <code>ctest</code>:</p>
+  <pre><code><span class="k">enable_testing</span>()
+<span class="k">add_executable</span>(test_board tests/test_board.cpp)
+<span class="k">target_link_libraries</span>(test_board PRIVATE game)
+<span class="k">add_test</span>(NAME board_tests COMMAND test_board)</code></pre>
+  <pre><code><span class="k">cmake</span> -B build &amp;&amp; <span class="k">cmake</span> --build build
+<span class="k">ctest</span> --test-dir build --output-on-failure</code></pre>
+
+  <h3>3 · Create the Gitee Go pipeline</h3>
+  <p>Enable Gitee Go on your repo and add a pipeline. Start from Gitee's shell/build template and set its steps to the commands below (the exact YAML keys come from the template editor — adjust to match the current Gitee Go interface). The pipeline should run the same steps your machine does:</p>
+  <pre><code><span class="c"># .workflow/  — illustrative shape; build the real one from Gitee's template</span>
+name: build-and-test
+trigger: [push, pull_request]
+stages:
+  - name: build-test
+    steps:
+      - <span class="k">apt-get install -y cmake g++</span>     <span class="c"># ensure tools</span>
+      - <span class="k">cmake -B build</span>
+      - <span class="k">cmake --build build</span>
+      - <span class="k">ctest --test-dir build --output-on-failure</span></code></pre>
+
+  <h3>4 · Make it go red, then green</h3>
+  <ol>
+    <li>Push your work and watch the pipeline turn <span style="color:var(--green);font-weight:700">green</span>.</li>
+    <li>Deliberately break a test (e.g. change an expected winner) and push — watch it turn <span style="color:var(--coral);font-weight:700">red</span> and read the failure in the logs.</li>
+    <li>Fix it and push again → green.</li>
+    <li><em>(Optional)</em> Configure the PR pipeline so a Pull Request can't merge while tests fail.</li>
+  </ol>
+
+  <div class="callout"><span class="tag">Done when</span><p>Every push to your repository automatically builds the project and runs the tests on Gitee Go, and you have seen a full red → green cycle.</p></div>
+
+  <div class="next-prev">
+    <a href="#m6-lecture">← Lecture</a>
+    <a href="#m7">Final Project →</a>
+  </div>
+</section>
+
+<!-- ============================== M7 FINAL PROJECT ============================== -->
+<section class="page" id="m7">
+  <div class="eyebrow">Module 7 · Capstone · Classes 13–16</div>
+  <h2 class="page-title">Final Project</h2>
+  <p class="sub-meta">In teams, extend the game through the full workflow you've learned — from issue to released, tested build.</p>
+
+  <p class="lead">Everything so far has built the machinery: version control, a clean repo, branches, a CMake build, and an automated test pipeline. Now you put it to work. In teams of 2–3, add <strong>one feature</strong> to Tic-Tac-Toe and take it through the complete professional loop.</p>
+
+  <h3>Schedule</h3>
+  <div class="timing"><span class="t">Class 13</span><span><strong>Discussion &amp; planning.</strong> Form teams, choose a feature, open issues on Gitee, assign owners, plan branches, agree on "done."</span></div>
+  <div class="timing"><span class="t">Classes 14–15</span><span><strong>Implementation.</strong> Issue-driven development: branch per issue → code + a unit test → push → PR → CI gate → review → merge.</span></div>
+  <div class="timing"><span class="t">Class 16</span><span><strong>Integration &amp; demo.</strong> Final merge to <code>main</code>, tag a <code>v1.0</code> release, and present.</span></div>
+
+  <h3>Choose a feature</h3>
+  <div class="opt-grid">
+    <div class="opt"><span class="lvl easy">Easy</span><b>Random-move AI</b><p>A single-player mode where the computer plays a random legal move.</p></div>
+    <div class="opt"><span class="lvl hard">Hard</span><b>Unbeatable AI (minimax)</b><p>An opponent that never loses — and is very testable ("must take a winning move," "must never lose").</p></div>
+    <div class="opt"><span class="lvl med">Medium</span><b>N×N board</b><p>Generalise the board and win logic to larger sizes / Connect-Four style.</p></div>
+    <div class="opt"><span class="lvl med">Medium</span><b>Score &amp; replay</b><p>A persistent high-score file and a play-again loop with difficulty levels.</p></div>
+  </div>
+
+  <h3>Definition of done</h3>
+  <ul>
+    <li>The feature works and is merged into <code>main</code> via a Pull Request.</li>
+    <li>It has at least one meaningful <strong>unit test</strong> for any new logic.</li>
+    <li>CI (Gitee Go) is <span style="color:var(--green);font-weight:700">green</span> on <code>main</code>.</li>
+    <li>The work is traceable: issues linked to PRs.</li>
+    <li>A <code>v1.0</code> release is tagged on Gitee.</li>
+  </ul>
+
+  <h3>Assessment rubric</h3>
+  <table class="rubric">
+    <thead><tr><th>Criterion</th><th>Weight</th></tr></thead>
+    <tbody>
+      <tr><td>Working feature, merged to <code>main</code></td><td class="pct">30%</td></tr>
+      <tr><td>At least one meaningful unit test</td><td class="pct">20%</td></tr>
+      <tr><td>CI pipeline passing on <code>main</code></td><td class="pct">20%</td></tr>
+      <tr><td>Clean issue → branch → PR history showing the workflow</td><td class="pct">20%</td></tr>
+      <tr><td>Tagged release + clear demo</td><td class="pct">10%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout tip"><span class="tag">Demo</span><p>Each team shows: the green pipeline, the issue→PR history, the tagged release, and the feature played live. Close with a one-minute reflection on what branching and CI saved you.</p></div>
+
+  <div class="next-prev">
+    <a href="#m6-lab">← Lab 5</a>
+    <a href="#home" class="">Back to Home</a>
+  </div>
+</section>
+
+</div>
+</main>
+
+<script>
+  const pages = document.querySelectorAll('.page');
+  function showPage(){
+    let id = location.hash.replace('#','') || 'home';
+    let found = false;
+    pages.forEach(p => { const on = p.id === id; p.classList.toggle('active', on); if(on) found = true; });
+    if(!found){ document.getElementById('home').classList.add('active'); id='home'; }
+    document.querySelectorAll('.nav-link').forEach(a => a.classList.toggle('current', a.getAttribute('href') === '#'+id));
+    document.body.classList.remove('nav-open');
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange', showPage);
+  showPage();
+
+  const menuBtn = document.getElementById('menuBtn');
+  if(menuBtn) menuBtn.addEventListener('click', e => { e.stopPropagation(); document.body.classList.toggle('nav-open'); });
+  document.addEventListener('click', e => {
+    if(document.body.classList.contains('nav-open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-btn')){
+      document.body.classList.remove('nav-open');
+    }
+  });
+  document.querySelectorAll('[data-print]').forEach(b => b.addEventListener('click', () => window.print()));
+</script>
+</body>
+</html>
