@@ -70,3 +70,8 @@ Testing/
 
 # instructor answer keys — never publish to the website
 solutions/
+
+# Vendored third-party static site (learnGitBranching, MIT). The generic
+# build/ rule above would otherwise drop its compiled bundle, so keep it.
+!vendor/learngitbranching/build/
+!vendor/learngitbranching/build/**
