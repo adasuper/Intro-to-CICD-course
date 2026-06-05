@@ -79,6 +79,7 @@
   .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:14px;}
   h2.page-title{font-family:'Fraunces',serif;font-weight:900;font-size:42px;line-height:1.05;letter-spacing:-.02em;margin:0 0 10px;}
   .sub-meta{color:var(--muted);font-size:15px;margin:0 0 34px;font-style:italic;font-family:'Fraunces',serif;}
+  .cmd-note{background:var(--paper-2);border:1px dashed var(--line);border-radius:8px;padding:12px 16px;font-size:14px;color:var(--muted);margin:18px 0 26px;}
   h3{font-family:'Fraunces',serif;font-weight:600;font-size:25px;margin:42px 0 14px;letter-spacing:-.01em;}
   h4{font-family:'Hanken Grotesk';font-weight:700;font-size:18px;margin:28px 0 8px;}
   p{margin:0 0 16px;}
@@ -168,6 +169,10 @@
   figure.diagram{margin:10px 0 24px;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:24px 20px 16px;box-shadow:0 2px 12px rgba(0,0,0,.05);}
   figure.diagram svg{width:100%;height:auto;max-width:600px;display:block;margin:0 auto;}
   figure.diagram figcaption{text-align:center;color:var(--muted);font-size:13.5px;font-style:italic;font-family:'Fraunces',serif;margin-top:14px;line-height:1.5;}
+  figure.git-flow{margin:10px 0 24px;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:24px 20px 16px;box-shadow:0 2px 12px rgba(0,0,0,.05);}
+  figure.git-flow svg{width:100%;height:auto;max-width:780px;display:block;margin:0 auto;}
+  figure.git-flow figcaption{text-align:center;color:var(--muted);font-size:13.5px;font-style:italic;font-family:'Fraunces',serif;margin-top:14px;line-height:1.5;}
+  figure.git-flow figcaption code{font-style:normal;}
 
   .step{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:0 0 16px;background:var(--paper-2);}
   .step .head{display:flex;gap:12px;align-items:baseline;margin-bottom:10px;}
@@ -275,7 +280,7 @@
     <a class="nav-link sub" href="#m1-lab">Setup Lab · Tool installation</a>
 
     <div class="group-label">Module 2 · Git Basics</div>
-    <a class="nav-link sub" href="#m2-lecture">Lecture · Git fundamentals</a>
+    <a class="nav-link sub" href="#m2-lecture">Lecture · Git Basics</a>
     <a class="nav-link sub" href="#m2-lab">Lab 1 · File location tracking</a>
 
     <div class="group-label">Module 3 · .gitignore &amp; Conflicts</div>
@@ -566,21 +571,59 @@
   <div class="callout tip"><span class="tag">Tip</span><p>The first time you build a C++ file, VS Code may ask which compiler to use — choose the <code>g++</code> you installed in Step 2.</p></div>
 
   <h3>5 · Create a Gitee account &amp; SSH key</h3>
-  <p>Gitee hosts your repositories and runs the CI pipeline. An SSH key lets you push without typing a password each time.</p>
+  <p>Gitee hosts your repositories and runs the CI pipeline. To push your commits up to Gitee, your computer has to prove <em>who it is</em> every time it connects. There are two ways to do that — <strong>HTTPS</strong> and <strong>SSH</strong> — and it is worth understanding the difference before you set one up.</p>
+
+  <h4>HTTPS vs. SSH — two ways to authenticate</h4>
+  <p>Both transport the exact same Git data; they only differ in <em>how the server checks that the connection is allowed</em>.</p>
+  <table class="log">
+    <thead><tr><th></th><th>HTTPS</th><th>SSH</th></tr></thead>
+    <tbody>
+      <tr><td class="desc"><strong>Remote URL looks like</strong></td><td><code>https://gitee.com/user/repo.git</code></td><td><code>git@gitee.com:user/repo.git</code></td></tr>
+      <tr><td class="desc"><strong>How you prove it's you</strong></td><td>Username + password / access token, typed (or cached) on each push.</td><td>A cryptographic <strong>key pair</strong> stored once on your machine — no password typed.</td></tr>
+      <tr><td class="desc"><strong>Setup effort</strong></td><td>None up front, but you re-enter credentials (or manage a token) repeatedly.</td><td>A few minutes once; after that, pushing is friction-free.</td></tr>
+      <tr><td class="desc"><strong>Best when</strong></td><td>One-off clones, machines you don't control, networks that block SSH.</td><td>Your own daily-driver machine — which is our case.</td></tr>
+    </tbody>
+  </table>
+  <p>We use <strong>SSH</strong> in this course: you set it up once and never type a password to push again.</p>
+
+  <div class="callout"><span class="tag">How SSH keys work</span><p>SSH uses a matched <strong>key pair</strong>: a <strong>private key</strong> that stays secret on your computer, and a <strong>public key</strong> you give to Gitee. When you connect, Gitee challenges your machine to prove it holds the matching private key — without the private key ever leaving your computer. The public key is safe to share; the private key (the file <em>without</em> <code>.pub</code>) must never be copied or posted anywhere.</p></div>
+
   <div class="dl-row"><a class="dl" href="https://gitee.com/" target="_blank" rel="noopener"><span class="arr">↗</span> Register on gitee.com</a></div>
   <ol>
     <li>Create and verify an account at <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a>.</li>
-    <li>In <strong>Git Bash</strong>, generate a key (press <kbd>Enter</kbd> at every prompt to accept the defaults):
-      <pre style="margin:8px 0"><code><span class="k">ssh-keygen</span> -t ed25519 -C <span class="s">"you@example.com"</span></code></pre></li>
-    <li>Display and copy the <em>public</em> key:
-      <pre style="margin:8px 0"><code><span class="k">cat</span> ~/.ssh/id_ed25519.pub</code></pre></li>
-    <li>On Gitee: avatar → <strong>Settings</strong> → <strong>SSH Public Keys</strong> → <em>Add Public Key</em> → paste it and save.</li>
+    <li>In <strong>Git Bash</strong>, generate a key pair (press <kbd>Enter</kbd> at every prompt to accept the defaults):
+      <pre style="margin:8px 0"><code><span class="k">ssh-keygen</span> -t ed25519 -C <span class="s">"you@example.com"</span></code></pre>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">Breaking the command down:</p>
+      <ul style="margin:4px 0">
+        <li><code>ssh-keygen</code> — the program that creates a new SSH key pair.</li>
+        <li><code>-t ed25519</code> — the key <em>type</em> (algorithm). Ed25519 is the modern, fast, secure default.</li>
+        <li><code>-C "you@example.com"</code> — a <em>comment</em> label attached to the key so you can recognise it later in Gitee's list. It does not have to be a real email; it's just a tag.</li>
+      </ul>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">This writes two files into <code>~/.ssh/</code>: <code>id_ed25519</code> (your <strong>private</strong> key — keep secret) and <code>id_ed25519.pub</code> (your <strong>public</strong> key — safe to share). The prompts ask where to save it (Enter = default) and for an optional passphrase that encrypts the private key on disk.</p></li>
+    <li>Display and copy the <em>public</em> key — note the <code>.pub</code> extension; never copy the other file:
+      <pre style="margin:8px 0"><code><span class="k">cat</span> ~/.ssh/id_ed25519.pub</code></pre>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)"><code>cat</code> prints a file's contents to the screen. Select the whole line it outputs (it starts with <code>ssh-ed25519</code> and ends with your comment) and copy it.</p></li>
+    <li>On Gitee: avatar → <strong>Settings</strong> → <strong>SSH Public Keys</strong> → <em>Add Public Key</em> → paste it and save. This tells Gitee to trust any machine that holds the matching private key.</li>
     <li>Test the connection:
-      <pre style="margin:8px 0"><code><span class="k">ssh</span> -T git@gitee.com</code></pre></li>
+      <pre style="margin:8px 0"><code><span class="k">ssh</span> -T git@gitee.com</code></pre>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)"><code>ssh</code> opens a secure connection; <code>-T</code> skips requesting an interactive terminal (Gitee doesn't offer a shell, only Git); <code>git@gitee.com</code> is the user <code>git</code> on the host <code>gitee.com</code>. A successful run greets you by your username — that confirms your key is recognised.</p></li>
   </ol>
+  <div class="callout tip"><span class="tag">First-connection prompt</span><p>The first time you run <code>ssh -T</code>, you'll see <em>"The authenticity of host 'gitee.com' can't be established… continue connecting (yes/no)?"</em> — type <kbd>yes</kbd>. This records Gitee's fingerprint so future connections are trusted automatically.</p></div>
+  <div class="callout"><span class="tag">"Does not provide shell access" is success</span><p>A correct test prints something like <em>"Hi user(@user)! You've successfully authenticated, but GITEE.COM does not provide shell access."</em> That is <strong>not an error</strong>. The first half means your key worked and Gitee knows who you are. The second half is normal: the <code>git</code> account exists only to handle <code>push</code>/<code>pull</code>, not to give you a command prompt — so it logs you out instead of opening a shell (which is why we pass <code>-T</code>). A real failure looks different: <code>Permission denied (publickey)</code>.</p></div>
 
   <h3>6 · Smoke test (the checkpoint)</h3>
-  <p>Prove the whole toolchain works end-to-end:</p>
+  <p>Prove the whole toolchain works end-to-end. First, pick a folder to work in and create the file you'll compile.</p>
+  <ol>
+    <li>Choose a home for your project — somewhere easy to find, <em>not</em> inside a synced folder like OneDrive or Desktop. A path with no spaces or non-English characters avoids headaches later. For example:
+      <pre style="margin:8px 0"><code><span class="c"># create the folder and move into it</span>
+<span class="k">mkdir</span> -p ~/dev/hello
+<span class="k">cd</span> ~/dev/hello</code></pre>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)"><code>mkdir -p ~/dev/hello</code> makes a <code>dev/hello</code> folder in your home directory (<code>-p</code> creates parents as needed and won't complain if it already exists); <code>cd</code> moves your terminal <em>into</em> that folder, so every command after this runs there.</p></li>
+    <li>Create <code>hello.cpp</code> in this folder. Either run the <code>echo</code> command in the block below, or — if you prefer — open the folder in VS Code (<code>code .</code>) and create <code>hello.cpp</code> by hand with the same contents.</li>
+    <li>Create the remote repository on Gitee so you have somewhere to push to. On <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a>: <strong>+</strong> (top-right) → <strong>New Repository</strong>. Set <strong>Repository name</strong> to <code>hello</code>, and — importantly — leave it <strong>empty</strong>: do <em>not</em> tick "Initialize this repository", and don't add a README, <code>.gitignore</code>, or licence. An empty repo lets your local commits push cleanly without conflicts. Click <strong>Create</strong>.</li>
+  </ol>
+  <div class="callout"><span class="tag">This folder is your workspace</span><p>The folder you just made is your <strong>local workspace</strong> — the actual files on your disk that you edit and compile. When you run <code>git init</code> below, Git starts tracking changes <em>inside</em> this folder. How a file moves from your workspace all the way to Gitee (workspace → staging → local repo → remote) is the core of the <strong>next class</strong>, so don't worry about the <code>git</code> commands' details yet — just run them and watch it work.</p></div>
+  <p>Now run the full sequence from inside that folder:</p>
   <pre><code><span class="c"># compile and run a hello program</span>
 <span class="k">echo</span> <span class="s">'#include &lt;iostream&gt;
 int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
@@ -593,6 +636,7 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
 <span class="k">git</span> commit -m <span class="s">"first commit: hello"</span>
 <span class="k">git</span> remote add origin git@gitee.com:&lt;your-user&gt;/hello.git
 <span class="k">git</span> push -u origin master</code></pre>
+  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">Replace <code>&lt;your-user&gt;</code> (brackets and all) with your Gitee username — the handle from the <em>"Hi <strong>user</strong>(@user)!"</em> message in the SSH test. Easiest of all: open the new repo on Gitee → green <strong>Clone</strong> button → <strong>SSH</strong> tab → copy the exact <code>git@gitee.com:…</code> URL and paste it in place of the one above.</p>
 
   <div class="callout">
     <span class="tag">Done when</span>
@@ -622,7 +666,63 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
     <li><strong>Remote Repository</strong> — the shared copy on Gitee that your team pulls from and pushes to.</li>
   </ul>
 
+  <figure class="git-flow">
+    <svg viewBox="0 0 920 300" role="img" aria-label="Diagram of the four Git locations and the commands that move changes between them" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ah-fwd" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L7,3 L0,6 Z" fill="var(--green)"/>
+        </marker>
+        <marker id="ah-back" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L7,3 L0,6 Z" fill="var(--coral)"/>
+        </marker>
+      </defs>
+
+      <!-- forward arrows (top): add → commit → push -->
+      <g font-family="'JetBrains Mono',monospace" font-size="13" fill="var(--green)" text-anchor="middle">
+        <line x1="187" y1="78" x2="253" y2="78" stroke="var(--green)" stroke-width="2" marker-end="url(#ah-fwd)"/>
+        <text x="220" y="64">git add</text>
+        <line x1="427" y1="78" x2="493" y2="78" stroke="var(--green)" stroke-width="2" marker-end="url(#ah-fwd)"/>
+        <text x="460" y="64">git commit</text>
+        <line x1="667" y1="78" x2="733" y2="78" stroke="var(--green)" stroke-width="2" marker-end="url(#ah-fwd)"/>
+        <text x="700" y="64">git push</text>
+      </g>
+
+      <!-- the four locations -->
+      <g font-family="'Hanken Grotesk',sans-serif" text-anchor="middle">
+        <rect x="15"  y="90" width="170" height="84" rx="10" fill="var(--paper-2)" stroke="var(--green)" stroke-width="2"/>
+        <text x="100" y="126" font-size="16" font-weight="700" fill="var(--ink)">Workspace</text>
+        <text x="100" y="148" font-size="12" fill="var(--muted)">files on your disk</text>
+
+        <rect x="255" y="90" width="170" height="84" rx="10" fill="var(--paper-2)" stroke="var(--amber)" stroke-width="2"/>
+        <text x="340" y="126" font-size="16" font-weight="700" fill="var(--ink)">Staging Area</text>
+        <text x="340" y="148" font-size="12" fill="var(--muted)">the index</text>
+
+        <rect x="495" y="90" width="170" height="84" rx="10" fill="var(--paper-2)" stroke="var(--green)" stroke-width="2"/>
+        <text x="580" y="126" font-size="16" font-weight="700" fill="var(--ink)">Local Repository</text>
+        <text x="580" y="148" font-size="12" fill="var(--muted)">.git history</text>
+
+        <rect x="735" y="90" width="170" height="84" rx="10" fill="var(--ink)" stroke="var(--ink)" stroke-width="2"/>
+        <text x="820" y="126" font-size="16" font-weight="700" fill="var(--paper)">Remote Repository</text>
+        <text x="820" y="148" font-size="12" fill="#b9b3a2">Gitee</text>
+      </g>
+
+      <!-- backward arrows (bottom): reset (unstage) and fetch (remote → local) -->
+      <g font-family="'JetBrains Mono',monospace" font-size="13" fill="var(--coral)" text-anchor="middle">
+        <line x1="253" y1="200" x2="187" y2="200" stroke="var(--coral)" stroke-width="2" marker-end="url(#ah-back)"/>
+        <text x="220" y="222">git reset</text>
+        <line x1="733" y1="200" x2="667" y2="200" stroke="var(--coral)" stroke-width="2" marker-end="url(#ah-back)"/>
+        <text x="700" y="222">git fetch</text>
+
+        <!-- git pull: remote all the way back into the workspace (fetch + merge) -->
+        <path d="M820 176 L820 264 L100 264 L100 176" fill="none" stroke="var(--coral)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ah-back)"/>
+        <text x="460" y="256">git pull <tspan font-size="11" fill="var(--muted)">(fetch + merge)</tspan></text>
+      </g>
+    </svg>
+    <figcaption>Changes flow left → right toward sharing (green: <code>add</code>, <code>commit</code>, <code>push</code>). Coming back (coral): <code>reset</code> unstages, <code>fetch</code> downloads commits into your local repo only, and <code>pull</code> goes further — <code>fetch + merge</code> — landing others' work right in your workspace. <code>git clone</code> creates the whole local copy from a remote in one shot.</figcaption>
+  </figure>
+
   <h3>The core commands</h3>
+  <p>Use this block as a quick map of which command moves a change between which two locations, then read the detail below for <em>when</em> and <em>how</em> to reach for each one.</p>
   <pre><code><span class="k">git clone</span> &lt;url&gt;     <span class="c"># copy a remote repo to your workspace</span>
 <span class="k">git status</span>          <span class="c"># what changed, and where it lives now</span>
 <span class="k">git add</span> &lt;file&gt;       <span class="c"># workspace  → staging area</span>
@@ -632,6 +732,71 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
 <span class="k">git pull</span>            <span class="c"># remote repo → local + workspace</span>
 <span class="k">git log</span>             <span class="c"># view commit history</span>
 <span class="k">git diff</span>            <span class="c"># view exact changes</span></code></pre>
+
+  <p class="cmd-note">The examples below all use the <code>hello</code> repository you pushed to Gitee in the Setup Lab smoke test (<code>git@gitee.com:adasuper/hello.git</code> — swap in your own username). Imagine you are coming back to it on a fresh machine to make a small change.</p>
+
+  <h4><code>git clone &lt;url&gt;</code></h4>
+  <p><strong>When</strong> — once per project, to make a local copy of a repository that already exists on Gitee.</p>
+  <p><strong>How</strong> — run it in the folder where you want the project to land. It creates a new sub-folder, downloads the full history, and wires up the remote (named <code>origin</code>) for you, so <code>git init</code> + <code>git remote add</code> are unnecessary.</p>
+  <p><strong>Example</strong> — grab your <code>hello</code> repo onto a new machine and step into it:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> clone git@gitee.com:adasuper/hello.git
+<span class="k">cd</span> hello</code></pre>
+
+  <h4><code>git status</code></h4>
+  <p><strong>When</strong> — constantly, before and after almost every other command. It is your map of where each file currently lives.</p>
+  <p><strong>How</strong> — it needs no arguments and changes nothing; it lists files that are modified but unstaged, files staged for the next commit, and files Git isn't tracking yet.</p>
+  <p><strong>Example</strong> — after editing <code>hello.cpp</code> to print a friendlier message:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> status
+<span class="c"># Changes not staged for commit:</span>
+<span class="c">#   modified:   hello.cpp</span></code></pre>
+
+  <h4><code>git add &lt;file&gt;</code></h4>
+  <p><strong>When</strong> — after editing, to mark exactly which changes belong in your next commit (<em>workspace → staging</em>).</p>
+  <p><strong>How</strong> — name specific files to stage them deliberately, or use <code>.</code> to stage everything changed. Staging is what lets you commit two edits separately even if you made them at the same time.</p>
+  <p><strong>Example</strong> — stage your edited <code>hello.cpp</code>:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> add hello.cpp         <span class="c"># just this file</span>
+<span class="k">git</span> add .                  <span class="c"># everything changed in the hello folder</span></code></pre>
+
+  <h4><code>git reset &lt;file&gt;</code></h4>
+  <p><strong>When</strong> — you staged something by mistake and want to take it back out of the next commit (<em>staging → workspace</em>).</p>
+  <p><strong>How</strong> — it unstages the file while <strong>keeping your edits</strong>: your file on disk is untouched, it just won't be in the next commit. It is the exact undo of <code>git add</code> (which is why Lab 1 has you add then unstage).</p>
+  <p><strong>Example</strong> — you staged <code>hello.cpp</code> but realise you aren't done editing it:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> reset hello.cpp        <span class="c"># back to unstaged; your edits remain</span></code></pre>
+
+  <h4><code>git commit -m "message"</code></h4>
+  <p><strong>When</strong> — once a staged set of changes forms one complete, logical unit of work (<em>staging → local repository</em>).</p>
+  <p><strong>How</strong> — always include a clear message with <code>-m</code>. The commit is a permanent snapshot in your local history — it is <em>not</em> on Gitee yet until you push.</p>
+  <p><strong>Example</strong> — record your greeting change as a commit:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> commit -m <span class="s">"print a friendlier greeting"</span></code></pre>
+
+  <h4><code>git push</code></h4>
+  <p><strong>When</strong> — after committing, to publish your local commits so teammates and the CI pipeline can see them (<em>local → remote</em>).</p>
+  <p><strong>How</strong> — the first push of a new branch needs <code>-u origin &lt;branch&gt;</code> to link it; after that, a bare <code>git push</code> is enough.</p>
+  <p><strong>Example</strong> — the smoke test already ran the first form, so from now on a bare push is all you need:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> push -u origin master    <span class="c"># first time (done in the smoke test)</span>
+<span class="k">git</span> push                      <span class="c"># every push to hello after that</span></code></pre>
+
+  <h4><code>git pull</code> <span style="font-weight:400">(and <code>git fetch</code>)</span></h4>
+  <p><strong>When</strong> — before you start working, and whenever a teammate has pushed to <code>hello</code>, to bring their commits into your copy.</p>
+  <p><strong>How</strong> — run it with a clean workspace (commit or stash your own changes first) to avoid merge conflicts. The distinction matters: <code>git fetch</code> only <em>downloads</em> new commits into your local repository (<em>remote → local repo</em>) and leaves your working files untouched, so you can inspect what changed first. <code>git pull</code> is <code>fetch</code> followed by <code>merge</code> — it goes one step further and updates the files on your disk too (<em>remote → local repo → workspace</em>).</p>
+  <p><strong>Example</strong> — sync the <code>hello</code> repo before adding your next change:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> fetch                   <span class="c"># download new commits, hello.cpp on disk unchanged</span>
+<span class="k">git</span> pull                    <span class="c"># download AND update hello.cpp on disk</span></code></pre>
+
+  <h4><code>git log</code></h4>
+  <p><strong>When</strong> — any time you need to see the history of a repository: what was changed, by whom, and when.</p>
+  <p><strong>How</strong> — it lists past commits newest-first with author, date, and message. Add <code>--oneline</code> for a compact one-row-per-commit view.</p>
+  <p><strong>Example</strong> — review the history of <code>hello</code> after your new commit:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> log --oneline
+<span class="c"># a1b2c3d  print a friendlier greeting</span>
+<span class="c"># e4f5a6b  first commit: hello</span></code></pre>
+
+  <h4><code>git diff</code></h4>
+  <p><strong>When</strong> — to review the exact line-by-line changes you've made, typically right before <code>git add</code> or <code>git commit</code>.</p>
+  <p><strong>How</strong> — <code>git diff</code> alone shows unstaged edits (workspace vs. staging); <code>git diff --staged</code> shows what's already staged for the next commit (staging vs. last commit).</p>
+  <p><strong>Example</strong> — check what you changed in <code>hello.cpp</code> before staging it:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> diff                    <span class="c"># unstaged edits to hello.cpp</span>
+<span class="k">git</span> diff --staged           <span class="c"># what the next commit will record</span></code></pre>
 
   <h3>The journey of a change</h3>
   <p>You edit a file (workspace) → <code>git add</code> it (staging) → <code>git commit</code> it (local repo) → <code>git push</code> it (remote). Each command moves the change one step closer to being shared. Knowing which command moves a file between which two locations is the whole game — and the worksheet in Lab 1 makes you trace it explicitly.</p>
