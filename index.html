@@ -303,11 +303,11 @@
 
     <div class="group-label">Module 4 · Branching</div>
     <a class="nav-link sub" href="#m4-lecture">Lecture · Branches &amp; PRs</a>
-    <a class="nav-link sub" href="#m4-lab">Lab 3 · Branching log</a>
+    <a class="nav-link sub" href="#m4-lab">Lab 3 · Branch the game</a>
 
-    <div class="group-label">Module 5 · CMake</div>
+    <div class="group-label">Module 5 · Make</div>
     <a class="nav-link sub" href="#m5-lecture">Lecture · Build systems</a>
-    <a class="nav-link sub" href="#m5-lab">Lab 4 · CMake the project</a>
+    <a class="nav-link sub" href="#m5-lab">Lab 4 · Build with Make</a>
 
     <div class="group-label">Module 6 · CI/CD Config</div>
     <a class="nav-link sub" href="#m6-lecture">Lecture · Pipelines &amp; tests</a>
@@ -335,7 +335,7 @@
     <p class="desc lead">A hands-on, four-day introduction to version control, build systems, and continuous integration &amp; delivery: taught entirely around one small C++ project: a console <strong>Tic-Tac-Toe</strong> game that grows, lab by lab, into an automatically built and tested pipeline on <strong>Gitee</strong>.</p>
     <div class="meta-row">
       <span class="pill">Prereq: <b>basic C++</b></span>
-      <span class="pill">Tools: <b>Git · Gitee · CMake · Gitee&nbsp;Go</b></span>
+      <span class="pill">Tools: <b>Git · Gitee · Make · Gitee&nbsp;Go</b></span>
     </div>
   </div>
 
@@ -366,7 +366,7 @@
   </div>
   <div class="module-card">
     <div class="num">05</div>
-    <div class="info"><h3>CMake</h3><p>Day 3 · Classes 9–10 · Lab 4</p></div>
+    <div class="info"><h3>Make</h3><p>Day 3 · Classes 9–10 · Lab 4</p></div>
     <div class="links"><a class="lecture" href="#m5-lecture">Lecture</a><a class="lab" href="#m5-lab">Lab 4</a></div>
   </div>
   <div class="module-card">
@@ -380,7 +380,7 @@
     <div class="links"><a class="lab" href="#m7">Project Brief</a></div>
   </div>
 
-  <p class="footer-note">The course project thread: a single Tic-Tac-Toe codebase carried across every module: versioned in Lab 1, kept clean and conflict-free in Lab 2, branched in Lab 3, built with CMake in Lab 4, and put behind an automated build-and-test pipeline in Lab 5, before teams extend it in the final project.</p>
+  <p class="footer-note">The course project thread: a single Tic-Tac-Toe codebase carried across every module: versioned in Lab 1, kept clean and conflict-free in Lab 2, branched in Lab 3, built with Make in Lab 4, and put behind an automated build-and-test pipeline in Lab 5, before teams extend it in the final project.</p>
 </section>
 
 <!-- ============================== M1 LECTURE ============================== -->
@@ -435,13 +435,13 @@
   <ul>
     <li><strong>Git</strong>: the version-control system that records every change to the code.</li>
     <li><strong>Gitee (码云)</strong>: our remote host for repositories, pull requests, issue tracking, <em>and</em> CI/CD. We use Gitee because it is fast and reliable from within China, where GitHub access is often slow or unstable.</li>
-    <li><strong>A C++ compiler (g++) + CMake</strong>: to compile the project in a structured, repeatable way.</li>
+    <li><strong>A C++ compiler (g++) + Make</strong>: to build the project in a structured, repeatable way.</li>
     <li><strong>Gitee Go</strong>: Gitee's built-in CI/CD service, which runs our build and tests automatically on every push.</li>
   </ul>
 
   <div class="callout">
     <span class="tag">Course project</span>
-    <p>Everything is taught around one small program: a <strong>console Tic-Tac-Toe game</strong> in C++. It starts as a single file you version with Git, becomes a structured CMake project, and finishes as a repository whose every commit is automatically built and tested by Gitee Go.</p>
+    <p>Everything is taught around one small program: a <strong>console Tic-Tac-Toe game</strong> in C++. It starts as a single file you version with Git, becomes a structured, Make-built project, and finishes as a repository whose every commit is automatically built and tested by Gitee Go.</p>
   </div>
 
   <h3>Glossary to remember</h3>
@@ -462,7 +462,7 @@
     <tbody>
       <tr><td><strong>Plan</strong></td><td>Planning &amp; issue tracking</td><td>Jira, Trello, Gitee / GitLab Issues</td></tr>
       <tr><td><strong>Code</strong></td><td>Source control &amp; editors</td><td>Git, VS Code, Gitee / GitLab / GitHub</td></tr>
-      <tr><td><strong>Build</strong></td><td>Compiling &amp; build systems</td><td>CMake, Make, Maven, Gradle</td></tr>
+      <tr><td><strong>Build</strong></td><td>Compiling &amp; build systems</td><td>Make, CMake, Maven, Gradle</td></tr>
       <tr><td><strong>Test</strong></td><td>Automated testing</td><td>CTest, GoogleTest, Catch2, JUnit, Selenium</td></tr>
       <tr><td><strong>Release</strong></td><td>CI/CD orchestration</td><td>Gitee Go, Jenkins, GitLab CI, GitHub Actions</td></tr>
       <tr><td><strong>Deploy</strong></td><td>Deployment &amp; containers</td><td>Docker, Kubernetes, Ansible</td></tr>
@@ -471,7 +471,7 @@
     </tbody>
   </table>
   <p>No team uses all of these: the point is that <em>every</em> stage can be automated, and the tools are what wire the stages into one continuous loop.</p>
-  <div class="callout"><span class="tag">In this course</span><p>We use a small, self-contained slice of this toolchain: <strong>Git + Gitee</strong> (Plan &amp; Code), <strong>CMake</strong> (Build), a lightweight <strong>CTest</strong> harness (Test), and <strong>Gitee Go</strong> (Release / CI). Containerised deploy-and-operate tools such as Docker and Kubernetes are powerful next steps beyond this short course.</p></div>
+  <div class="callout"><span class="tag">In this course</span><p>We use a small, self-contained slice of this toolchain: <strong>Git + Gitee</strong> (Plan &amp; Code), <strong>Make</strong> (Build), a lightweight <strong>test program</strong> (Test), and <strong>Gitee Go</strong> (Release / CI). Containerised deploy-and-operate tools such as Docker and Kubernetes are powerful next steps beyond this short course.</p></div>
 
   <div class="next-prev">
     <a href="#home">← Home</a>
@@ -556,22 +556,23 @@
   <p>Verify in a fresh terminal:</p>
   <pre><code><span class="k">g++</span> --version</code></pre>
 
-  <h3>3 · Install CMake</h3>
-  <p>CMake is the build system used from Module 5 onward.</p>
-  <div class="dl-row"><a class="dl" href="https://cmake.org/download/" target="_blank" rel="noopener"><span class="arr">⇣</span> cmake.org/download</a></div>
+  <h3>3 · Make (your build tool)</h3>
+  <p><strong>Make</strong> is the build system used from Module 5 onward. You do <em>not</em> need a separate download: it ships with the compiler toolchain you just installed.</p>
   <div class="os">
     <div class="os-h">Windows</div>
-    <ol>
-      <li>Download the <em>Windows x64 Installer</em> (the <code>.msi</code> file) from the link.</li>
-      <li>Run it, and on the options screen choose <strong>"Add CMake to the system PATH for all users."</strong></li>
-    </ol>
+    <p style="margin:6px 0 0">Both compiler options from Step 2 ship the tool as <code>mingw32-make.exe</code>, inside the same <code>bin</code> folder you already added to your PATH. To be able to type plain <code>make</code> (as this course does), copy that file to <code>make.exe</code> in the same folder:</p>
+    <ul style="margin:6px 0 0">
+      <li><strong>Option A (WinLibs):</strong> copy <code>C:\mingw64\bin\mingw32-make.exe</code> → <code>C:\mingw64\bin\make.exe</code></li>
+      <li><strong>Option B (MSYS2):</strong> copy <code>C:\msys64\ucrt64\bin\mingw32-make.exe</code> → <code>C:\msys64\ucrt64\bin\make.exe</code></li>
+    </ul>
+    <p style="margin:6px 0 0">(Just copy and rename, keeping the original <code>mingw32-make.exe</code> in place. Then reopen Git Bash so it picks up the new name.)</p>
   </div>
   <div class="os">
     <div class="os-h">macOS / Linux</div>
-    <p style="margin:6px 0 0">macOS: <code>brew install cmake</code>. Linux: <code>sudo apt install cmake</code> (if that version is old, use the installer above).</p>
+    <p style="margin:6px 0 0">macOS: <code>make</code> comes with the Xcode command-line tools from Step 2. Linux: it is part of <code>build-essential</code>.</p>
   </div>
   <p>Verify:</p>
-  <pre><code><span class="k">cmake</span> --version</code></pre>
+  <pre><code><span class="k">make</span> --version</code></pre>
 
   <h3>4 · Install VS Code &amp; extensions</h3>
   <p>VS Code is the editor. Install it, then add two Microsoft extensions from inside VS Code.</p>
@@ -580,7 +581,7 @@
     <li>Download and install VS Code for your operating system.</li>
     <li>Open VS Code → click the <strong>Extensions</strong> icon in the left bar (or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>).</li>
     <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools" target="_blank" rel="noopener">C/C++</a></strong> (by Microsoft).</li>
-    <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools" target="_blank" rel="noopener">CMake Tools</a></strong> (by Microsoft).</li>
+    <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools" target="_blank" rel="noopener">Makefile Tools</a></strong> (by Microsoft).</li>
   </ol>
   <div class="callout tip"><span class="tag">Tip</span><p>The first time you build a C++ file, VS Code may ask which compiler to use: choose the <code>g++</code> you installed in Step 2.</p></div>
 
@@ -857,7 +858,7 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
     <p>Your worksheet answers are typed directly into this page and are <strong>not saved</strong>: navigating away (for example, back to the lecture notes to look something up) will <strong>erase everything you've entered</strong>. Before you start, right-click this page and choose <em>"Open in new tab/window"</em> (or press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> and click a nav link) so you can read the lecture in one tab and keep your log safe in another. When you're done, use the print button to save a PDF.</p>
   </div>
 
-  <p>You will create the seed of the course project, a single file <code>tictactoe.cpp</code>, and version it. <strong>For every step, record the equivalent Git command and the contents of each location after the command runs.</strong> Steps 0–2 are filled in for you as examples. Type directly into the cells; use the print button to save your completed worksheet as a PDF to submit.</p>
+  <p>You will create the seed of the course project, a single file <code>tictactoe.cpp</code>, and version it. <strong>For every step, record the equivalent Git command and the contents of each location after the command runs.</strong> If a step needs no Git command, write <code>N/A</code>; if it needs several, put them on one line separated by <code>|</code>. Steps 0–2 are filled in for you as examples. Type directly into the cells; use the print button to save your completed worksheet as a PDF to submit.</p>
 
   <div class="callout tip">
     <span class="tag">The file you will track</span>
@@ -936,49 +937,49 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   <!-- STEPS 3-14 (blank) -->
   <div class="step">
     <div class="head"><span class="badge">Step 3</span><span class="instr">Add <strong>only</strong> <code>tictactoe.cpp</code> to the staging area: name the file explicitly (don't use <code>git add .</code>) so nothing else slips in.</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
 
   <div class="step">
     <div class="head"><span class="badge">Step 4</span><span class="instr">Remove the file from the staging area (unstage it).</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
 
   <div class="step">
     <div class="head"><span class="badge">Step 5</span><span class="instr">Add <strong>only</strong> <code>tictactoe.cpp</code> to the staging area again, again naming the file explicitly, not <code>git add .</code>, so you stage just this one file.</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
 
   <div class="step">
     <div class="head"><span class="badge">Step 6</span><span class="instr">Commit the file to the local repository.</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
 
   <div class="step">
     <div class="head"><span class="badge">Step 7</span><span class="instr">Undo the commit, keeping the change staged.</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
 
   <div class="step">
     <div class="head"><span class="badge">Step 8</span><span class="instr">Commit the file to the local repository again.</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
 
   <div class="step">
     <div class="head"><span class="badge">Step 9</span><span class="instr">Push the file to the remote repository.</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
@@ -986,25 +987,25 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   <h4>Part II: modifying a tracked file</h4>
   <div class="step">
     <div class="head"><span class="badge">Step 10</span><span class="instr">Change the code in your workspace (e.g. edit the prompt text).</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)">N/A</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)">N/A</span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
   <div class="step">
     <div class="head"><span class="badge">Step 11</span><span class="instr">Add the changed file to the staging area.</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
   <div class="step">
     <div class="head"><span class="badge">Step 12</span><span class="instr">Commit the change to the local repository.</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
   <div class="step">
     <div class="head"><span class="badge">Step 13</span><span class="instr">Push the change to the remote repository.</span></div>
-    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:inline-block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
@@ -1031,9 +1032,8 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
     <li><strong>Non-portability.</strong> A binary you compiled won't run on a teammate's different OS, it is useless to them, yet still downloaded on every pull.</li>
     <li><strong>Needless conflicts.</strong> Files that differ <em>per machine</em> (editor settings, build output) get rewritten by everyone, so they collide constantly, even though nobody meaningfully changed the project.</li>
   </ul>
-  <p>The fix is a <code>.gitignore</code> file: a list of patterns telling Git which paths to leave untracked. Crucially, <code>.gitignore</code> itself <em>is</em> committed, so the whole team automatically shares the same rules. A typical one for this course's C++ / CMake project:</p>
-  <pre><code><span class="c"># .gitignore for a C++ / CMake project</span>
-build/          <span class="c"># CMake's generated build tree</span>
+  <p>The fix is a <code>.gitignore</code> file: a list of patterns telling Git which paths to leave untracked. Crucially, <code>.gitignore</code> itself <em>is</em> committed, so the whole team automatically shares the same rules. A typical one for this course's C++ project:</p>
+  <pre><code><span class="c"># .gitignore for a C++ project</span>
 *.o             <span class="c"># object files</span>
 *.exe           <span class="c"># Windows executables</span>
 *.out           <span class="c"># a.out-style binaries</span>
@@ -1043,22 +1043,22 @@ ttt             <span class="c"># our compiled game binary</span>
   <h3>What should you ignore?</h3>
   <p>A good rule of thumb: <strong>if a file can be regenerated, is specific to one machine, or should stay secret, ignore it.</strong> In practice the things you exclude fall into a few categories:</p>
   <ul>
-    <li><strong>Build output and compiled artifacts.</strong> Anything your compiler or build tool produces from the source: executables, object files, and whole build trees: <code>*.o</code>, <code>*.exe</code>, <code>*.out</code>, <code>a.out</code>, the <code>build/</code> folder, and our game binary <code>ttt</code>.</li>
+    <li><strong>Build output and compiled artifacts.</strong> Anything your compiler or build tool produces from the source: executables and object files: <code>*.o</code>, <code>*.exe</code>, <code>*.out</code>, <code>a.out</code>, and our game binary <code>ttt</code>.</li>
     <li><strong>Editor and IDE settings.</strong> Per-developer configuration that differs from machine to machine: <code>.vscode/</code>, JetBrains' <code>.idea/</code>, Vim swap files (<code>*.swp</code>).</li>
     <li><strong>Operating-system junk.</strong> Files the OS sprinkles into folders: <code>.DS_Store</code> on macOS, <code>Thumbs.db</code> on Windows.</li>
     <li><strong>Downloaded dependencies.</strong> Packages a tool can fetch again on demand, so there is no need to store them: e.g. <code>vcpkg_installed/</code>, or <code>node_modules/</code> in a JavaScript project.</li>
     <li><strong>Logs and temporary files.</strong> Throwaway output such as <code>*.log</code> and <code>*.tmp</code>.</li>
     <li><strong>Secrets and local-only config.</strong> Anything with passwords, API keys, or tokens: <code>.env</code> files, credential files. <em>Never</em> commit these, even by accident.</li>
   </ul>
-  <p>By contrast, you should <strong>always commit</strong> the things a teammate genuinely needs: your source files (<code>*.cpp</code>, <code>*.h</code>), the build <em>instructions</em> (<code>CMakeLists.txt</code>), tests, the <code>README.md</code>, and <code>.gitignore</code> itself. The test is simple: <em>could a teammate rebuild this from what's committed?</em> If yes, the generated result doesn't belong in the repo.</p>
+  <p>By contrast, you should <strong>always commit</strong> the things a teammate genuinely needs: your source files (<code>*.cpp</code>, <code>*.h</code>), the build <em>instructions</em> (<code>Makefile</code>), tests, the <code>README.md</code>, and <code>.gitignore</code> itself. The test is simple: <em>could a teammate rebuild this from what's committed?</em> If yes, the generated result doesn't belong in the repo.</p>
 
   <h3>A cautionary tale: committing <code>.vscode/</code></h3>
   <p>It is tempting to <code>git add .</code> and commit <em>everything</em>, including the <code>.vscode/</code> folder VS Code creates. Here is why that bites you. The folder holds <strong>machine-specific</strong> settings: for example each developer's <code>.vscode/settings.json</code> records the absolute path to <em>their</em> compiler:</p>
   <pre><code><span class="c">// Alice's .vscode/settings.json</span>
-{ <span class="s">"cmake.cmakePath"</span>: <span class="s">"C:/msys64/ucrt64/bin/cmake.exe"</span> }
+{ <span class="s">"C_Cpp.default.compilerPath"</span>: <span class="s">"C:/msys64/ucrt64/bin/g++.exe"</span> }
 
 <span class="c">// Bob's .vscode/settings.json (different machine!)</span>
-{ <span class="s">"cmake.cmakePath"</span>: <span class="s">"/usr/local/bin/cmake"</span> }</code></pre>
+{ <span class="s">"C_Cpp.default.compilerPath"</span>: <span class="s">"/usr/local/bin/g++"</span> }</code></pre>
   <p>Now watch what happens once that file is tracked:</p>
   <ol>
     <li>Alice opens the project; VS Code rewrites <code>settings.json</code> with <em>her</em> path. She commits and pushes it.</li>
@@ -1175,11 +1175,11 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;        <span class="c">// Bob's version (his local HEAD)</span>
 <span class="k">=======</span>
   std::cout &lt;&lt; <span class="s">"Hello, world!\n"</span>;     <span class="c">// Alice's version (from the remote)</span>
-<span class="k">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> origin/main</code></pre>
+<span class="k">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> origin/master</code></pre>
   <ul>
     <li><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> begins <em>your</em> side (Bob's current commit).</li>
     <li><code>=======</code> divides the two versions.</li>
-    <li><code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main</code> ends <em>their</em> side (the incoming commit).</li>
+    <li><code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/master</code> ends <em>their</em> side (the incoming commit).</li>
   </ul>
 
   <h3>Resolving it</h3>
@@ -1261,35 +1261,35 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   </div>
 
   <h4>How to resolve: your task</h4>
-  <p><strong>Step 1 is given as an example. Add as many steps as necessary to reach the desired end state. For each step, describe the action clearly, record the exact Git command used (if any), and explain <em>why</em> you are doing it.</strong></p>
+  <p><strong>Step 1 is given as an example. Add as many steps as necessary to reach the desired end state. For each step, describe the action clearly, record the Git command(s) used, and explain <em>why</em> you are doing it. If a step has no Git command, write <code>N/A</code>; if it uses several, put them on one line separated by <code>|</code>.</strong></p>
 
   <div class="ws-bar"><span class="label">// Activity A worksheet</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
 
   <div id="actA-steps">
   <div class="step">
     <div class="head"><span class="badge">Step 1</span><span class="instr">In Repo1, remove the <code>.gitignore</code> entry for the artifact.</span></div>
-    <p style="margin:0 0 6px"><strong>Git command used (if any):</strong> N/A (edit the <code>.gitignore</code> file by hand)</p>
+    <p style="margin:0 0 6px"><strong>Git command used:</strong> N/A (edit the <code>.gitignore</code> file by hand)</p>
     <p style="margin:0"><strong>Explanation:</strong> To change anything about a file on the remote, that file cannot be ignored. So first <em>un-ignore</em> the artifact you intend to delete. (Alternatively, leave the entry and force-add with <code>git add --force</code>.)</p>
   </div>
 
   <div class="step">
     <div class="head"><span class="badge">Step 2</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
-    <p style="margin:0 0 6px"><strong>Git command used (if any):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+    <p style="margin:0 0 6px"><strong>Git command used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
     <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
   </div>
   <div class="step">
     <div class="head"><span class="badge">Step 3</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
-    <p style="margin:0 0 6px"><strong>Git command used (if any):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+    <p style="margin:0 0 6px"><strong>Git command used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
     <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
   </div>
   <div class="step">
     <div class="head"><span class="badge">Step 4</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
-    <p style="margin:0 0 6px"><strong>Git command used (if any):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+    <p style="margin:0 0 6px"><strong>Git command used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
     <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
   </div>
   <div class="step">
     <div class="head"><span class="badge">Step 5</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
-    <p style="margin:0 0 6px"><strong>Git command used (if any):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+    <p style="margin:0 0 6px"><strong>Git command used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
     <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
   </div>
   </div>
@@ -1299,7 +1299,7 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   <template id="actA-step-tpl">
     <div class="step">
       <div class="head"><span class="badge">Step</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
-      <p style="margin:0 0 6px"><strong>Git command used (if any):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0 0 6px"><strong>Git command used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
     </div>
   </template>
@@ -1309,7 +1309,7 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   <p>Now trace a conflict step by step, like the worked example in the lecture. Using a file <code>ConflictPractice.txt</code> inside your project repo, two clones (Repo 1 and Repo 2, acting as two teammates sharing one remote) edit the <em>same line</em>. The target final content of the file in every location is <code>OriginalText Workspace1 Workspace2</code>. <strong>You may NOT use <code>git reset</code>.</strong></p>
   <div class="callout tip">
     <span class="tag">For each step</span>
-    <p>Write any <strong>git command(s)</strong> you ran (leave blank for plain file edits), then fill the table with the content of <code>ConflictPractice.txt</code> in each of the seven locations <em>after</em> the operation. Use <code>(empty)</code> where the file isn't present yet. Steps 1–14 lead to the conflict; <strong>add your own resolution steps</strong> after Step 14 to reach the given final state.</p>
+    <p>Write the <strong>git command(s)</strong> you ran, then fill the table with the content of <code>ConflictPractice.txt</code> in each of the seven locations <em>after</em> the operation. If a step has no git command (a plain file edit), write <code>N/A</code>; if it uses several, put them on one line separated by <code>|</code>. Use <code>(empty)</code> where the file isn't present yet. Steps 1–14 lead to the conflict; <strong>add your own resolution steps</strong> after Step 14 to reach the given final state.</p>
   </div>
 
   <div class="ws-bar"><span class="label">// Activity B worksheet: fillable &amp; printable</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
@@ -1317,97 +1317,97 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   <div id="actB-steps">
     <div class="step">
       <div class="head"><span class="badge">Step 1</span><span class="instr">Create <code>ConflictPractice.txt</code> in <strong>Repo 1</strong>'s workspace.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill given">CP.txt (empty)</div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 2</span><span class="instr">In Repo 1, add the text <code>OriginalText</code> to the file.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill given">OriginalText</div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 3</span><span class="instr">Repo 1: add the file to the staging area.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 4</span><span class="instr">Repo 1: commit to the local repository.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 5</span><span class="instr">Repo 1: push to the remote repository.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 6</span><span class="instr">In <strong>Repo 2</strong>, pull from the remote.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 7</span><span class="instr">Repo 1: on the same line, append <code>Workspace1</code> (file now reads <code>OriginalText Workspace1</code>).</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 8</span><span class="instr">Repo 1: add the file to the staging area.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 9</span><span class="instr">Repo 1: commit.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 10</span><span class="instr">Repo 1: push.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 11</span><span class="instr">Repo 2: on the same line of its (un-pulled) copy, append <code>Workspace2</code> (file reads <code>OriginalText Workspace2</code>).</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 12</span><span class="instr">Repo 2: add the file to the staging area.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 13</span><span class="instr">Repo 2: commit.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge" style="background:var(--coral)">Step 14</span><span class="instr">Repo 2: pull from the remote. Git reports a <strong style="color:var(--coral)">CONFLICT</strong> on the shared line.</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill cflct">⚠ conflict</div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 15</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe your resolution action (no git reset!)&gt;</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
     <div class="step">
       <div class="head"><span class="badge">Step 16</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe your resolution action (no git reset!)&gt;</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
@@ -1424,7 +1424,7 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   <template id="actB-step-tpl">
     <div class="step">
       <div class="head"><span class="badge">Step</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe your resolution action (no git reset!)&gt;</span></div>
-      <p style="margin:6px 0 4px"><strong>Git command(s) used (optional):</strong> <span class="fill" contenteditable="true" style="display:inline-block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
       <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
     </div>
@@ -1445,18 +1445,18 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   <h3>1 · What is branching?</h3>
   <p class="lead">Branching is not new in Git: almost every version-control system supports it. <strong>Branching means diverging from the main line of development and continuing to work without interfering with that main line.</strong></p>
   <p>Branches in Git are extremely lightweight. Think of a branch as nothing more than a <strong>movable pointer to a specific commit</strong>. Because there is no memory overhead, it is cheap and natural to use branches to logically divide your work. Creating one is instant; switching between them just changes which version of the files you see on disk.</p>
-  <div class="callout tip"><span class="tag">Visualize it</span><p>As you read, try each action in the interactive branch playground, hosted locally so it works even when the original site is slow or blocked: <a class="inline" href="vendor/learngitbranching/index.html?NODEMO" target="_blank" rel="noopener">open Learn Git Branching</a>. Watching the pointers move is the fastest way to build intuition. This tool is the open-source <a class="inline" href="https://learngitbranching.js.org/" target="_blank" rel="noopener">Learn Git Branching</a> by Peter Cottle, used here under the MIT license; all credit goes to the original author.</p></div>
+  <div class="callout tip"><span class="tag">Visualize it</span><p>As you read, try each action in the interactive branch playground, hosted locally so it works even when the original site is slow or blocked: <a class="inline" href="vendor/learngitbranching/index.html" target="_blank" rel="noopener">open Learn Git Branching</a>. Watching the pointers move is the fastest way to build intuition. This tool is the open-source <a class="inline" href="https://learngitbranching.js.org/" target="_blank" rel="noopener">Learn Git Branching</a> by Peter Cottle, used here under the MIT license; all credit goes to the original author.</p></div>
 
   <h3>2 · When do you branch?</h3>
-  <p>So far you have worked on a single branch (<code>main</code>). There are times when you need to temporarily diverge and work on a "separate project". Three common scenarios:</p>
+  <p>So far you have worked on a single branch (<code>master</code>). There are times when you need to temporarily diverge and work on a "separate project". Three common scenarios:</p>
 
   <h4>Keep development off the delivered system</h4>
   <p>You are adding new features to an <em>already delivered</em> system, and you want to make sure your ongoing work does not destabilise the version users depend on until it is ready.</p>
-  <p><strong>Solution:</strong> keep a <code>dev</code> branch separate from <code>main</code>. Merge into <code>main</code> only when the new features are ready to ship.</p>
+  <p><strong>Solution:</strong> keep a <code>dev</code> branch separate from <code>master</code>. Merge into <code>master</code> only when the new features are ready to ship.</p>
 
   <h4>Hot bug fix</h4>
   <p>You are mid-way through a new feature when QA reports a critical bug in already-released code that must be fixed immediately.</p>
-  <p><strong>Solution:</strong> switch to <code>main</code>, create a <code>bugfix</code> branch from it, fix the bug, and merge it back into <code>main</code>. Then switch back to your feature branch and carry on, your unfinished work undisturbed.</p>
+  <p><strong>Solution:</strong> switch to <code>master</code>, create a <code>bugfix</code> branch from it, fix the bug, and merge it back into <code>master</code>. Then switch back to your feature branch and carry on, your unfinished work undisturbed.</p>
 
   <h4>Work in parallel</h4>
   <p>Several engineers share one project. The work is split and assigned to individuals who mostly work at the same time. Having everyone commit to one shared branch quickly gets messy.</p>
@@ -1476,17 +1476,17 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
     <pre style="margin:8px 0 0"><code><span class="c"># in a fresh folder</span>
 <span class="k">git</span> clone git@gitee.com:adasuper/hello.git
 <span class="k">cd</span> hello
-<span class="k">git</span> branch dev          <span class="c"># create dev; you are STILL on main</span>
+<span class="k">git</span> branch dev          <span class="c"># create dev; you are STILL on master</span>
 <span class="k">git</span> branch             <span class="c"># list local branches</span>
 <span class="c">#   dev</span>
-<span class="c"># * main                  (the * and green mark the current branch)</span>
+<span class="c"># * master                (the * and green mark the current branch)</span>
 <span class="k">git</span> branch -a          <span class="c"># also show remote branches</span>
 <span class="c">#   dev</span>
-<span class="c"># * main</span>
-<span class="c">#   remotes/origin/HEAD -> origin/main</span>
-<span class="c">#   remotes/origin/main</span></code></pre>
+<span class="c"># * master</span>
+<span class="c">#   remotes/origin/HEAD -> origin/master</span>
+<span class="c">#   remotes/origin/master</span></code></pre>
   </div>
-  <p>Only <code>origin/main</code> shows up under remotes because you have not pushed the new <code>dev</code> branch yet. (More on remote branches below.)</p>
+  <p>Only <code>origin/master</code> shows up under remotes because you have not pushed the new <code>dev</code> branch yet. (More on remote branches below.)</p>
 
   <h4>2) Switch to a branch: <code>git checkout &lt;name&gt;</code></h4>
   <ul>
@@ -1496,7 +1496,7 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   </ul>
   <div class="callout tip"><span class="tag">Activity: switch to dev, then create-and-switch to testing</span>
     <pre style="margin:8px 0 0"><code><span class="k">git</span> checkout dev        <span class="c"># Switched to branch 'dev'</span>
-<span class="k">git</span> switch main         <span class="c"># same idea, switch back</span>
+<span class="k">git</span> switch master         <span class="c"># same idea, switch back</span>
 <span class="k">git</span> checkout -b testing  <span class="c"># create 'testing' and switch to it at once</span></code></pre>
   </div>
 
@@ -1513,40 +1513,40 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
 
   <h4>4) Merge a branch: <code>git merge &lt;name&gt;</code></h4>
   <p>Merging brings another branch's work into the current branch. There are two outcomes:</p>
-  <p><strong>Fast-forward.</strong> If <code>main</code> has not moved since you branched, Git just slides the <code>main</code> pointer forward to the tip of <code>dev</code>. No new commit is created.</p>
-  <pre><code><span class="c"># commit once on dev, then merge into main</span>
+  <p><strong>Fast-forward.</strong> If <code>master</code> has not moved since you branched, Git just slides the <code>master</code> pointer forward to the tip of <code>dev</code>. No new commit is created.</p>
+  <pre><code><span class="c"># commit once on dev, then merge into master</span>
 <span class="k">git</span> checkout dev
 <span class="c"># create code.txt, then:</span>
 <span class="k">git</span> add -A
 <span class="k">git</span> commit -m <span class="s">"added code.txt"</span>
-<span class="k">git</span> checkout main
+<span class="k">git</span> checkout master
 <span class="k">git</span> merge dev            <span class="c"># Fast-forward</span>
 
-<span class="c"># before:   c0 - c1 - c2        main -> c1,  dev -> c2</span>
-<span class="c"># after:    c0 - c1 - c2        main -> c2,  dev -> c2   (pointer just moved)</span></code></pre>
+<span class="c"># before:   c0 - c1 - c2        master -> c1,  dev -> c2</span>
+<span class="c"># after:    c0 - c1 - c2        master -> c2,  dev -> c2   (pointer just moved)</span></code></pre>
   <p><strong>Merge commit (three-way merge).</strong> If <em>both</em> branches gained commits since they diverged, Git creates a special <strong>merge commit</strong> with two parents that ties the histories together. This may require resolving a conflict, exactly as in Lab 2.</p>
-  <pre><code><span class="c"># commit on main AND on dev, then merge</span>
-<span class="c"># on main: modify code.txt, add, commit</span>
+  <pre><code><span class="c"># commit on master AND on dev, then merge</span>
+<span class="c"># on master: modify code.txt, add, commit</span>
 <span class="k">git</span> checkout dev
 <span class="c"># create resource.txt, add, commit</span>
-<span class="k">git</span> checkout main
+<span class="k">git</span> checkout master
 <span class="k">git</span> merge dev            <span class="c"># creates a merge commit</span>
 
-<span class="c"># before:        c3              main -> c3</span>
+<span class="c"># before:        c3              master -> c3</span>
 <span class="c">#               /</span>
 <span class="c">#         c0 - c1 - c2 - c4     dev  -> c4</span>
 <span class="c"># after:         c3 ----- c5    c5 = merge commit (parents c3 and c4)</span>
 <span class="c">#               /        /</span>
 <span class="c">#         c0 - c1 - c2 - c4</span></code></pre>
-  <div class="callout tip"><span class="tag">Keep the feature branch fresh</span><p>After merging <code>dev</code> into <code>main</code>, also update <code>dev</code> so it includes the latest <code>main</code>, which avoids future conflicts: <code>git checkout dev</code> then <code>git merge main</code>.</p></div>
+  <div class="callout tip"><span class="tag">Keep the feature branch fresh</span><p>After merging <code>dev</code> into <code>master</code>, also update <code>dev</code> so it includes the latest <code>master</code>, which avoids future conflicts: <code>git checkout dev</code> then <code>git merge master</code>.</p></div>
 
   <h4>5) Combine history with rebase: <code>git rebase &lt;name&gt;</code></h4>
   <p>Rebasing is another way to combine work. It takes a set of commits, "copies" them, and replays them on top of the checked-out branch, producing a <strong>linear history</strong> instead of a merge commit.</p>
   <div class="callout warn"><span class="tag">Rebase rewrites history</span><p>Rebasing creates <em>copies</em> of commits; the originals are no longer reachable by their branch. On shared branches this can <strong>wipe out other people's work</strong>. Do not rebase unless you are 100% sure it is the right tool, and never rebase commits others have already pulled.</p></div>
-  <p>The typical local flow: fix a bug on a <code>bugfix</code> branch, rebase it onto <code>main</code> so the fix sits neatly after <code>main</code>'s latest commit, resolve any conflict, then fast-forward <code>main</code> and delete the branch. For a deeper comparison see the reference link at the end.</p>
+  <p>The typical local flow: fix a bug on a <code>bugfix</code> branch, rebase it onto <code>master</code> so the fix sits neatly after <code>master</code>'s latest commit, resolve any conflict, then fast-forward <code>master</code> and delete the branch. For a deeper comparison see the reference link at the end.</p>
 
   <h4>6) Remote branches</h4>
-  <p>So far everything has been local. A name like <code>origin/main</code> is a <strong>remote-tracking branch</strong>: the convention is <code>&lt;remote name&gt;/&lt;branch name&gt;</code>. It reflects the state of the remote <em>as of your last pull or fetch</em>.</p>
+  <p>So far everything has been local. A name like <code>origin/master</code> is a <strong>remote-tracking branch</strong>: the convention is <code>&lt;remote name&gt;/&lt;branch name&gt;</code>. It reflects the state of the remote <em>as of your last pull or fetch</em>.</p>
   <p>Crucially, remote-tracking branches live in your <strong>local</strong> repository. Treat them as cached references to the real remote (they are sometimes called "upstreams"). They only update when you communicate with the remote.</p>
 
   <h4>7) Publish a new local branch: <code>git push --set-upstream origin &lt;name&gt;</code></h4>
@@ -1581,16 +1581,16 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   <p>On a team, you usually do not merge a feature branch yourself. Instead you open a <strong>Pull Request</strong> so the change can be reviewed first:</p>
   <ol>
     <li>Push your feature branch to Gitee (<code>git push -u origin feature/x</code>).</li>
-    <li>Open a <strong>Pull Request</strong> (PR) proposing to merge it into <code>main</code>.</li>
+    <li>Open a <strong>Pull Request</strong> (PR) proposing to merge it into <code>master</code>.</li>
     <li>A teammate reviews the changes and comments.</li>
-    <li>Merge the PR, delete the branch, and everyone pulls the updated <code>main</code>.</li>
+    <li>Merge the PR, delete the branch, and everyone pulls the updated <code>master</code>.</li>
   </ol>
   <p>PRs are where code review happens, and, once we add CI in Module 6, where automated tests <strong>gate</strong> the merge. PRs can also be linked to <strong>issues</strong> so that merging automatically closes the task it addressed.</p>
 
   <h3>References</h3>
   <ul>
     <li><a class="inline" href="https://git-scm.com/book/en/v2" target="_blank" rel="noopener">Pro Git book (git-scm.com)</a></li>
-    <li>Learn Git Branching by Peter Cottle (interactive branch visualizer, MIT license): <a class="inline" href="vendor/learngitbranching/index.html?NODEMO" target="_blank" rel="noopener">local copy</a> · <a class="inline" href="https://learngitbranching.js.org/" target="_blank" rel="noopener">original site</a></li>
+    <li>Learn Git Branching by Peter Cottle (interactive branch visualizer, MIT license): <a class="inline" href="vendor/learngitbranching/index.html" target="_blank" rel="noopener">local copy</a> · <a class="inline" href="https://learngitbranching.js.org/" target="_blank" rel="noopener">original site</a></li>
     <li><a class="inline" href="https://www.atlassian.com/git/tutorials/merging-vs-rebasing" target="_blank" rel="noopener">Atlassian: merging vs. rebasing</a></li>
   </ul>
 
@@ -1603,36 +1603,204 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
 <!-- ============================== M4 LAB (LAB 3) ============================== -->
 <section class="page" id="m4-lab">
   <div class="eyebrow">Module 4 · Lab 3 · Class 8</div>
-  <h2 class="page-title">Lab 3: Git Branching Log</h2>
-  <p class="sub-meta">Follow the Alice &amp; Ben branching scenario. For each step, record the Git command(s) and any non-Git operations.</p>
+  <h2 class="page-title">Lab 3: Branching on the Tic-Tac-Toe Game</h2>
+  <p class="sub-meta">Two developers grow the game on a <code>dev</code> branch, fix a planted bug on a <code>bugfix</code> branch, and sync it back into <code>master</code>. For every step, record the Git command(s) and any non-Git operations.</p>
 
-  <p>Two developers, <strong>Alice</strong> and <strong>Ben</strong>, collaborate on one Gitee repository through a <code>dev</code> branch, a <code>bugfix</code> branch, and finally a clean merge back to <code>main</code>. Work through the scenario on your own machine using two workspaces, and <strong>fill in the Git command(s) and non-Git operations for every step.</strong></p>
+  <div class="callout warn">
+    <span class="tag">Open this lab in a new tab first</span>
+    <p>Your worksheet answers are typed directly into this page and are <strong>not saved</strong>: navigating away (for example, back to the lecture notes) will <strong>erase everything you've entered</strong>. Before you start, right-click this page and choose <em>"Open in new tab/window"</em> (or <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + click a nav link) so you can read the lecture in one tab and keep your log safe in another. When you're done, use the print button to save a PDF.</p>
+  </div>
+
+  <p>Two developers, <strong>Alice</strong> and <strong>Ben</strong>, continue the Tic-Tac-Toe project from Lab 1. Its <code>master</code> branch already holds the <code>tictactoe.cpp</code> seed (hot-seat board, no win detection). On a shared <code>dev</code> branch each developer adds <strong>one real function</strong> to the game:</p>
+  <ul>
+    <li><strong>Alice</strong> adds <code>checkWin()</code> for win detection. <em>It ships with an intentional bug.</em></li>
+    <li><strong>Ben</strong> adds <code>boardFull()</code> for draw detection.</li>
+  </ul>
+  <p>During play-testing the bug surfaces, so a short-lived <code>bugfix/anti-diagonal</code> branch is created off <code>dev</code> to fix it. When development is done, <code>dev</code> is merged into <code>master</code> so that <strong><code>master</code> ends up fully synced with <code>dev</code></strong>. Work through the scenario on your own machine using two clones (Repo1 = Alice, Repo2 = Ben), and <strong>fill in the Git command(s) and non-Git operations for every step.</strong></p>
+
+  <div class="callout tip">
+    <span class="tag">The two functions you'll add</span>
+    <p>Add these <em>above</em> <code>main()</code> in <code>tictactoe.cpp</code> and call them from the game loop (after placing a mark: if <code>checkWin</code> is true announce the winner and stop; else if <code>boardFull</code> is true announce a draw and stop). Paste them exactly as shown, including Alice's bug, which you'll hunt down later.</p>
+  </div>
+
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c">// Alice's feature: true if player p holds a full row, column, or diagonal.</span>
+<span class="k">bool</span> checkWin(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b, <span class="k">char</span> p) {
+    <span class="k">const</span> <span class="k">int</span> lines[8][3] = {
+        {0,1,2}, {3,4,5}, {6,7,8},   <span class="c">// rows</span>
+        {0,3,6}, {1,4,7}, {2,5,8},   <span class="c">// columns</span>
+        {0,4,8}, {2,4,8}             <span class="c">// diagonals</span>
+    };
+    <span class="k">for</span> (<span class="k">auto</span>&amp; line : lines)
+        <span class="k">if</span> (b[line[0]] == p &amp;&amp; b[line[1]] == p &amp;&amp; b[line[2]] == p)
+            <span class="k">return</span> <span class="k">true</span>;
+    <span class="k">return</span> <span class="k">false</span>;
+}</code></pre>
+  </div>
+
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c">// Ben's feature: true once every cell holds a mark (no '1'..'9' left).</span>
+<span class="k">bool</span> boardFull(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b) {
+    <span class="k">for</span> (<span class="k">char</span> c : b)
+        <span class="k">if</span> (c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>)
+            <span class="k">return</span> <span class="k">false</span>;
+    <span class="k">return</span> <span class="k">true</span>;
+}</code></pre>
+  </div>
 
   <div class="ws-bar"><span class="label">// Lab 3 branching log: fillable &amp; printable</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
+  <p><strong>Step 1 is given as an example.</strong> For each remaining step, fill in the Git command(s) and the non-Git operations (file edits, website actions, builds, etc.). <strong>If a step has no Git command or no non-Git operation, write <code>N/A</code> in that field. If a step uses several Git commands, put them on one line separated by <code>|</code></strong> (for example, <code>git add tictactoe.cpp | git commit -m "add checkWin"</code>).</p>
 
-  <table class="log">
-    <thead><tr><th>#</th><th class="desc">Description</th><th>Git command(s)</th><th>Non-git operations</th></tr></thead>
-    <tbody>
-      <tr><td class="n">1</td><td class="desc">Alice created a project on <strong>gitee.com</strong> and cloned the repository to her local workspace "Repo1". Start with a fresh workspace whose remote has only a <code>main</code> branch.</td>
-        <td><div class="fill given">git clone git@gitee.com:&lt;user&gt;/&lt;proj&gt;.git</div></td><td><div class="fill given">Create a folder "Repo1"</div></td></tr>
-      <tr><td class="n">2</td><td class="desc">Alice created a new local branch "dev" and switched to it.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">3</td><td class="desc">Alice created a new file "work.txt", saved, added, and committed it to the local repository.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">4</td><td class="desc">Alice pushed all local changes to the remote repository.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">5</td><td class="desc">Ben cloned the remote repository to his local workspace "Repo2".</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">6</td><td class="desc">Ben started working on the dev branch. He wrote "Ben" in work.txt, saved, added, committed, and pushed to the remote.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">7</td><td class="desc">Alice wrote "Alice" in work.txt, saved, added, committed.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">8</td><td class="desc">Alice resolved the conflict when trying to push, and successfully pushed. The remote dev branch's work.txt now has both Alice's and Ben's work.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">9</td><td class="desc">Ben was assigned a bug fix. Following good practice he first pulled to his dev branch, then created a new branch "bugfix" off dev and switched to it.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">10</td><td class="desc">Alice continued working on work.txt and added new text. She saved, added, committed, and pushed.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">11</td><td class="desc">Ben fixed the bug by adding a line "bug fixed" in work.txt. He saved, added, and committed to his local bugfix branch.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">12</td><td class="desc">Ben merged the bug fix into dev and deleted the bugfix branch locally.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">13</td><td class="desc">Ben wanted to push dev to remote. He first pulled to check for changes, found Alice had pushed more work, resolved the conflict, and pushed the bug fix to remote dev.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">14</td><td class="desc">Development is finished. Alice cleaned up: she pulled to dev for the latest work, merged dev into main, and pushed main to remote.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-      <tr><td class="n">15</td><td class="desc">Alice deleted the remote dev branch; both deleted their local dev branch. The final remote has only <code>main</code>, containing all work plus the bug fix.</td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr>
-    </tbody>
-  </table>
+  <div id="lab3-steps">
+    <div class="step">
+      <div class="head"><span class="badge">Step 1</span><span class="instr">Alice created the project on <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a> and cloned it into a folder "Repo1". The remote's <code>master</code> branch already contains the <code>tictactoe.cpp</code> seed from Lab 1.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">git clone git@gitee.com:&lt;user&gt;/tictactoe.git</span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">Create the folder "Repo1"; confirm <code>tictactoe.cpp</code> (seed) is present on <code>master</code>.</span></p>
+    </div>
 
-  <div class="callout"><span class="tag">Submit</span><p>After completing all operations, include a screenshot of your commit graph: run <code>git log --graph --oneline --all</code> in your local workspace (or open the commit graph on Gitee). It should show the dev/bugfix branches merging into a single <code>main</code>.</p></div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 2</span><span class="instr">In Repo1, Alice created a local branch <code>dev</code> off <code>master</code> and switched to it.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 3</span><span class="instr">On <code>dev</code>, Alice added the <code>checkWin()</code> function (above) to <code>tictactoe.cpp</code> and called it after each move so the game announces a winner. She saved, staged, and committed to her local <code>dev</code>.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 4</span><span class="instr">Alice published the new branch by pushing <code>dev</code> to the remote (setting the upstream).</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 5</span><span class="instr">Ben cloned the remote into a folder "Repo2" and switched to the <code>dev</code> branch (so his workspace now has Alice's <code>checkWin</code>).</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 6</span><span class="instr">On <code>dev</code>, Ben added the <code>boardFull()</code> function (above) and used it to detect a draw. He saved, staged, and committed to his local <code>dev</code>.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 7</span><span class="instr">Ben pushed <code>dev</code> to the remote. (No one else has pushed since his clone, so this fast-forwards.) The remote <code>dev</code> now holds both functions.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge" style="background:var(--coral)">Step 8</span><span class="instr">Play-testing exposes a <strong style="color:var(--coral)">bug</strong>: marking the anti-diagonal (cells <code>3</code>, <code>5</code>, <code>7</code>) does <em>not</em> announce a win. Ben pulled <code>dev</code> to be current, then created a branch <code>bugfix/anti-diagonal</code> off <code>dev</code> and switched to it.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 9</span><span class="instr">Ben fixed <code>checkWin</code>: in the lookup table the anti-diagonal was written <code>{2,4,8}</code> but should be <code>{2,4,6}</code>. He corrected that one entry, saved, staged, and committed to <code>bugfix/anti-diagonal</code>.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 10</span><span class="instr">Ben merged <code>bugfix/anti-diagonal</code> back into <code>dev</code> and deleted the <code>bugfix/anti-diagonal</code> branch locally.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 11</span><span class="instr">Ben pushed <code>dev</code> to the remote, so the remote <code>dev</code> now has the corrected <code>checkWin</code>.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 12</span><span class="instr">In Repo1, Alice switched to <code>dev</code> and pulled to get Ben's <code>boardFull</code> and the fix. She rebuilt and confirmed the anti-diagonal win is now detected.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge" style="background:var(--green)">Step 13</span><span class="instr">Development is finished. The rest of the operations should be on <strong>Gitee.com</strong>. What steps do Alice and Ben need to do to reach the End State? Add steps when necessary.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+  </div>
+  <button class="btn-add" data-addstep="#lab3-steps" data-tpl="#lab3-step-tpl">+ Add step</button>
+  <button class="btn-add" data-removestep="#lab3-steps">− Remove last step</button>
+
+  <template id="lab3-step-tpl">
+    <div class="step">
+      <div class="head"><span class="badge">Step</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+  </template>
+
+  <div class="step" style="border-color:var(--green);margin-top:28px">
+    <div class="head"><span class="badge" style="background:var(--green)">End State</span><span class="instr"><strong>The lab is complete when:</strong><br>1. On Gitee.com, there is only one <code>master</code> branch with the finished Tic-Tac-Toe game source code.<br>2. Both Alice's and Ben's local workspaces have only one <code>master</code> branch with the finished code.<br><br>Below is what <code>tictactoe.cpp</code> looks like in that final <code>master</code>; use it to verify your game compiles and detects every win, including cells 3-5-7.</span></div>
+  </div>
+
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c">// tictactoe.cpp: end state (win + draw detection, bug fixed)</span>
+<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
+<span class="k">#include</span> <span class="s">&lt;array&gt;</span>
+
+<span class="k">bool</span> checkWin(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b, <span class="k">char</span> p) {
+    <span class="k">const</span> <span class="k">int</span> lines[8][3] = {
+        {0,1,2}, {3,4,5}, {6,7,8},
+        {0,3,6}, {1,4,7}, {2,5,8},
+        {0,4,8}, {2,4,6}             <span class="c">// anti-diagonal fixed</span>
+    };
+    <span class="k">for</span> (<span class="k">auto</span>&amp; line : lines)
+        <span class="k">if</span> (b[line[0]] == p &amp;&amp; b[line[1]] == p &amp;&amp; b[line[2]] == p)
+            <span class="k">return</span> <span class="k">true</span>;
+    <span class="k">return</span> <span class="k">false</span>;
+}
+
+<span class="k">bool</span> boardFull(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b) {
+    <span class="k">for</span> (<span class="k">char</span> c : b)
+        <span class="k">if</span> (c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>)
+            <span class="k">return</span> <span class="k">false</span>;
+    <span class="k">return</span> <span class="k">true</span>;
+}
+
+<span class="k">int</span> main() {
+    std::array&lt;<span class="k">char</span>, 9&gt; board = {<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>};
+    <span class="k">char</span> player = <span class="s">'X'</span>;
+
+    <span class="k">auto</span> draw = [&amp;] {
+        <span class="k">for</span> (<span class="k">int</span> r = 0; r &lt; 3; ++r)
+            std::cout &lt;&lt; <span class="s">' '</span> &lt;&lt; board[r*3] &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r*3+1] &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r*3+2] &lt;&lt; <span class="s">'\n'</span>;
+    };
+
+    <span class="k">while</span> (<span class="k">true</span>) {
+        draw();
+        std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">", cell 1-9: "</span>;
+
+        <span class="k">int</span> cell;
+        std::cin &gt;&gt; cell;
+        <span class="k">if</span> (cell &lt; 1 || cell &gt; 9 || board[cell-1] == <span class="s">'X'</span> || board[cell-1] == <span class="s">'O'</span>) {
+            std::cout &lt;&lt; <span class="s">"invalid\n"</span>;
+            <span class="k">continue</span>;
+        }
+
+        board[cell-1] = player;
+        <span class="k">if</span> (checkWin(board, player)) { draw(); std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">" wins!\n"</span>; <span class="k">break</span>; }
+        <span class="k">if</span> (boardFull(board))        { draw(); std::cout &lt;&lt; <span class="s">"Draw\n"</span>; <span class="k">break</span>; }
+        player = (player == <span class="s">'X'</span>) ? <span class="s">'O'</span> : <span class="s">'X'</span>;
+    }
+}</code></pre>
+  </div>
+
+  <div class="callout"><span class="tag">Submit</span><p>Submit (1) this completed worksheet as a PDF, and (2) a screenshot of your commit graph: run <code>git log --graph --oneline --all</code> (or open the commit graph on Gitee). It should show the <code>bugfix/anti-diagonal</code> branch merging into <code>dev</code>, and <code>dev</code> merging into <code>master</code>.</p></div>
 
   <div class="next-prev">
     <a href="#m4-lecture">← Lecture</a>
@@ -1643,35 +1811,241 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
 <!-- ============================== M5 LECTURE ============================== -->
 <section class="page" id="m5-lecture">
   <div class="eyebrow">Module 5 · Lecture · Class 9</div>
-  <h2 class="page-title">CMake</h2>
-  <p class="sub-meta">Why manual <code>g++</code> doesn't scale, and how to describe a build once and run it anywhere.</p>
+  <h2 class="page-title">Make</h2>
+  <p class="sub-meta">Why manual <code>g++</code> doesn't scale, and how to describe a build once and repeat it with a single command.</p>
 
-  <p class="lead">As soon as a project has more than one source file, typing <code>g++</code> commands by hand becomes error-prone and unrepeatable. <strong>CMake</strong> lets you describe your build in one file; it then generates the right commands for whatever compiler and platform you're on.</p>
+  <p class="lead">As soon as a project has more than one source file, typing <code>g++</code> commands by hand becomes error-prone and unrepeatable. <strong>Make</strong> lets you record your build in one file, the <strong>Makefile</strong>. You then type <code>make</code>, and it runs the right compiler commands for you, rebuilding only what actually changed.</p>
 
-  <h3>The anatomy of CMakeLists.txt</h3>
-  <pre><code><span class="k">cmake_minimum_required</span>(VERSION 3.16)
-<span class="k">project</span>(tictactoe CXX)
-<span class="k">set</span>(CMAKE_CXX_STANDARD 17)
+  <h3>1 · The simplest Makefile</h3>
+  <p>Recall the <code>hello</code> project from the Setup Lab: a single <code>hello.cpp</code> you compiled by hand with <code>g++ hello.cpp -o hello</code>. A Makefile records that command as a <strong>rule</strong>. Create a file named <code>Makefile</code> (no extension) next to <code>hello.cpp</code>:</p>
+  <pre><code>hello: hello.cpp
+	g++ hello.cpp -o hello</code></pre>
+  <p>That single rule has three parts:</p>
+  <ul>
+    <li><strong>Target</strong>: <code>hello</code>, the file we want to produce (left of the colon).</li>
+    <li><strong>Prerequisites</strong>: <code>hello.cpp</code>, what the target is built from (right of the colon).</li>
+    <li><strong>Recipe</strong>: the indented <code>g++ …</code> line, the shell command that builds the target.</li>
+  </ul>
+  <p>Now just type <code>make</code>:</p>
+  <pre><code><span class="k">make</span>
+<span class="c"># g++ hello.cpp -o hello</span>
+./hello
+<span class="c"># Hello, world!</span></code></pre>
+  <div class="callout warn"><span class="tag">Tabs, not spaces</span><p>Every recipe line <strong>must</strong> begin with a real <kbd>Tab</kbd> character, never spaces; this is Make's most infamous gotcha. If you see <code>Makefile:2: *** missing separator. Stop.</code>, your editor turned the Tab into spaces; switch that line's indentation back to a Tab. (In VS Code, the Makefile Tools extension handles this for you.)</p></div>
 
-<span class="k">add_library</span>(game src/board.cpp)          <span class="c"># reusable game logic</span>
-<span class="k">target_include_directories</span>(game PUBLIC include)
+  <h3>2 · The default goal &amp; "up to date"</h3>
+  <p>Running <code>make</code> with no arguments builds the <strong>first</strong> target in the file, the <em>default goal</em>. You can also name one explicitly: <code>make hello</code>. Run <code>make</code> a second time without changing anything:</p>
+  <pre><code><span class="k">make</span>
+<span class="c"># make: 'hello' is up to date.</span></code></pre>
+  <p>Make compares <strong>timestamps</strong>: it rebuilds a target only when a prerequisite is <em>newer</em> than the target. Edit <code>hello.cpp</code> (or <code>touch hello.cpp</code>) and <code>make</code> recompiles; otherwise it does nothing. On one file that hardly matters; on a big project it turns a minutes-long rebuild into a seconds-long one. That is the whole point of a build system.</p>
 
-<span class="k">add_executable</span>(tictactoe src/main.cpp)    <span class="c"># the playable program</span>
-<span class="k">target_link_libraries</span>(tictactoe PRIVATE game)</code></pre>
+  <h3>3 · More than one file</h3>
+  <p>Real programs span several files. Let's grow <code>hello</code> by moving the greeting into its own unit, giving three files:</p>
+  <pre><code><span class="c">// greeter.h</span>
+<span class="k">#ifndef</span> GREETER_H
+<span class="k">#define</span> GREETER_H
+<span class="k">#include</span> <span class="s">&lt;string&gt;</span>
+std::string greet(<span class="k">const</span> std::string&amp; name);
+<span class="k">#endif</span></code></pre>
+  <pre><code><span class="c">// greeter.cpp</span>
+<span class="k">#include</span> <span class="s">"greeter.h"</span>
+std::string greet(<span class="k">const</span> std::string&amp; name) {
+    <span class="k">return</span> <span class="s">"Hello, "</span> + name + <span class="s">"!"</span>;
+}</code></pre>
+  <pre><code><span class="c">// main.cpp</span>
+<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
+<span class="k">#include</span> <span class="s">"greeter.h"</span>
+<span class="k">int</span> main() {
+    std::cout &lt;&lt; greet(<span class="s">"world"</span>) &lt;&lt; <span class="s">"\n"</span>;
+}</code></pre>
+  <p>The naive Makefile compiles them all in one command:</p>
+  <pre><code>hello: main.cpp greeter.cpp greeter.h
+	g++ main.cpp greeter.cpp -o hello</code></pre>
+  <p>It works, but it recompiles <em>both</em> sources whenever you touch <em>either</em> one. We can do better.</p>
 
-  <h3>Out-of-source builds</h3>
-  <p>CMake keeps all generated files in a separate <code>build/</code> folder, so your source tree stays clean (and <code>build/</code> goes in <code>.gitignore</code>):</p>
-  <pre><code><span class="k">cmake</span> -B build        <span class="c"># configure: generate the build system</span>
-<span class="k">cmake</span> --build build   <span class="c"># compile</span></code></pre>
+  <h3>4 · Separate compilation &amp; incremental builds</h3>
+  <p>Building is really two steps: turn each <code>.cpp</code> into an <strong>object file</strong> (<code>.o</code>), then <strong>link</strong> the objects into one executable. Giving each step its own rule lets Make rebuild only what changed:</p>
+  <pre><code>hello: main.o greeter.o
+	g++ main.o greeter.o -o hello
 
-  <h3>Why split a library from the executable?</h3>
-  <p>We move the pure game <em>logic</em> (board state, move validation, win detection) into a <code>game</code> library, and keep only input/output in the executable. This separation is what makes the logic <strong>testable</strong>: in Module 6 the automated pipeline links tests against the <code>game</code> library without needing a keyboard. A clean structure today is what makes CI possible tomorrow:</p>
-  <pre><code>tictactoe/
-├── include/board.h
-├── src/board.cpp      <span class="c"># pure logic → library</span>
-├── src/main.cpp       <span class="c"># I/O loop → executable</span>
-├── tests/test_board.cpp
-└── CMakeLists.txt</code></pre>
+main.o: main.cpp greeter.h
+	g++ -c main.cpp
+
+greeter.o: greeter.cpp greeter.h
+	g++ -c greeter.cpp</code></pre>
+  <p><code>g++ -c main.cpp</code> compiles <em>without</em> linking, producing <code>main.o</code>. Make now understands a small <strong>dependency graph</strong>:</p>
+  <pre><code>hello
+├── main.o      ← main.cpp + greeter.h
+└── greeter.o   ← greeter.cpp + greeter.h</code></pre>
+  <p>Edit only <code>greeter.cpp</code> and run <code>make</code>: it rebuilds <code>greeter.o</code> and relinks <code>hello</code>, but <strong>skips</strong> <code>main.o</code> because <code>main.cpp</code> didn't change. Both objects list <code>greeter.h</code> as a prerequisite, so editing the header correctly rebuilds both.</p>
+
+  <h3>5 · Variables</h3>
+  <p>The compiler name and flags repeat on every line. Pull them into <strong>variables</strong> and reference them with <code>$(…)</code>:</p>
+  <pre><code>CXX = g++
+CXXFLAGS = -std=c++17 -Wall
+
+hello: main.o greeter.o
+	$(CXX) $(CXXFLAGS) main.o greeter.o -o hello
+
+main.o: main.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c main.cpp
+
+greeter.o: greeter.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c greeter.cpp</code></pre>
+  <p>Now adding a flag or switching compilers is a one-line change applied everywhere. <code>CXX</code> and <code>CXXFLAGS</code> are conventional names, but any name works. The two flags we pass are worth knowing:</p>
+  <ul>
+    <li><code>-std=c++17</code>: compile against the <strong>C++17</strong> language standard. Without it, g++ may default to an older standard and reject modern syntax; pinning the version makes the build behave the same on every machine.</li>
+    <li><code>-Wall</code>: turn on the common <strong>warnings</strong> ("<em>all</em>" the usual ones). Warnings flag suspicious code (an unused variable, a function that forgets to return) that still compiles but is often a bug. Treat them as a free code review.</li>
+  </ul>
+  <p>Other flags you'll meet: <code>-Iinclude</code> (also written <code>-I include</code>) adds a folder to the compiler's <strong>header search path</strong>, so <code>#include "board.h"</code> is found when the header lives in an <code>include/</code> subfolder; <code>-g</code> adds debug information; <code>-O2</code> turns on optimisation.</p>
+
+  <h3>6 · Automatic variables</h3>
+  <p>The recipes still repeat file names. Make fills in three <strong>automatic variables</strong> per rule:</p>
+  <ul>
+    <li><code>$@</code>: the <strong>target</strong>.</li>
+    <li><code>$^</code>: <strong>all</strong> prerequisites.</li>
+    <li><code>$&lt;</code>: the <strong>first</strong> prerequisite.</li>
+  </ul>
+  <pre><code>hello: main.o greeter.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+main.o: main.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c $&lt;
+
+greeter.o: greeter.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c $&lt;</code></pre>
+  <p>For <code>hello</code>, <code>$^</code> expands to <code>main.o greeter.o</code> and <code>$@</code> to <code>hello</code>. In the object rules we use <code>$&lt;</code> (the <code>.cpp</code>), not <code>$^</code>, so the header isn't handed to the compiler as a source file.</p>
+
+  <h3>7 · Pattern rules</h3>
+  <p>The two object rules are now identical except for the names. A <strong>pattern rule</strong> using <code>%</code> as a wildcard collapses them into one rule that builds <em>any</em> <code>.o</code> from the matching <code>.cpp</code>:</p>
+  <pre><code>%.o: %.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c $&lt; -o $@</code></pre>
+  <p>The <code>%</code> matches the stem: for <code>greeter.o</code> it is <code>greeter</code>, so the prerequisite becomes <code>greeter.cpp</code>. One rule now covers every source file you add.</p>
+
+  <h3>8 · Phony targets: <code>clean</code> and <code>run</code></h3>
+  <p>Not every target is a file. <code>clean</code> deletes build output; <code>run</code> builds then launches the program. Since no file named <code>clean</code> exists, <code>make clean</code> normally runs, but if someone ever created a file called <code>clean</code>, Make would think it was "up to date" and skip it. Declaring these targets <code>.PHONY</code> tells Make they are commands, not files:</p>
+  <pre><code>.PHONY: clean run
+
+clean:
+	rm -f hello *.o
+
+run: hello
+	./hello</code></pre>
+  <p><code>make run</code> depends on <code>hello</code>, so Make builds the program first (if needed), then runs it.</p>
+  <p><strong>But these two recipes are environment-specific.</strong> <code>rm -f</code> and <code>./hello</code> are Unix conventions (macOS, Linux, and Git Bash). In a native Windows shell (PowerShell or Command Prompt) the delete command is <code>del</code>, and the executable is <code>hello.exe</code>, launched <em>without</em> the <code>./</code> prefix. So <code>clean</code> and <code>run</code> have to adapt: the complete Makefile below detects <strong>which shell you are running in</strong> and picks the right commands automatically.</p>
+
+  <h3>9 · The complete Makefile</h3>
+  <p>Putting every idea together, and making <code>clean</code> and <code>run</code> work in any shell, gives this complete, portable Makefile for the multi-file <code>hello</code> project:</p>
+  <pre><code>CXX = g++
+CXXFLAGS = -std=c++17 -Wall
+
+<span class="c"># Ask the shell what it is: a POSIX shell (Linux, macOS, Git Bash) has</span>
+<span class="c"># `uname`; a native Windows shell (cmd / PowerShell) does not.</span>
+UNAME := $(shell uname 2&gt;/dev/null)
+
+<span class="k">ifeq</span> ($(UNAME),)
+    EXE = hello.exe
+    RM  = del /Q /F
+    RUN = $(EXE)
+<span class="k">else</span>
+    EXE = hello
+    RM  = rm -f
+    RUN = ./$(EXE)
+<span class="k">endif</span>
+
+$(EXE): main.o greeter.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+%.o: %.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c $&lt; -o $@
+
+.PHONY: clean run
+
+clean:
+	-$(RM) $(EXE) *.o
+
+run: $(EXE)
+	$(RUN)</code></pre>
+  <p>Instead of keying off the operating system, this version asks the <strong>shell</strong> what it is. The detection line repays reading token by token:</p>
+  <pre><code>UNAME := $(shell uname 2&gt;/dev/null)</code></pre>
+  <ul>
+    <li><code>UNAME</code>: the variable we are defining (any name works; this one is conventional).</li>
+    <li><code>:=</code>: a <strong>simply-expanded</strong> assignment: the right-hand side is evaluated <em>once, right now</em>, and the result is stored. With a plain <code>=</code> the value would be <em>recursively</em> expanded, re-evaluated every time <code>UNAME</code> is used, which would re-run the command on each reference. <code>:=</code> runs <code>uname</code> exactly once.</li>
+    <li><code>$(shell …)</code>: Make's <strong>shell function</strong>: it runs the command inside a subshell and substitutes the command's <strong>standard output</strong> back into the Makefile (with the trailing newline stripped). So <code>UNAME</code> becomes whatever <code>uname</code> printed.</li>
+    <li><code>uname</code>: the Unix command that prints the kernel/OS name: <code>Linux</code>, <code>Darwin</code> (macOS), or <code>MINGW64_NT-…</code> (Git Bash). A native Windows shell has no such command.</li>
+    <li><code>2&gt;/dev/null</code>: shell redirection: send file descriptor <strong>2</strong> (standard error) to the <strong>null device</strong>, i.e. discard it. When <code>uname</code> is missing, Windows prints a "command not found" message to stderr; this throws that message away so it doesn't clutter the output, leaving <code>UNAME</code> simply <em>empty</em>.</li>
+  </ul>
+  <p>So <code>UNAME</code> ends up as either the shell's name or an empty string, and two cases follow:</p>
+  <ul>
+    <li><strong>Empty</strong> (no <code>uname</code>) → Command Prompt or PowerShell: delete with <code>del</code>, run the bare <code>hello.exe</code>.</li>
+    <li><strong>Anything else</strong> (a POSIX shell: <code>Linux</code>, <code>Darwin</code>, or Git Bash) → use <code>rm</code> and <code>./hello</code>.</li>
+  </ul>
+  <p>The rules use <code>$(EXE)</code>, <code>$(RM)</code>, and <code>$(RUN)</code> instead of hard-coded names, so one file works for everyone. The leading <code>-</code> in <code>-$(RM) …</code> tells Make to <strong>ignore errors</strong> from that line, so <code>make clean</code> still succeeds even when there is nothing to delete.</p>
+  <div class="callout tip"><span class="tag">Works in any shell</span><p>Because the choice is driven by <code>uname</code> rather than the OS, the <code>clean</code> and <code>run</code> targets behave correctly whether you run <code>make</code> from <strong>Git Bash</strong>, <strong>PowerShell</strong>, or <strong>Command Prompt</strong>, with no need to remember which one.</p></div>
+  <p><code>make</code> builds it, <code>make run</code> builds-and-runs, <code>make clean</code> resets. For a deeper reference, the community favourite is <a class="inline" href="https://makefiletutorial.com/" target="_blank" rel="noopener">makefiletutorial.com</a>.</p>
+
+  <h3>10 · Organising files into folders</h3>
+  <p>So far every file (headers, sources, the Makefile, and the compiled output) has sat in one folder. That is fine for three files, but it stops scaling the moment a project grows: headers get tangled up with implementation, and, crucially, there is nowhere clean to put <strong>tests</strong>. The conventional layout separates code by its role:</p>
+  <pre><code>hello/
+├── include/
+│   └── greeter.h        <span class="c"># public headers (the interface)</span>
+├── src/
+│   ├── greeter.cpp      <span class="c"># implementation (the logic)</span>
+│   └── main.cpp         <span class="c"># entry point / I/O</span>
+├── tests/
+│   └── test_greeter.cpp <span class="c"># tests for the logic (added in Module 6)</span>
+├── build/               <span class="c"># compiled output: objects + executable (generated; gitignored)</span>
+└── Makefile</code></pre>
+  <ul>
+    <li><code>include/</code> holds the <strong>headers</strong>: the declarations other files <code>#include</code>.</li>
+    <li><code>src/</code> holds the <strong>implementation</strong>, split so the <em>logic</em> (<code>greeter.cpp</code>) is separate from the <em>entry point / I/O</em> (<code>main.cpp</code>).</li>
+    <li><code>tests/</code> holds <strong>test programs</strong> that exercise the logic.</li>
+  </ul>
+  <p><strong>Why this matters for testing.</strong> A test needs to call your logic (<code>greet()</code>) but must <em>not</em> drag in <code>main()</code>: a program can have only one <code>main</code>, and the test supplies its own. Because the logic lives in its own <code>src/greeter.cpp</code>, separate from <code>src/main.cpp</code>, a test in <code>tests/</code> can compile against <code>greeter.cpp</code> alone, with no keyboard and no clashing <code>main()</code>. In Module 6 you will do exactly that. Organising the files now is what makes automated testing possible later.</p>
+  <p>Build output should be kept out of the source folders too. This Makefile writes every object file <em>and</em> the executable into a generated <code>build/</code> folder, so <code>src/</code>, <code>include/</code>, and the project root only ever hold things you actually wrote (add <code>build/</code> to <code>.gitignore</code>). That takes a few coordinated changes: point the compiler at the headers with <code>-Iinclude</code>, read sources from <code>src/</code>, write outputs under <code>build/</code>, and create that folder before compiling.</p>
+  <pre><code>CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Iinclude
+BUILD = build
+
+UNAME := $(shell uname 2&gt;/dev/null)
+
+<span class="k">ifeq</span> ($(UNAME),)
+    EXE   = $(BUILD)/hello.exe
+    MKDIR = if not exist $(BUILD) mkdir $(BUILD)
+    RMDIR = if exist $(BUILD) rmdir /S /Q $(BUILD)
+    RUN   = $(subst /,\,$(EXE))
+<span class="k">else</span>
+    EXE   = $(BUILD)/hello
+    MKDIR = mkdir -p $(BUILD)
+    RMDIR = rm -rf $(BUILD)
+    RUN   = ./$(EXE)
+<span class="k">endif</span>
+
+$(EXE): $(BUILD)/main.o $(BUILD)/greeter.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+$(BUILD)/%.o: src/%.cpp include/greeter.h | $(BUILD)
+	$(CXX) $(CXXFLAGS) -c $&lt; -o $@
+
+$(BUILD):
+	$(MKDIR)
+
+.PHONY: clean run
+
+clean:
+	$(RMDIR)
+
+run: $(EXE)
+	$(RUN)</code></pre>
+  <ul>
+    <li><code>BUILD = build</code> names the output folder once, so every other line refers to it by variable.</li>
+    <li><code>-Iinclude</code> adds the <code>include/</code> folder to the compiler's header search path, so <code>#include "greeter.h"</code> resolves even though the header is not beside the source. The name <code>include</code> is only a <strong>convention</strong>: the flag is <code>-I</code> followed by whatever your folder is called (headers in <code>headers/</code> would use <code>-Iheaders</code>, with the prerequisite path updated to match). You can list several folders with several <code>-I</code> flags.</li>
+    <li>The pattern rule <code>$(BUILD)/%.o: src/%.cpp</code> reads each source from <code>src/</code> and writes its object into <code>build/</code> (so <code>build/greeter.o</code> is built from <code>src/greeter.cpp</code>); <code>include/greeter.h</code> is a prerequisite so editing the header rebuilds the objects.</li>
+    <li>The <code>$(BUILD):</code> rule creates the output folder before anything is compiled into it. Because creating and deleting a folder is shell-specific, the same <code>uname</code> check also sets <code>MKDIR</code> (<code>mkdir -p</code> on Unix vs <code>if not exist … mkdir</code> on Windows) and <code>RMDIR</code> (<code>rm -rf</code> vs <code>rmdir /S /Q</code>). <code>make clean</code> now just removes the whole <code>build/</code> folder.</li>
+    <li><code>RUN</code> on Windows wraps the path in <code>$(subst /,\,$(EXE))</code> because the <code>cmd</code> shell needs back-slashes (<code>build\hello.exe</code>) to launch a program, while g++ and Make accept forward slashes everywhere else.</li>
+  </ul>
+
+  <div class="callout tip"><span class="tag">On to the lab</span><p>In <strong>Lab 4</strong> you'll write a Makefile just like this for the Tic-Tac-Toe game, splitting its logic into <code>board.cpp</code> (so it can be tested without a keyboard) and its I/O into <code>main.cpp</code>. In <strong>Module 6</strong> you'll add a <code>test</code> target, and CI will run <code>make</code> and <code>make test</code> on every push.</p></div>
 
   <div class="next-prev">
     <a href="#m4-lab">← Lab 3</a>
@@ -1682,44 +2056,220 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
 <!-- ============================== M5 LAB (LAB 4) ============================== -->
 <section class="page" id="m5-lab">
   <div class="eyebrow">Module 5 · Lab 4 · Class 10</div>
-  <h2 class="page-title">Lab 4: Turn the Game into a CMake Project</h2>
-  <p class="sub-meta">Restructure the single file into a library + executable, and build it out-of-source.</p>
+  <h2 class="page-title">Lab 4: Build the Game with a Makefile</h2>
+  <p class="sub-meta">Split the game into logic, I/O, and an entry point, then write your own Makefile that builds it into a <code>build/</code> folder.</p>
 
-  <h3>1 · Restructure the files</h3>
-  <p>Split the seed into pure logic and I/O. Create <code>include/board.h</code>:</p>
-  <pre><code><span class="k">#pragma once</span>
+  <h3>1 · Split the game into source files</h3>
+  <p>The whole point of this lab is to write the <strong>Makefile</strong>, so all the C++ is given. Split the seed game into three layers, with headers in <code>include/</code> and sources in <code>src/</code>:</p>
+  <pre><code>tictactoe/
+├── include/
+│   ├── Board.h     <span class="c"># pure logic: board state + rules + win detection</span>
+│   └── Game.h      <span class="c"># I/O: drawing the board, reading moves, the loop</span>
+├── src/
+│   ├── Board.cpp
+│   ├── Game.cpp
+│   └── main.cpp    <span class="c"># entry point</span>
+└── Makefile        <span class="c"># you write this in Section 2</span></code></pre>
+  <p>Create each file at the path shown and paste in the code below.</p>
+
+  <p><strong><code>include/Board.h</code></strong> — the pure logic (no I/O, so it can be tested without a keyboard later):</p>
+  <pre><code><span class="c">// include/Board.h</span>
+<span class="k">#ifndef</span> BOARD_H
+<span class="k">#define</span> BOARD_H
 <span class="k">#include</span> <span class="s">&lt;array&gt;</span>
-<span class="k">struct</span> Board { std::array&lt;char,9&gt; cells; };
-<span class="k">bool</span> isValidMove(<span class="k">const</span> Board&amp; b, <span class="k">int</span> i);
-<span class="k">void</span> applyMove(Board&amp; b, <span class="k">int</span> i, <span class="k">char</span> player);
-<span class="k">bool</span> isFull(<span class="k">const</span> Board&amp; b);
-<span class="k">char</span> checkWinner(<span class="k">const</span> Board&amp; b);  <span class="c">// 'X', 'O', or ' '</span></code></pre>
-  <p>Put the implementations in <code>src/board.cpp</code> (including the win-detection logic from Lab 2), and keep the game loop, printing the board and reading input, in <code>src/main.cpp</code>, calling these functions.</p>
 
-  <h3>2 · Write CMakeLists.txt</h3>
-  <pre><code><span class="k">cmake_minimum_required</span>(VERSION 3.16)
-<span class="k">project</span>(tictactoe CXX)
-<span class="k">set</span>(CMAKE_CXX_STANDARD 17)
-<span class="k">set</span>(CMAKE_CXX_STANDARD_REQUIRED ON)
+<span class="k">class</span> Board {
+<span class="k">public</span>:
+    Board();                                <span class="c">// empty board, cells labelled '1'..'9'</span>
+    <span class="k">bool</span> isValidMove(<span class="k">int</span> cell) <span class="k">const</span>;       <span class="c">// cell in 1..9 and not already taken</span>
+    <span class="k">void</span> applyMove(<span class="k">int</span> cell, <span class="k">char</span> player);  <span class="c">// place 'X' or 'O' at cell</span>
+    <span class="k">bool</span> isFull() <span class="k">const</span>;                    <span class="c">// all nine cells taken</span>
+    <span class="k">char</span> winner() <span class="k">const</span>;                    <span class="c">// 'X', 'O', or ' ' if none yet</span>
+    <span class="k">char</span> cellMark(<span class="k">int</span> cell) <span class="k">const</span>;          <span class="c">// what to display for cell 1..9</span>
+<span class="k">private</span>:
+    std::array&lt;<span class="k">char</span>, 9&gt; cells;
+};
+<span class="k">#endif</span></code></pre>
 
-<span class="k">add_library</span>(game src/board.cpp)
-<span class="k">target_include_directories</span>(game PUBLIC include)
+  <p><strong><code>src/Board.cpp</code></strong> — the implementation of that logic:</p>
+  <pre><code><span class="c">// src/Board.cpp</span>
+<span class="k">#include</span> <span class="s">"Board.h"</span>
 
-<span class="k">add_executable</span>(tictactoe src/main.cpp)
-<span class="k">target_link_libraries</span>(tictactoe PRIVATE game)</code></pre>
+Board::Board() {
+    cells = {<span class="s">'1'</span>,<span class="s">'2'</span>,<span class="s">'3'</span>,<span class="s">'4'</span>,<span class="s">'5'</span>,<span class="s">'6'</span>,<span class="s">'7'</span>,<span class="s">'8'</span>,<span class="s">'9'</span>};
+}
 
-  <h3>3 · Build out-of-source &amp; run</h3>
-  <pre><code><span class="k">cmake</span> -B build
-<span class="k">cmake</span> --build build
-./build/tictactoe        <span class="c"># (build\tictactoe.exe on Windows)</span></code></pre>
+<span class="k">bool</span> Board::isValidMove(<span class="k">int</span> cell) <span class="k">const</span> {
+    <span class="k">if</span> (cell &lt; 1 || cell &gt; 9) <span class="k">return</span> <span class="k">false</span>;
+    <span class="k">char</span> c = cells[cell - 1];
+    <span class="k">return</span> c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>;
+}
 
-  <h3>4 · Keep the repo clean &amp; commit via a PR</h3>
-  <ol>
-    <li>Add <code>build/</code> to your <code>.gitignore</code>.</li>
-    <li>Create a branch <code>feature/cmake</code>, commit the restructure, push it, and open a Pull Request on Gitee (reinforcing Lab 3). Merge it into <code>main</code>.</li>
+<span class="k">void</span> Board::applyMove(<span class="k">int</span> cell, <span class="k">char</span> player) {
+    cells[cell - 1] = player;
+}
+
+<span class="k">bool</span> Board::isFull() <span class="k">const</span> {
+    <span class="k">for</span> (<span class="k">char</span> c : cells)
+        <span class="k">if</span> (c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>) <span class="k">return</span> <span class="k">false</span>;
+    <span class="k">return</span> <span class="k">true</span>;
+}
+
+<span class="k">char</span> Board::winner() <span class="k">const</span> {
+    <span class="k">const</span> <span class="k">int</span> lines[8][3] = {
+        {0,1,2}, {3,4,5}, {6,7,8},
+        {0,3,6}, {1,4,7}, {2,5,8},
+        {0,4,8}, {2,4,6}
+    };
+    <span class="k">for</span> (<span class="k">auto</span>&amp; l : lines) {
+        <span class="k">char</span> a = cells[l[0]];
+        <span class="k">if</span> ((a == <span class="s">'X'</span> || a == <span class="s">'O'</span>) &amp;&amp; a == cells[l[1]] &amp;&amp; a == cells[l[2]])
+            <span class="k">return</span> a;
+    }
+    <span class="k">return</span> <span class="s">' '</span>;
+}
+
+<span class="k">char</span> Board::cellMark(<span class="k">int</span> cell) <span class="k">const</span> {
+    <span class="k">return</span> cells[cell - 1];
+}</code></pre>
+
+  <p><strong><code>include/Game.h</code></strong> — the I/O layer, which owns a <code>Board</code>:</p>
+  <pre><code><span class="c">// include/Game.h</span>
+<span class="k">#ifndef</span> GAME_H
+<span class="k">#define</span> GAME_H
+<span class="k">#include</span> <span class="s">"Board.h"</span>
+
+<span class="k">class</span> Game {
+<span class="k">public</span>:
+    <span class="k">void</span> run();          <span class="c">// play one game to the end</span>
+<span class="k">private</span>:
+    <span class="k">void</span> draw() <span class="k">const</span>;   <span class="c">// print the board</span>
+    Board board;
+    <span class="k">char</span> player = <span class="s">'X'</span>;
+};
+<span class="k">#endif</span></code></pre>
+
+  <p><strong><code>src/Game.cpp</code></strong> — drawing the board and the game loop:</p>
+  <pre><code><span class="c">// src/Game.cpp</span>
+<span class="k">#include</span> <span class="s">"Game.h"</span>
+<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
+
+<span class="k">void</span> Game::draw() <span class="k">const</span> {
+    <span class="k">for</span> (<span class="k">int</span> r = 0; r &lt; 3; ++r) {
+        std::cout &lt;&lt; <span class="s">' '</span> &lt;&lt; board.cellMark(r * 3 + 1)
+                  &lt;&lt; <span class="s">'|'</span> &lt;&lt; board.cellMark(r * 3 + 2)
+                  &lt;&lt; <span class="s">'|'</span> &lt;&lt; board.cellMark(r * 3 + 3) &lt;&lt; <span class="s">'\n'</span>;
+    }
+}
+
+<span class="k">void</span> Game::run() {
+    <span class="k">while</span> (<span class="k">true</span>) {
+        draw();
+        std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">", cell 1-9: "</span>;
+        <span class="k">int</span> cell;
+        std::cin &gt;&gt; cell;
+        <span class="k">if</span> (!board.isValidMove(cell)) {
+            std::cout &lt;&lt; <span class="s">"invalid\n"</span>;
+            <span class="k">continue</span>;
+        }
+        board.applyMove(cell, player);
+        <span class="k">if</span> (board.winner() != <span class="s">' '</span>) {
+            draw();
+            std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">" wins!\n"</span>;
+            <span class="k">return</span>;
+        }
+        <span class="k">if</span> (board.isFull()) {
+            draw();
+            std::cout &lt;&lt; <span class="s">"Draw\n"</span>;
+            <span class="k">return</span>;
+        }
+        player = (player == <span class="s">'X'</span>) ? <span class="s">'O'</span> : <span class="s">'X'</span>;
+    }
+}</code></pre>
+
+  <p><strong><code>src/main.cpp</code></strong> — the entry point, just three lines:</p>
+  <pre><code><span class="c">// src/main.cpp</span>
+<span class="k">#include</span> <span class="s">"Game.h"</span>
+
+<span class="k">int</span> main() {
+    Game game;
+    game.run();
+}</code></pre>
+
+  <h3>2 · Write your own Makefile</h3>
+  <p>Now write the <code>Makefile</code> yourself, in the project root, modelled on the lecture (Class 9, Sections 9–10). Do not copy a finished file: build it from the requirements below. Remember that every recipe line must start with a real <kbd>Tab</kbd>.</p>
+  <div class="callout"><span class="tag">Your Makefile must</span>
+  <ol style="margin:0">
+    <li>Define variables: <code>CXX = g++</code>, <code>CXXFLAGS = -std=c++17 -Wall -Iinclude</code>, and <code>BUILD = build</code>.</li>
+    <li>Detect the shell with the <code>uname</code> check from the lecture, setting <code>EXE</code> (the program: <code>build/tictactoe</code>, or <code>build/tictactoe.exe</code> on Windows), <code>MKDIR</code>, <code>RMDIR</code>, and <code>RUN</code>.</li>
+    <li>Have a <strong>default target</strong> that links the three object files (<code>build/Board.o build/Game.o build/main.o</code>) into <code>$(EXE)</code>.</li>
+    <li>Have a <strong>pattern rule</strong> that compiles each <code>src/%.cpp</code> into <code>build/%.o</code>, listing the headers in <code>include/</code> as prerequisites so editing a header triggers a rebuild.</li>
+    <li>Have a rule that <strong>creates the <code>build/</code> folder</strong> before anything is compiled into it.</li>
+    <li>Declare <code>.PHONY</code> targets <code>run</code> (build, then run <code>$(EXE)</code>) and <code>clean</code> (delete the <code>build/</code> folder).</li>
   </ol>
+  </div>
+  <p>The only differences from the lecture's <code>hello</code> Makefile are the names: the program is <code>tictactoe</code>, and there are <em>three</em> source files instead of two.</p>
 
-  <div class="callout"><span class="tag">Done when</span><p>The project builds with two CMake commands, produces a working <code>tictactoe</code> executable, <code>build/</code> is ignored, and the restructure is merged into <code>main</code> via a PR.</p></div>
+  <p>Once your Makefile builds and runs the game, <strong>paste the finished file in the box below</strong> for submission:</p>
+  <div class="ws-bar"><span class="label">// paste your finished Makefile here</span></div>
+  <div class="fill" contenteditable="true" spellcheck="false" style="display:block;white-space:pre-wrap;min-height:260px;border:1px solid var(--line);border-radius:8px;padding:14px;font-size:12.5px;line-height:1.55"></div>
+
+  <h3>3 · Test your Makefile</h3>
+  <p>From the project root, run these three commands and check each behaves as described:</p>
+  <pre><code><span class="k">make</span>           <span class="c"># compiles src/*.cpp into build/*.o, links build/tictactoe</span>
+<span class="k">make</span> run       <span class="c"># builds if needed, then starts the game</span>
+<span class="k">make</span> clean     <span class="c"># deletes the whole build/ folder</span></code></pre>
+  <ul>
+    <li><strong><code>make</code></strong> creates the <code>build/</code> folder and the executable inside it. Run <code>make</code> a second time: it should report everything is <em>up to date</em> and compile nothing.</li>
+    <li><strong><code>make run</code></strong> launches the game. Play through a win (e.g. X on cells 1, 2, 3) and a draw to confirm the logic works.</li>
+    <li><strong><code>make clean</code></strong> removes <code>build/</code> entirely, so <code>git status</code> shows only your source files and the <code>Makefile</code>.</li>
+  </ul>
+
+  <h3>4 · Log your work &amp; commit via a PR</h3>
+  <div class="callout warn">
+    <span class="tag">Open this lab in a new tab first</span>
+    <p>The box in Section 2 and the log below are typed directly into this page and are <strong>not saved</strong>: navigating away will erase them. Open this page in a new tab, then use the print button at the end to save a PDF when you're done.</p>
+  </div>
+  <p>Take the finished project through the Git workflow from Lab 3, and log every step below. <strong>Steps 1 and 2 are given as examples.</strong> Using the <strong>+ Add step</strong> button, add the remaining steps you take to reach the final state. Your steps <strong>must</strong> include:</p>
+  <ul>
+    <li>doing all the new work on a <strong>task branch</strong> (you created <code>feature/make</code> in Step 1) — never commit directly to <code>master</code>;</li>
+    <li>adding your <code>Makefile</code> to the project;</li>
+    <li>editing <code>.gitignore</code> so the generated <code>build/</code> folder is excluded from version control;</li>
+    <li>committing and pushing the task branch to Gitee;</li>
+    <li>opening a <strong>Pull Request</strong> to merge the task branch into <code>master</code>;</li>
+    <li>after the merge, <strong>deleting the task branch</strong> on Gitee and locally.</li>
+  </ul>
+  <p>For each step, fill in the Git command(s) and the non-Git operations. Write <code>N/A</code> where there are none; if a step uses several Git commands, put them on one line separated by <code>|</code>.</p>
+
+  <div class="ws-bar"><span class="label">// Lab 4 work log: fillable</span></div>
+
+  <div id="lab4-steps">
+    <div class="step">
+      <div class="head"><span class="badge">Step 1</span><span class="instr">Create a feature branch <code>feature/make</code> off <code>master</code> and switch to it.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">git switch -c feature/make</span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">N/A</span></p>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 2</span><span class="instr">Add the project's source files to your workspace.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">N/A</span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">Create the <code>include/</code> and <code>src/</code> folders and add the five source files (Board.h, Game.h, Board.cpp, Game.cpp, main.cpp) at the paths shown in Section 1.</span></p>
+    </div>
+  </div>
+  <button class="btn-add" data-addstep="#lab4-steps" data-tpl="#lab4-step-tpl">+ Add step</button>
+  <button class="btn-add" data-removestep="#lab4-steps">− Remove last step</button>
+
+  <template id="lab4-step-tpl">
+    <div class="step">
+      <div class="head"><span class="badge">Step</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+  </template>
+
+  <div class="callout"><span class="tag">Done when</span><p>A single <code>make</code> builds a working <code>tictactoe</code> in the <code>build/</code> folder, <code>make run</code> plays the game, <code>make clean</code> removes <code>build/</code>, the generated folder is gitignored (but the <code>Makefile</code> and sources are committed), and the project is merged into <code>master</code> via a PR.</p></div>
+
+  <div class="callout tip"><span class="tag">Submit</span><p>Save this page as a PDF for submission. It should show your finished <strong>Makefile pasted in Section 2</strong> and the completed <strong>work log in Section 4</strong>.</p></div>
+  <div class="ws-bar"><span class="label">// Lab 4 submission</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
 
   <div class="next-prev">
     <a href="#m5-lecture">← Lecture</a>
@@ -1733,22 +2283,23 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   <h2 class="page-title">CI/CD Configuration</h2>
   <p class="sub-meta">Automating the build and tests on every change with Gitee Go.</p>
 
-  <p class="lead">We now connect everything: a build system (CMake), tests, and a remote host (Gitee) become an automated <strong>pipeline</strong> that runs on every push and protects <code>main</code> from broken code.</p>
+  <p class="lead">We now connect everything: a build system (Make), tests, and a remote host (Gitee) become an automated <strong>pipeline</strong> that runs on every push and protects <code>master</code> from broken code.</p>
 
   <h3>Testing pure functions</h3>
-  <p>Because Lab 4 moved the game logic into a library, we can test it directly: no keyboard required. A test program calls functions like <code>checkWinner</code> with known inputs and verifies the outputs. Crucially, it signals success or failure through its <strong>exit code</strong>: <code>0</code> means all tests passed, non-zero means something failed. That exit code is what the pipeline watches.</p>
+  <p>Because Lab 4 separated the game logic into <code>board.cpp</code>, we can test it directly: no keyboard required. A test program calls functions like <code>checkWinner</code> with known inputs and verifies the outputs. Crucially, it signals success or failure through its <strong>exit code</strong>: <code>0</code> means all tests passed, non-zero means something failed. That exit code is what the pipeline watches.</p>
 
-  <h3>CTest</h3>
-  <p>CMake's testing tool, CTest, runs your test programs and reports pass/fail:</p>
-  <pre><code><span class="k">enable_testing</span>()
-<span class="k">add_executable</span>(test_board tests/test_board.cpp)
-<span class="k">target_link_libraries</span>(test_board PRIVATE game)
-<span class="k">add_test</span>(NAME board_tests COMMAND test_board)</code></pre>
-  <p>Then <code>ctest --test-dir build</code> runs them.</p>
+  <h3>A test target in the Makefile</h3>
+  <p>We add a rule that compiles the test program against <code>board.cpp</code>, and a <code>test</code> rule that runs it:</p>
+  <pre><code>test_board: tests/test_board.cpp src/board.cpp
+	$(CXX) $(CXXFLAGS) -o test_board tests/test_board.cpp src/board.cpp
+
+test: test_board
+	./test_board</code></pre>
+  <p>Then <code>make test</code> builds and runs the tests. Because the test program returns a non-zero exit code on failure, <code>make test</code> itself fails too, which is exactly the signal CI needs.</p>
 
   <h3>Gitee Go</h3>
   <p>Gitee Go is Gitee's built-in CI/CD. You enable it on the repository, and it stores pipeline definitions as YAML files in a <code>.workflow/</code> folder. A typical pipeline has stages that run on every push:</p>
-  <pre><code><span class="k">checkout</span> → <span class="k">install tools</span> → <span class="k">cmake configure</span> → <span class="k">build</span> → <span class="k">ctest</span></code></pre>
+  <pre><code><span class="k">checkout</span> → <span class="k">install tools</span> → <span class="k">make</span> → <span class="k">make test</span></code></pre>
   <ul>
     <li>Each push triggers the pipeline; you watch it run and read the logs.</li>
     <li>A passing run is <span style="color:var(--green);font-weight:700">green</span>; a failing one is <span style="color:var(--coral);font-weight:700">red</span>.</li>
@@ -1768,7 +2319,7 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
 <section class="page" id="m6-lab">
   <div class="eyebrow">Module 6 · Lab 5 · Class 12</div>
   <h2 class="page-title">Lab 5: Build &amp; Test Pipeline on Gitee Go</h2>
-  <p class="sub-meta">Add unit tests, wire them into CTest, then automate everything in a pipeline. Watch it go red, then green.</p>
+  <p class="sub-meta">Add unit tests, wire them into a Makefile <code>test</code> target, then automate everything in a pipeline. Watch it go red, then green.</p>
 
   <h3>1 · Write a test program</h3>
   <p>Create <code>tests/test_board.cpp</code>: a tiny, dependency-free harness (no external framework needed, which avoids download problems):</p>
@@ -1795,14 +2346,14 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   std::cerr&lt;&lt;failures&lt;&lt;<span class="s">" test(s) failed.\n"</span>; <span class="k">return</span> 1;
 }</code></pre>
 
-  <h3>2 · Wire it into CMake / CTest</h3>
-  <p>Add to <code>CMakeLists.txt</code>, then verify locally with <code>ctest</code>:</p>
-  <pre><code><span class="k">enable_testing</span>()
-<span class="k">add_executable</span>(test_board tests/test_board.cpp)
-<span class="k">target_link_libraries</span>(test_board PRIVATE game)
-<span class="k">add_test</span>(NAME board_tests COMMAND test_board)</code></pre>
-  <pre><code><span class="k">cmake</span> -B build &amp;&amp; <span class="k">cmake</span> --build build
-<span class="k">ctest</span> --test-dir build --output-on-failure</code></pre>
+  <h3>2 · Add a test target to the Makefile</h3>
+  <p>Add these rules to your <code>Makefile</code> (recipe lines start with a <kbd>Tab</kbd>), then verify locally with <code>make test</code>:</p>
+  <pre><code>test_board: tests/test_board.cpp src/board.cpp
+	$(CXX) $(CXXFLAGS) -o test_board tests/test_board.cpp src/board.cpp
+
+test: test_board
+	./test_board</code></pre>
+  <pre><code><span class="k">make</span> test               <span class="c"># builds test_board, then runs it</span></code></pre>
 
   <h3>3 · Create the Gitee Go pipeline</h3>
   <p>Enable Gitee Go on your repo and add a pipeline. Start from Gitee's shell/build template and set its steps to the commands below (the exact YAML keys come from the template editor: adjust to match the current Gitee Go interface). The pipeline should run the same steps your machine does:</p>
@@ -1812,10 +2363,9 @@ trigger: [push, pull_request]
 stages:
   - name: build-test
     steps:
-      - <span class="k">apt-get install -y cmake g++</span>     <span class="c"># ensure tools</span>
-      - <span class="k">cmake -B build</span>
-      - <span class="k">cmake --build build</span>
-      - <span class="k">ctest --test-dir build --output-on-failure</span></code></pre>
+      - <span class="k">apt-get install -y make g++</span>      <span class="c"># ensure tools</span>
+      - <span class="k">make</span>                          <span class="c"># build the game</span>
+      - <span class="k">make test</span>                     <span class="c"># build &amp; run the tests</span></code></pre>
 
   <h3>4 · Make it go red, then green</h3>
   <ol>
@@ -1839,12 +2389,12 @@ stages:
   <h2 class="page-title">Final Project</h2>
   <p class="sub-meta">In teams, extend the game through the full workflow you've learned: from issue to released, tested build.</p>
 
-  <p class="lead">Everything so far has built the machinery: version control, a clean repo, branches, a CMake build, and an automated test pipeline. Now you put it to work. In teams of 2–3, add <strong>one feature</strong> to Tic-Tac-Toe and take it through the complete professional loop.</p>
+  <p class="lead">Everything so far has built the machinery: version control, a clean repo, branches, a Make build, and an automated test pipeline. Now you put it to work. In teams of 2–3, add <strong>one feature</strong> to Tic-Tac-Toe and take it through the complete professional loop.</p>
 
   <h3>Schedule</h3>
   <div class="timing"><span class="t">Class 13</span><span><strong>Discussion &amp; planning.</strong> Form teams, choose a feature, open issues on Gitee, assign owners, plan branches, agree on "done."</span></div>
   <div class="timing"><span class="t">Classes 14–15</span><span><strong>Implementation.</strong> Issue-driven development: branch per issue → code + a unit test → push → PR → CI gate → review → merge.</span></div>
-  <div class="timing"><span class="t">Class 16</span><span><strong>Integration &amp; demo.</strong> Final merge to <code>main</code>, tag a <code>v1.0</code> release, and present.</span></div>
+  <div class="timing"><span class="t">Class 16</span><span><strong>Integration &amp; demo.</strong> Final merge to <code>master</code>, tag a <code>v1.0</code> release, and present.</span></div>
 
   <h3>Choose a feature</h3>
   <div class="opt-grid">
@@ -1856,9 +2406,9 @@ stages:
 
   <h3>Definition of done</h3>
   <ul>
-    <li>The feature works and is merged into <code>main</code> via a Pull Request.</li>
+    <li>The feature works and is merged into <code>master</code> via a Pull Request.</li>
     <li>It has at least one meaningful <strong>unit test</strong> for any new logic.</li>
-    <li>CI (Gitee Go) is <span style="color:var(--green);font-weight:700">green</span> on <code>main</code>.</li>
+    <li>CI (Gitee Go) is <span style="color:var(--green);font-weight:700">green</span> on <code>master</code>.</li>
     <li>The work is traceable: issues linked to PRs.</li>
     <li>A <code>v1.0</code> release is tagged on Gitee.</li>
   </ul>
@@ -1867,9 +2417,9 @@ stages:
   <table class="rubric">
     <thead><tr><th>Criterion</th><th>Weight</th></tr></thead>
     <tbody>
-      <tr><td>Working feature, merged to <code>main</code></td><td class="pct">30%</td></tr>
+      <tr><td>Working feature, merged to <code>master</code></td><td class="pct">30%</td></tr>
       <tr><td>At least one meaningful unit test</td><td class="pct">20%</td></tr>
-      <tr><td>CI pipeline passing on <code>main</code></td><td class="pct">20%</td></tr>
+      <tr><td>CI pipeline passing on <code>master</code></td><td class="pct">20%</td></tr>
       <tr><td>Clean issue → branch → PR history showing the workflow</td><td class="pct">20%</td></tr>
       <tr><td>Tagged release + clear demo</td><td class="pct">10%</td></tr>
     </tbody>
@@ -1918,6 +2468,27 @@ stages:
       setTimeout(() => { b.textContent = original; b.classList.remove('copied'); }, 1500);
     });
   }));
+  // Auto-add a copy button to every code block that doesn't already have one
+  document.querySelectorAll('pre').forEach(pre => {
+    if(pre.closest('.code-block')) return;                 // already has a manual copy button
+    const wrap = document.createElement('div');
+    wrap.className = 'code-block';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn-copy';
+    btn.textContent = '⧉ Copy';
+    wrap.insertBefore(btn, pre);
+    btn.addEventListener('click', () => {
+      const code = wrap.querySelector('pre code') || pre;
+      navigator.clipboard.writeText(code.innerText).then(() => {
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '⧉ Copy'; btn.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
   document.querySelectorAll('[data-addstep]').forEach(btn => btn.addEventListener('click', () => {
     const container = document.querySelector(btn.dataset.addstep);
     const tpl = document.querySelector(btn.dataset.tpl);
