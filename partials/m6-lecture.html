@@ -1,0 +1,38 @@
+<!-- ============================== M6 LECTURE ============================== -->
+<section class="page" id="m6-lecture">
+  <div class="eyebrow">Module 6 · Lecture · Class 11</div>
+  <h2 class="page-title">CI/CD Configuration</h2>
+  <p class="sub-meta">Automating the build and tests on every change with Gitee Go.</p>
+
+  <p class="lead">We now connect everything: a build system (Make), tests, and a remote host (Gitee) become an automated <strong>pipeline</strong> that runs on every push and protects <code>master</code> from broken code.</p>
+
+  <h3>Testing pure functions</h3>
+  <p>Because Lab 4 separated the game logic into <code>board.cpp</code>, we can test it directly: no keyboard required. A test program calls functions like <code>checkWinner</code> with known inputs and verifies the outputs. Crucially, it signals success or failure through its <strong>exit code</strong>: <code>0</code> means all tests passed, non-zero means something failed. That exit code is what the pipeline watches.</p>
+
+  <h3>A test target in the Makefile</h3>
+  <p>We add a rule that compiles the test program against <code>board.cpp</code>, and a <code>test</code> rule that runs it:</p>
+  <pre><code>test_board: tests/test_board.cpp src/board.cpp
+	$(CXX) $(CXXFLAGS) -o test_board tests/test_board.cpp src/board.cpp
+
+test: test_board
+	./test_board</code></pre>
+  <p>Then <code>make test</code> builds and runs the tests. Because the test program returns a non-zero exit code on failure, <code>make test</code> itself fails too, which is exactly the signal CI needs.</p>
+
+  <h3>Gitee Go</h3>
+  <p>Gitee Go is Gitee's built-in CI/CD. You enable it on the repository, and it stores pipeline definitions as YAML files in a <code>.workflow/</code> folder. A typical pipeline has stages that run on every push:</p>
+  <pre><code><span class="k">checkout</span> → <span class="k">install tools</span> → <span class="k">make</span> → <span class="k">make test</span></code></pre>
+  <ul>
+    <li>Each push triggers the pipeline; you watch it run and read the logs.</li>
+    <li>A passing run is <span style="color:var(--green);font-weight:700">green</span>; a failing one is <span style="color:var(--coral);font-weight:700">red</span>.</li>
+    <li>Gitee Go provides free build minutes, generous for a class, so every student can run pipelines.</li>
+    <li>A <strong>PR pipeline</strong> can <em>gate</em> merges: a Pull Request whose tests fail cannot be merged.</li>
+  </ul>
+
+  <div class="callout tip"><span class="tag">This is CD too</span><p>Without Docker, "delivery" here means the pipeline produces a verified, runnable build (an artifact) and you tag a release on Gitee: a reliable, automated path from commit to shippable program.</p></div>
+
+  <div class="next-prev">
+    <a href="#m5-lab">← Lab 4</a>
+    <a href="#m6-lab">Lab 5 →</a>
+  </div>
+</section>
+

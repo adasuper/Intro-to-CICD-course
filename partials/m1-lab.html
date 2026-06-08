@@ -1,0 +1,185 @@
+<!-- ============================== M1 LAB ============================== -->
+<section class="page" id="m1-lab">
+  <div class="eyebrow">Module 1 · Setup Lab · Class 2</div>
+  <h2 class="page-title">Setup Lab: Get Your Machine Ready</h2>
+  <p class="sub-meta">Install and verify the full toolchain. Nothing later works until this does, so finish every checkpoint.</p>
+
+  <div class="callout tip">
+    <span class="tag">Goal</span>
+    <p>By the end of this lab you have a working C++ toolchain, a Gitee account with SSH access, and you have successfully pushed a small program to a Gitee repository.</p>
+  </div>
+
+  <div class="callout">
+    <span class="tag">Before you start</span>
+    <p>Work through the steps in order: each builds on the last. Instructions focus on <strong>Windows</strong> (most common here) with short notes for macOS and Linux. Every tool has an official download link plus a <span style="color:var(--amber);font-weight:600">China mirror</span> in case the official one is slow.</p>
+  </div>
+
+  <h3>1 · Install Git</h3>
+  <p>Git is the version-control tool at the centre of the course. On Windows the installer also gives you <strong>Git Bash</strong>: the terminal you'll use throughout.</p>
+  <div class="dl-row">
+    <a class="dl" href="https://git-scm.com/download/win" target="_blank" rel="noopener"><span class="arr">⇣</span> Git for Windows</a>
+    <a class="dl alt" href="https://git-scm.com/downloads" target="_blank" rel="noopener">All platforms</a>
+  </div>
+  <div class="os">
+    <div class="os-h">Windows</div>
+    <ol>
+      <li>Download and run the installer from the link above.</li>
+      <li>Accept the default option on every screen: the defaults are correct for this course. Keep <em>"Git from the command line and also from 3rd-party software"</em> selected.</li>
+      <li>Finish, then open <strong>Git Bash</strong> from the Start menu.</li>
+    </ol>
+    <div class="mirror">Official download slow? Get Git for Windows from the Tsinghua mirror: <a href="https://mirrors.tuna.tsinghua.edu.cn/github-release/git-for-windows/git/" target="_blank" rel="noopener">mirrors.tuna.tsinghua.edu.cn/github-release/git-for-windows/git/</a></div>
+  </div>
+  <div class="os">
+    <div class="os-h">macOS / Linux</div>
+    <p style="margin:6px 0 0">macOS: Git arrives with the Xcode Command Line Tools (Step 2). Linux: <code>sudo apt install git</code> on Debian/Ubuntu.</p>
+  </div>
+  <p>Then set your identity once, in any terminal:</p>
+  <pre><code><span class="k">git</span> --version
+<span class="k">git</span> config --global user.name <span class="s">"Your Name"</span>
+<span class="k">git</span> config --global user.email <span class="s">"you@example.com"</span></code></pre>
+
+  <h3>2 · Install a C++ compiler (g++)</h3>
+  <p>You need the GCC / g++ compiler. On Windows, pick <strong>one</strong> of the two options below: Option A is the simplest for beginners.</p>
+
+  <div class="os">
+    <div class="os-h">Windows · Option A: WinLibs (easiest: download &amp; unzip)</div>
+    <div class="dl-row"><a class="dl" href="https://winlibs.com/" target="_blank" rel="noopener"><span class="arr">⇣</span> winlibs.com</a></div>
+    <ol>
+      <li>On WinLibs, under the newest release download the <strong>UCRT runtime · Win64 · Zip archive</strong> (the "GCC + MinGW-w64 (UCRT)" build).</li>
+      <li>Extract the zip to <code>C:\mingw64</code>: you should end up with a <code>C:\mingw64\bin</code> folder.</li>
+      <li>Add <code>C:\mingw64\bin</code> to your <strong>PATH</strong>: press <kbd>Win</kbd>+<kbd>R</kbd>, run <code>sysdm.cpl</code> → <em>Advanced</em> → <em>Environment Variables</em> → select <em>Path</em> → <em>Edit</em> → <em>New</em> → paste the folder → OK.</li>
+      <li>Close and reopen Git Bash so the new PATH takes effect.</li>
+    </ol>
+  </div>
+
+  <div class="os">
+    <div class="os-h">Windows · Option B: MSYS2 (a full toolchain manager)</div>
+    <div class="dl-row"><a class="dl" href="https://www.msys2.org/" target="_blank" rel="noopener"><span class="arr">⇣</span> msys2.org</a></div>
+    <ol>
+      <li>Download and run the installer; keep the default location <code>C:\msys64</code>.</li>
+      <li>When it finishes, open <strong>"MSYS2 UCRT64"</strong> from the Start menu.</li>
+      <li>Update the package database: run this, let the window close if asked, reopen it and run again until it reports "nothing to do":
+        <pre style="margin:8px 0"><code><span class="k">pacman</span> -Syu</code></pre></li>
+      <li>Install the compiler toolchain (press <kbd>Enter</kbd> to accept all packages):
+        <pre style="margin:8px 0"><code><span class="k">pacman</span> -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain</code></pre></li>
+      <li>Add <code>C:\msys64\ucrt64\bin</code> to your Windows <strong>PATH</strong> (same steps as Option A), then reopen Git Bash.</li>
+    </ol>
+    <div class="mirror">In China, set MSYS2 to a domestic mirror <em>first</em>: it is far faster. Follow the Tsinghua guide at <a href="https://mirrors.tuna.tsinghua.edu.cn/help/msys2/" target="_blank" rel="noopener">mirrors.tuna.tsinghua.edu.cn/help/msys2/</a>: add the <code>tuna</code> <code>Server&nbsp;=</code> lines to the top of the <code>mirrorlist.*</code> files in <code>C:\msys64\etc\pacman.d\</code>, then run <code>pacman -Syu</code>.</div>
+  </div>
+
+  <div class="os">
+    <div class="os-h">macOS / Linux</div>
+    <p style="margin:6px 0 0">macOS: <code>xcode-select --install</code> (installs clang/g++ and git). Linux: <code>sudo apt install build-essential</code>.</p>
+  </div>
+
+  <p>Verify in a fresh terminal:</p>
+  <pre><code><span class="k">g++</span> --version</code></pre>
+
+  <h3>3 · Make (your build tool)</h3>
+  <p><strong>Make</strong> is the build system used from Module 5 onward. You do <em>not</em> need a separate download: it ships with the compiler toolchain you just installed.</p>
+  <div class="os">
+    <div class="os-h">Windows</div>
+    <p style="margin:6px 0 0">Both compiler options from Step 2 ship the tool as <code>mingw32-make.exe</code>, inside the same <code>bin</code> folder you already added to your PATH. To be able to type plain <code>make</code> (as this course does), copy that file to <code>make.exe</code> in the same folder:</p>
+    <ul style="margin:6px 0 0">
+      <li><strong>Option A (WinLibs):</strong> copy <code>C:\mingw64\bin\mingw32-make.exe</code> → <code>C:\mingw64\bin\make.exe</code></li>
+      <li><strong>Option B (MSYS2):</strong> copy <code>C:\msys64\ucrt64\bin\mingw32-make.exe</code> → <code>C:\msys64\ucrt64\bin\make.exe</code></li>
+    </ul>
+    <p style="margin:6px 0 0">(Just copy and rename, keeping the original <code>mingw32-make.exe</code> in place. Then reopen Git Bash so it picks up the new name.)</p>
+  </div>
+  <div class="os">
+    <div class="os-h">macOS / Linux</div>
+    <p style="margin:6px 0 0">macOS: <code>make</code> comes with the Xcode command-line tools from Step 2. Linux: it is part of <code>build-essential</code>.</p>
+  </div>
+  <p>Verify:</p>
+  <pre><code><span class="k">make</span> --version</code></pre>
+
+  <h3>4 · Install VS Code &amp; extensions</h3>
+  <p>VS Code is the editor. Install it, then add two Microsoft extensions from inside VS Code.</p>
+  <div class="dl-row"><a class="dl" href="https://code.visualstudio.com/Download" target="_blank" rel="noopener"><span class="arr">⇣</span> code.visualstudio.com</a></div>
+  <ol>
+    <li>Download and install VS Code for your operating system.</li>
+    <li>Open VS Code → click the <strong>Extensions</strong> icon in the left bar (or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>).</li>
+    <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools" target="_blank" rel="noopener">C/C++</a></strong> (by Microsoft).</li>
+    <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools" target="_blank" rel="noopener">Makefile Tools</a></strong> (by Microsoft).</li>
+  </ol>
+  <div class="callout tip"><span class="tag">Tip</span><p>The first time you build a C++ file, VS Code may ask which compiler to use: choose the <code>g++</code> you installed in Step 2.</p></div>
+
+  <h3>5 · Create a Gitee account &amp; SSH key</h3>
+  <p>Gitee hosts your repositories and runs the CI pipeline. To push your commits up to Gitee, your computer has to prove <em>who it is</em> every time it connects. There are two ways to do that, <strong>HTTPS</strong> and <strong>SSH</strong>, and it is worth understanding the difference before you set one up.</p>
+
+  <h4>HTTPS vs. SSH: two ways to authenticate</h4>
+  <p>Both transport the exact same Git data; they only differ in <em>how the server checks that the connection is allowed</em>.</p>
+  <table class="log">
+    <thead><tr><th></th><th>HTTPS</th><th>SSH</th></tr></thead>
+    <tbody>
+      <tr><td class="desc"><strong>Remote URL looks like</strong></td><td><code>https://gitee.com/user/repo.git</code></td><td><code>git@gitee.com:user/repo.git</code></td></tr>
+      <tr><td class="desc"><strong>How you prove it's you</strong></td><td>Username + password / access token, typed (or cached) on each push.</td><td>A cryptographic <strong>key pair</strong> stored once on your machine, no password typed.</td></tr>
+      <tr><td class="desc"><strong>Setup effort</strong></td><td>None up front, but you re-enter credentials (or manage a token) repeatedly.</td><td>A few minutes once; after that, pushing is friction-free.</td></tr>
+      <tr><td class="desc"><strong>Best when</strong></td><td>One-off clones, machines you don't control, networks that block SSH.</td><td>Your own daily-driver machine, which is our case.</td></tr>
+    </tbody>
+  </table>
+  <p>We use <strong>SSH</strong> in this course: you set it up once and never type a password to push again.</p>
+
+  <div class="callout"><span class="tag">How SSH keys work</span><p>SSH uses a matched <strong>key pair</strong>: a <strong>private key</strong> that stays secret on your computer, and a <strong>public key</strong> you give to Gitee. When you connect, Gitee challenges your machine to prove it holds the matching private key, without the private key ever leaving your computer. The public key is safe to share; the private key (the file <em>without</em> <code>.pub</code>) must never be copied or posted anywhere.</p></div>
+
+  <div class="dl-row"><a class="dl" href="https://gitee.com/" target="_blank" rel="noopener"><span class="arr">↗</span> Register on gitee.com</a></div>
+  <ol>
+    <li>Create and verify an account at <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a>.</li>
+    <li>In <strong>Git Bash</strong>, generate a key pair (press <kbd>Enter</kbd> at every prompt to accept the defaults):
+      <pre style="margin:8px 0"><code><span class="k">ssh-keygen</span> -t ed25519 -C <span class="s">"you@example.com"</span></code></pre>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">Breaking the command down:</p>
+      <ul style="margin:4px 0">
+        <li><code>ssh-keygen</code>: the program that creates a new SSH key pair.</li>
+        <li><code>-t ed25519</code>: the key <em>type</em> (algorithm). Ed25519 is the modern, fast, secure default.</li>
+        <li><code>-C "you@example.com"</code>: a <em>comment</em> label attached to the key so you can recognise it later in Gitee's list. It does not have to be a real email; it's just a tag.</li>
+      </ul>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">This writes two files into <code>~/.ssh/</code>: <code>id_ed25519</code> (your <strong>private</strong> key, keep secret) and <code>id_ed25519.pub</code> (your <strong>public</strong> key, safe to share). The prompts ask where to save it (Enter = default) and for an optional passphrase that encrypts the private key on disk.</p></li>
+    <li>Display and copy the <em>public</em> key: note the <code>.pub</code> extension; never copy the other file:
+      <pre style="margin:8px 0"><code><span class="k">cat</span> ~/.ssh/id_ed25519.pub</code></pre>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)"><code>cat</code> prints a file's contents to the screen. Select the whole line it outputs (it starts with <code>ssh-ed25519</code> and ends with your comment) and copy it.</p></li>
+    <li>On Gitee: avatar → <strong>Settings</strong> → <strong>SSH Public Keys</strong> → <em>Add Public Key</em> → paste it and save. This tells Gitee to trust any machine that holds the matching private key.</li>
+    <li>Test the connection:
+      <pre style="margin:8px 0"><code><span class="k">ssh</span> -T git@gitee.com</code></pre>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)"><code>ssh</code> opens a secure connection; <code>-T</code> skips requesting an interactive terminal (Gitee doesn't offer a shell, only Git); <code>git@gitee.com</code> is the user <code>git</code> on the host <code>gitee.com</code>. A successful run greets you by your username: that confirms your key is recognised.</p></li>
+  </ol>
+  <div class="callout tip"><span class="tag">First-connection prompt</span><p>The first time you run <code>ssh -T</code>, you'll see <em>"The authenticity of host 'gitee.com' can't be established… continue connecting (yes/no)?"</em>, type <kbd>yes</kbd>. This records Gitee's fingerprint so future connections are trusted automatically.</p></div>
+  <div class="callout"><span class="tag">"Does not provide shell access" is success</span><p>A correct test prints something like <em>"Hi user(@user)! You've successfully authenticated, but GITEE.COM does not provide shell access."</em> That is <strong>not an error</strong>. The first half means your key worked and Gitee knows who you are. The second half is normal: the <code>git</code> account exists only to handle <code>push</code>/<code>pull</code>, not to give you a command prompt, so it logs you out instead of opening a shell (which is why we pass <code>-T</code>). A real failure looks different: <code>Permission denied (publickey)</code>.</p></div>
+
+  <h3>6 · Smoke test (the checkpoint)</h3>
+  <p>Prove the whole toolchain works end-to-end. First, pick a folder to work in and create the file you'll compile.</p>
+  <ol>
+    <li>Choose a home for your project: somewhere easy to find, <em>not</em> inside a synced folder like OneDrive or Desktop. A path with no spaces or non-English characters avoids headaches later. For example:
+      <pre style="margin:8px 0"><code><span class="c"># create the folder and move into it</span>
+<span class="k">mkdir</span> -p ~/dev/hello
+<span class="k">cd</span> ~/dev/hello</code></pre>
+      <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)"><code>mkdir -p ~/dev/hello</code> makes a <code>dev/hello</code> folder in your home directory (<code>-p</code> creates parents as needed and won't complain if it already exists); <code>cd</code> moves your terminal <em>into</em> that folder, so every command after this runs there.</p></li>
+    <li>Create <code>hello.cpp</code> in this folder. Either run the <code>echo</code> command in the block below, or, if you prefer, open the folder in VS Code (<code>code .</code>) and create <code>hello.cpp</code> by hand with the same contents.</li>
+    <li>Create the remote repository on Gitee so you have somewhere to push to. On <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a>: <strong>+</strong> (top-right) → <strong>New Repository</strong>. Set <strong>Repository name</strong> to <code>hello</code>, and, importantly, leave it <strong>empty</strong>: do <em>not</em> tick "Initialize this repository", and don't add a README, <code>.gitignore</code>, or licence. An empty repo lets your local commits push cleanly without conflicts. Click <strong>Create</strong>.</li>
+  </ol>
+  <div class="callout"><span class="tag">This folder is your workspace</span><p>The folder you just made is your <strong>local workspace</strong>: the actual files on your disk that you edit and compile. When you run <code>git init</code> below, Git starts tracking changes <em>inside</em> this folder. How a file moves from your workspace all the way to Gitee (workspace → staging → local repo → remote) is the core of the <strong>next class</strong>, so don't worry about the <code>git</code> commands' details yet: just run them and watch it work.</p></div>
+  <p>Now run the full sequence from inside that folder:</p>
+  <pre><code><span class="c"># compile and run a hello program</span>
+<span class="k">echo</span> <span class="s">'#include &lt;iostream&gt;
+int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
+<span class="k">g++</span> hello.cpp -o hello
+./hello
+
+<span class="c"># version it and push to a new empty Gitee repo</span>
+<span class="k">git</span> init
+<span class="k">git</span> add hello.cpp
+<span class="k">git</span> commit -m <span class="s">"first commit: hello"</span>
+<span class="k">git</span> remote add origin git@gitee.com:&lt;your-user&gt;/hello.git
+<span class="k">git</span> push -u origin master</code></pre>
+  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">Replace <code>&lt;your-user&gt;</code> (brackets and all) with your Gitee username: the handle from the <em>"Hi <strong>user</strong>(@user)!"</em> message in the SSH test. Easiest of all: open the new repo on Gitee → green <strong>Clone</strong> button → <strong>SSH</strong> tab → copy the exact <code>git@gitee.com:…</code> URL and paste it in place of the one above.</p>
+
+  <div class="callout">
+    <span class="tag">Done when</span>
+    <p>You can run <code>./hello</code>, and <code>hello.cpp</code> appears in your repository on the Gitee website.</p>
+  </div>
+
+  <div class="next-prev">
+    <a href="#m1-lecture">← Lecture</a>
+    <a href="#m2-lecture">Module 2 →</a>
+  </div>
+</section>
+

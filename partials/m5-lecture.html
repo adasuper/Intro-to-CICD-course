@@ -1,0 +1,245 @@
+<!-- ============================== M5 LECTURE ============================== -->
+<section class="page" id="m5-lecture">
+  <div class="eyebrow">Module 5 · Lecture · Class 9</div>
+  <h2 class="page-title">Make</h2>
+  <p class="sub-meta">Why manual <code>g++</code> doesn't scale, and how to describe a build once and repeat it with a single command.</p>
+
+  <p class="lead">As soon as a project has more than one source file, typing <code>g++</code> commands by hand becomes error-prone and unrepeatable. <strong>Make</strong> lets you record your build in one file, the <strong>Makefile</strong>. You then type <code>make</code>, and it runs the right compiler commands for you, rebuilding only what actually changed.</p>
+
+  <h3>1 · The simplest Makefile</h3>
+  <p>Recall the <code>hello</code> project from the Setup Lab: a single <code>hello.cpp</code> you compiled by hand with <code>g++ hello.cpp -o hello</code>. A Makefile records that command as a <strong>rule</strong>. Create a file named <code>Makefile</code> (no extension) next to <code>hello.cpp</code>:</p>
+  <pre><code>hello: hello.cpp
+	g++ hello.cpp -o hello</code></pre>
+  <p>That single rule has three parts:</p>
+  <ul>
+    <li><strong>Target</strong>: <code>hello</code>, the file we want to produce (left of the colon).</li>
+    <li><strong>Prerequisites</strong>: <code>hello.cpp</code>, what the target is built from (right of the colon).</li>
+    <li><strong>Recipe</strong>: the indented <code>g++ …</code> line, the shell command that builds the target.</li>
+  </ul>
+  <p>Now just type <code>make</code>:</p>
+  <pre><code><span class="k">make</span>
+<span class="c"># g++ hello.cpp -o hello</span>
+./hello
+<span class="c"># Hello, world!</span></code></pre>
+  <div class="callout warn"><span class="tag">Tabs, not spaces</span><p>Every recipe line <strong>must</strong> begin with a real <kbd>Tab</kbd> character, never spaces; this is Make's most infamous gotcha. If you see <code>Makefile:2: *** missing separator. Stop.</code>, your editor turned the Tab into spaces; switch that line's indentation back to a Tab. (In VS Code, the Makefile Tools extension handles this for you.)</p></div>
+
+  <h3>2 · The default goal &amp; "up to date"</h3>
+  <p>Running <code>make</code> with no arguments builds the <strong>first</strong> target in the file, the <em>default goal</em>. You can also name one explicitly: <code>make hello</code>. Run <code>make</code> a second time without changing anything:</p>
+  <pre><code><span class="k">make</span>
+<span class="c"># make: 'hello' is up to date.</span></code></pre>
+  <p>Make compares <strong>timestamps</strong>: it rebuilds a target only when a prerequisite is <em>newer</em> than the target. Edit <code>hello.cpp</code> (or <code>touch hello.cpp</code>) and <code>make</code> recompiles; otherwise it does nothing. On one file that hardly matters; on a big project it turns a minutes-long rebuild into a seconds-long one. That is the whole point of a build system.</p>
+
+  <h3>3 · More than one file</h3>
+  <p>Real programs span several files. Let's grow <code>hello</code> by moving the greeting into its own unit, giving three files:</p>
+  <pre><code><span class="c">// greeter.h</span>
+<span class="k">#ifndef</span> GREETER_H
+<span class="k">#define</span> GREETER_H
+<span class="k">#include</span> <span class="s">&lt;string&gt;</span>
+std::string greet(<span class="k">const</span> std::string&amp; name);
+<span class="k">#endif</span></code></pre>
+  <pre><code><span class="c">// greeter.cpp</span>
+<span class="k">#include</span> <span class="s">"greeter.h"</span>
+std::string greet(<span class="k">const</span> std::string&amp; name) {
+    <span class="k">return</span> <span class="s">"Hello, "</span> + name + <span class="s">"!"</span>;
+}</code></pre>
+  <pre><code><span class="c">// main.cpp</span>
+<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
+<span class="k">#include</span> <span class="s">"greeter.h"</span>
+<span class="k">int</span> main() {
+    std::cout &lt;&lt; greet(<span class="s">"world"</span>) &lt;&lt; <span class="s">"\n"</span>;
+}</code></pre>
+  <p>The naive Makefile compiles them all in one command:</p>
+  <pre><code>hello: main.cpp greeter.cpp greeter.h
+	g++ main.cpp greeter.cpp -o hello</code></pre>
+  <p>It works, but it recompiles <em>both</em> sources whenever you touch <em>either</em> one. We can do better.</p>
+
+  <h3>4 · Separate compilation &amp; incremental builds</h3>
+  <p>Building is really two steps: turn each <code>.cpp</code> into an <strong>object file</strong> (<code>.o</code>), then <strong>link</strong> the objects into one executable. Giving each step its own rule lets Make rebuild only what changed:</p>
+  <pre><code>hello: main.o greeter.o
+	g++ main.o greeter.o -o hello
+
+main.o: main.cpp greeter.h
+	g++ -c main.cpp
+
+greeter.o: greeter.cpp greeter.h
+	g++ -c greeter.cpp</code></pre>
+  <p><code>g++ -c main.cpp</code> compiles <em>without</em> linking, producing <code>main.o</code>. Make now understands a small <strong>dependency graph</strong>:</p>
+  <pre><code>hello
+├── main.o      ← main.cpp + greeter.h
+└── greeter.o   ← greeter.cpp + greeter.h</code></pre>
+  <p>Edit only <code>greeter.cpp</code> and run <code>make</code>: it rebuilds <code>greeter.o</code> and relinks <code>hello</code>, but <strong>skips</strong> <code>main.o</code> because <code>main.cpp</code> didn't change. Both objects list <code>greeter.h</code> as a prerequisite, so editing the header correctly rebuilds both.</p>
+
+  <h3>5 · Variables</h3>
+  <p>The compiler name and flags repeat on every line. Pull them into <strong>variables</strong> and reference them with <code>$(…)</code>:</p>
+  <pre><code>CXX = g++
+CXXFLAGS = -std=c++17 -Wall
+
+hello: main.o greeter.o
+	$(CXX) $(CXXFLAGS) main.o greeter.o -o hello
+
+main.o: main.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c main.cpp
+
+greeter.o: greeter.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c greeter.cpp</code></pre>
+  <p>Now adding a flag or switching compilers is a one-line change applied everywhere. <code>CXX</code> and <code>CXXFLAGS</code> are conventional names, but any name works. The two flags we pass are worth knowing:</p>
+  <ul>
+    <li><code>-std=c++17</code>: compile against the <strong>C++17</strong> language standard. Without it, g++ may default to an older standard and reject modern syntax; pinning the version makes the build behave the same on every machine.</li>
+    <li><code>-Wall</code>: turn on the common <strong>warnings</strong> ("<em>all</em>" the usual ones). Warnings flag suspicious code (an unused variable, a function that forgets to return) that still compiles but is often a bug. Treat them as a free code review.</li>
+  </ul>
+  <p>Other flags you'll meet: <code>-Iinclude</code> (also written <code>-I include</code>) adds a folder to the compiler's <strong>header search path</strong>, so <code>#include "board.h"</code> is found when the header lives in an <code>include/</code> subfolder; <code>-g</code> adds debug information; <code>-O2</code> turns on optimisation.</p>
+
+  <h3>6 · Automatic variables</h3>
+  <p>The recipes still repeat file names. Make fills in three <strong>automatic variables</strong> per rule:</p>
+  <ul>
+    <li><code>$@</code>: the <strong>target</strong>.</li>
+    <li><code>$^</code>: <strong>all</strong> prerequisites.</li>
+    <li><code>$&lt;</code>: the <strong>first</strong> prerequisite.</li>
+  </ul>
+  <pre><code>hello: main.o greeter.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+main.o: main.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c $&lt;
+
+greeter.o: greeter.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c $&lt;</code></pre>
+  <p>For <code>hello</code>, <code>$^</code> expands to <code>main.o greeter.o</code> and <code>$@</code> to <code>hello</code>. In the object rules we use <code>$&lt;</code> (the <code>.cpp</code>), not <code>$^</code>, so the header isn't handed to the compiler as a source file.</p>
+
+  <h3>7 · Pattern rules</h3>
+  <p>The two object rules are now identical except for the names. A <strong>pattern rule</strong> using <code>%</code> as a wildcard collapses them into one rule that builds <em>any</em> <code>.o</code> from the matching <code>.cpp</code>:</p>
+  <pre><code>%.o: %.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c $&lt; -o $@</code></pre>
+  <p>The <code>%</code> matches the stem: for <code>greeter.o</code> it is <code>greeter</code>, so the prerequisite becomes <code>greeter.cpp</code>. One rule now covers every source file you add.</p>
+
+  <h3>8 · Phony targets: <code>clean</code> and <code>run</code></h3>
+  <p>Not every target is a file. <code>clean</code> deletes build output; <code>run</code> builds then launches the program. Since no file named <code>clean</code> exists, <code>make clean</code> normally runs, but if someone ever created a file called <code>clean</code>, Make would think it was "up to date" and skip it. Declaring these targets <code>.PHONY</code> tells Make they are commands, not files:</p>
+  <pre><code>.PHONY: clean run
+
+clean:
+	rm -f hello *.o
+
+run: hello
+	./hello</code></pre>
+  <p><code>make run</code> depends on <code>hello</code>, so Make builds the program first (if needed), then runs it.</p>
+  <p><strong>But these two recipes are environment-specific.</strong> <code>rm -f</code> and <code>./hello</code> are Unix conventions (macOS, Linux, and Git Bash). In a native Windows shell (PowerShell or Command Prompt) the delete command is <code>del</code>, and the executable is <code>hello.exe</code>, launched <em>without</em> the <code>./</code> prefix. So <code>clean</code> and <code>run</code> have to adapt: the complete Makefile below detects <strong>which shell you are running in</strong> and picks the right commands automatically.</p>
+
+  <h3>9 · The complete Makefile</h3>
+  <p>Putting every idea together, and making <code>clean</code> and <code>run</code> work in any shell, gives this complete, portable Makefile for the multi-file <code>hello</code> project:</p>
+  <pre><code>CXX = g++
+CXXFLAGS = -std=c++17 -Wall
+
+<span class="c"># Ask the shell what it is: a POSIX shell (Linux, macOS, Git Bash) has</span>
+<span class="c"># `uname`; a native Windows shell (cmd / PowerShell) does not.</span>
+UNAME := $(shell uname 2&gt;/dev/null)
+
+<span class="k">ifeq</span> ($(UNAME),)
+    EXE = hello.exe
+    RM  = del /Q /F
+    RUN = $(EXE)
+<span class="k">else</span>
+    EXE = hello
+    RM  = rm -f
+    RUN = ./$(EXE)
+<span class="k">endif</span>
+
+$(EXE): main.o greeter.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+%.o: %.cpp greeter.h
+	$(CXX) $(CXXFLAGS) -c $&lt; -o $@
+
+.PHONY: clean run
+
+clean:
+	-$(RM) $(EXE) *.o
+
+run: $(EXE)
+	$(RUN)</code></pre>
+  <p>Instead of keying off the operating system, this version asks the <strong>shell</strong> what it is. The detection line repays reading token by token:</p>
+  <pre><code>UNAME := $(shell uname 2&gt;/dev/null)</code></pre>
+  <ul>
+    <li><code>UNAME</code>: the variable we are defining (any name works; this one is conventional).</li>
+    <li><code>:=</code>: a <strong>simply-expanded</strong> assignment: the right-hand side is evaluated <em>once, right now</em>, and the result is stored. With a plain <code>=</code> the value would be <em>recursively</em> expanded, re-evaluated every time <code>UNAME</code> is used, which would re-run the command on each reference. <code>:=</code> runs <code>uname</code> exactly once.</li>
+    <li><code>$(shell …)</code>: Make's <strong>shell function</strong>: it runs the command inside a subshell and substitutes the command's <strong>standard output</strong> back into the Makefile (with the trailing newline stripped). So <code>UNAME</code> becomes whatever <code>uname</code> printed.</li>
+    <li><code>uname</code>: the Unix command that prints the kernel/OS name: <code>Linux</code>, <code>Darwin</code> (macOS), or <code>MINGW64_NT-…</code> (Git Bash). A native Windows shell has no such command.</li>
+    <li><code>2&gt;/dev/null</code>: shell redirection: send file descriptor <strong>2</strong> (standard error) to the <strong>null device</strong>, i.e. discard it. When <code>uname</code> is missing, Windows prints a "command not found" message to stderr; this throws that message away so it doesn't clutter the output, leaving <code>UNAME</code> simply <em>empty</em>.</li>
+  </ul>
+  <p>So <code>UNAME</code> ends up as either the shell's name or an empty string, and two cases follow:</p>
+  <ul>
+    <li><strong>Empty</strong> (no <code>uname</code>) → Command Prompt or PowerShell: delete with <code>del</code>, run the bare <code>hello.exe</code>.</li>
+    <li><strong>Anything else</strong> (a POSIX shell: <code>Linux</code>, <code>Darwin</code>, or Git Bash) → use <code>rm</code> and <code>./hello</code>.</li>
+  </ul>
+  <p>The rules use <code>$(EXE)</code>, <code>$(RM)</code>, and <code>$(RUN)</code> instead of hard-coded names, so one file works for everyone. The leading <code>-</code> in <code>-$(RM) …</code> tells Make to <strong>ignore errors</strong> from that line, so <code>make clean</code> still succeeds even when there is nothing to delete.</p>
+  <div class="callout tip"><span class="tag">Works in any shell</span><p>Because the choice is driven by <code>uname</code> rather than the OS, the <code>clean</code> and <code>run</code> targets behave correctly whether you run <code>make</code> from <strong>Git Bash</strong>, <strong>PowerShell</strong>, or <strong>Command Prompt</strong>, with no need to remember which one.</p></div>
+  <p><code>make</code> builds it, <code>make run</code> builds-and-runs, <code>make clean</code> resets. For a deeper reference, the community favourite is <a class="inline" href="https://makefiletutorial.com/" target="_blank" rel="noopener">makefiletutorial.com</a>.</p>
+
+  <h3>10 · Organising files into folders</h3>
+  <p>So far every file (headers, sources, the Makefile, and the compiled output) has sat in one folder. That is fine for three files, but it stops scaling the moment a project grows: headers get tangled up with implementation, and, crucially, there is nowhere clean to put <strong>tests</strong>. The conventional layout separates code by its role:</p>
+  <pre><code>hello/
+├── include/
+│   └── greeter.h        <span class="c"># public headers (the interface)</span>
+├── src/
+│   ├── greeter.cpp      <span class="c"># implementation (the logic)</span>
+│   └── main.cpp         <span class="c"># entry point / I/O</span>
+├── tests/
+│   └── test_greeter.cpp <span class="c"># tests for the logic (added in Module 6)</span>
+├── build/               <span class="c"># compiled output: objects + executable (generated; gitignored)</span>
+└── Makefile</code></pre>
+  <ul>
+    <li><code>include/</code> holds the <strong>headers</strong>: the declarations other files <code>#include</code>.</li>
+    <li><code>src/</code> holds the <strong>implementation</strong>, split so the <em>logic</em> (<code>greeter.cpp</code>) is separate from the <em>entry point / I/O</em> (<code>main.cpp</code>).</li>
+    <li><code>tests/</code> holds <strong>test programs</strong> that exercise the logic.</li>
+  </ul>
+  <p><strong>Why this matters for testing.</strong> A test needs to call your logic (<code>greet()</code>) but must <em>not</em> drag in <code>main()</code>: a program can have only one <code>main</code>, and the test supplies its own. Because the logic lives in its own <code>src/greeter.cpp</code>, separate from <code>src/main.cpp</code>, a test in <code>tests/</code> can compile against <code>greeter.cpp</code> alone, with no keyboard and no clashing <code>main()</code>. In Module 6 you will do exactly that. Organising the files now is what makes automated testing possible later.</p>
+  <p>Build output should be kept out of the source folders too. This Makefile writes every object file <em>and</em> the executable into a generated <code>build/</code> folder, so <code>src/</code>, <code>include/</code>, and the project root only ever hold things you actually wrote (add <code>build/</code> to <code>.gitignore</code>). That takes a few coordinated changes: point the compiler at the headers with <code>-Iinclude</code>, read sources from <code>src/</code>, write outputs under <code>build/</code>, and create that folder before compiling.</p>
+  <pre><code>CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Iinclude
+BUILD = build
+
+UNAME := $(shell uname 2&gt;/dev/null)
+
+<span class="k">ifeq</span> ($(UNAME),)
+    EXE   = $(BUILD)/hello.exe
+    MKDIR = if not exist $(BUILD) mkdir $(BUILD)
+    RMDIR = if exist $(BUILD) rmdir /S /Q $(BUILD)
+    RUN   = $(subst /,\,$(EXE))
+<span class="k">else</span>
+    EXE   = $(BUILD)/hello
+    MKDIR = mkdir -p $(BUILD)
+    RMDIR = rm -rf $(BUILD)
+    RUN   = ./$(EXE)
+<span class="k">endif</span>
+
+$(EXE): $(BUILD)/main.o $(BUILD)/greeter.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+$(BUILD)/%.o: src/%.cpp include/greeter.h | $(BUILD)
+	$(CXX) $(CXXFLAGS) -c $&lt; -o $@
+
+$(BUILD):
+	$(MKDIR)
+
+.PHONY: clean run
+
+clean:
+	$(RMDIR)
+
+run: $(EXE)
+	$(RUN)</code></pre>
+  <ul>
+    <li><code>BUILD = build</code> names the output folder once, so every other line refers to it by variable.</li>
+    <li><code>-Iinclude</code> adds the <code>include/</code> folder to the compiler's header search path, so <code>#include "greeter.h"</code> resolves even though the header is not beside the source. The name <code>include</code> is only a <strong>convention</strong>: the flag is <code>-I</code> followed by whatever your folder is called (headers in <code>headers/</code> would use <code>-Iheaders</code>, with the prerequisite path updated to match). You can list several folders with several <code>-I</code> flags.</li>
+    <li>The pattern rule <code>$(BUILD)/%.o: src/%.cpp</code> reads each source from <code>src/</code> and writes its object into <code>build/</code> (so <code>build/greeter.o</code> is built from <code>src/greeter.cpp</code>); <code>include/greeter.h</code> is a prerequisite so editing the header rebuilds the objects.</li>
+    <li>The <code>$(BUILD):</code> rule creates the output folder before anything is compiled into it. Because creating and deleting a folder is shell-specific, the same <code>uname</code> check also sets <code>MKDIR</code> (<code>mkdir -p</code> on Unix vs <code>if not exist … mkdir</code> on Windows) and <code>RMDIR</code> (<code>rm -rf</code> vs <code>rmdir /S /Q</code>). <code>make clean</code> now just removes the whole <code>build/</code> folder.</li>
+    <li><code>RUN</code> on Windows wraps the path in <code>$(subst /,\,$(EXE))</code> because the <code>cmd</code> shell needs back-slashes (<code>build\hello.exe</code>) to launch a program, while g++ and Make accept forward slashes everywhere else.</li>
+  </ul>
+
+  <div class="callout tip"><span class="tag">On to the lab</span><p>In <strong>Lab 4</strong> you'll write a Makefile just like this for the Tic-Tac-Toe game, splitting its logic into <code>board.cpp</code> (so it can be tested without a keyboard) and its I/O into <code>main.cpp</code>. In <strong>Module 6</strong> you'll add a <code>test</code> target, and CI will run <code>make</code> and <code>make test</code> on every push.</p></div>
+
+  <div class="next-prev">
+    <a href="#m4-lab">← Lab 3</a>
+    <a href="#m5-lab">Lab 4 →</a>
+  </div>
+</section>
+

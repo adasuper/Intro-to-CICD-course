@@ -1,0 +1,68 @@
+<!-- ============================== M6 LAB (LAB 5) ============================== -->
+<section class="page" id="m6-lab">
+  <div class="eyebrow">Module 6 · Lab 5 · Class 12</div>
+  <h2 class="page-title">Lab 5: Build &amp; Test Pipeline on Gitee Go</h2>
+  <p class="sub-meta">Add unit tests, wire them into a Makefile <code>test</code> target, then automate everything in a pipeline. Watch it go red, then green.</p>
+
+  <h3>1 · Write a test program</h3>
+  <p>Create <code>tests/test_board.cpp</code>: a tiny, dependency-free harness (no external framework needed, which avoids download problems):</p>
+  <pre><code><span class="k">#include</span> <span class="s">"board.h"</span>
+<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
+<span class="k">static int</span> failures = 0;
+<span class="k">#define</span> CHECK(c) <span class="k">do</span>{ <span class="k">if</span>(!(c)){ std::cerr&lt;&lt;<span class="s">"FAIL: "</span> #c &lt;&lt;<span class="s">" @"</span>&lt;&lt;__LINE__&lt;&lt;<span class="s">"\n"</span>; ++failures; } }<span class="k">while</span>(0)
+
+<span class="k">int</span> main(){
+  Board top{{'X','X','X',' ',' ',' ',' ',' ',' '}};
+  CHECK(checkWinner(top)=='X');                 <span class="c">// row win</span>
+  Board col{{'O',' ',' ','O',' ',' ','O',' ',' '}};
+  CHECK(checkWinner(col)=='O');                 <span class="c">// column win</span>
+  Board diag{{'X',' ',' ',' ','X',' ',' ',' ','X'}};
+  CHECK(checkWinner(diag)=='X');                <span class="c">// diagonal win</span>
+  Board none{{'X','O','X',' ',' ',' ',' ',' ',' '}};
+  CHECK(checkWinner(none)==' ');                <span class="c">// no winner</span>
+  Board draw{{'X','O','X','X','O','O','O','X','X'}};
+  CHECK(isFull(draw) &amp;&amp; checkWinner(draw)==' '); <span class="c">// draw</span>
+  Board g{{'X',' ',' ',' ',' ',' ',' ',' ',' '}};
+  CHECK(!isValidMove(g,0)); CHECK(isValidMove(g,1));
+
+  <span class="k">if</span>(failures==0){ std::cout&lt;&lt;<span class="s">"All tests passed!\n"</span>; <span class="k">return</span> 0; }
+  std::cerr&lt;&lt;failures&lt;&lt;<span class="s">" test(s) failed.\n"</span>; <span class="k">return</span> 1;
+}</code></pre>
+
+  <h3>2 · Add a test target to the Makefile</h3>
+  <p>Add these rules to your <code>Makefile</code> (recipe lines start with a <kbd>Tab</kbd>), then verify locally with <code>make test</code>:</p>
+  <pre><code>test_board: tests/test_board.cpp src/board.cpp
+	$(CXX) $(CXXFLAGS) -o test_board tests/test_board.cpp src/board.cpp
+
+test: test_board
+	./test_board</code></pre>
+  <pre><code><span class="k">make</span> test               <span class="c"># builds test_board, then runs it</span></code></pre>
+
+  <h3>3 · Create the Gitee Go pipeline</h3>
+  <p>Enable Gitee Go on your repo and add a pipeline. Start from Gitee's shell/build template and set its steps to the commands below (the exact YAML keys come from the template editor: adjust to match the current Gitee Go interface). The pipeline should run the same steps your machine does:</p>
+  <pre><code><span class="c"># .workflow/ - illustrative shape; build the real one from Gitee's template</span>
+name: build-and-test
+trigger: [push, pull_request]
+stages:
+  - name: build-test
+    steps:
+      - <span class="k">apt-get install -y make g++</span>      <span class="c"># ensure tools</span>
+      - <span class="k">make</span>                          <span class="c"># build the game</span>
+      - <span class="k">make test</span>                     <span class="c"># build &amp; run the tests</span></code></pre>
+
+  <h3>4 · Make it go red, then green</h3>
+  <ol>
+    <li>Push your work and watch the pipeline turn <span style="color:var(--green);font-weight:700">green</span>.</li>
+    <li>Deliberately break a test (e.g. change an expected winner) and push: watch it turn <span style="color:var(--coral);font-weight:700">red</span> and read the failure in the logs.</li>
+    <li>Fix it and push again → green.</li>
+    <li><em>(Optional)</em> Configure the PR pipeline so a Pull Request can't merge while tests fail.</li>
+  </ol>
+
+  <div class="callout"><span class="tag">Done when</span><p>Every push to your repository automatically builds the project and runs the tests on Gitee Go, and you have seen a full red → green cycle.</p></div>
+
+  <div class="next-prev">
+    <a href="#m6-lecture">← Lecture</a>
+    <a href="#m7">Final Project →</a>
+  </div>
+</section>
+

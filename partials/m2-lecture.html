@@ -1,0 +1,183 @@
+<!-- ============================== M2 LECTURE ============================== -->
+<section class="page" id="m2-lecture">
+  <div class="eyebrow">Module 2 · Lecture · Class 3</div>
+  <h2 class="page-title">Git Basics</h2>
+  <p class="sub-meta">How Git tracks your work across four locations: the mental model behind Lab 1.</p>
+
+  <p class="lead">Git is a <strong>version-control system</strong>: it records snapshots of your project over time so you can review history, undo mistakes, and collaborate without overwriting each other's work. The key to using it confidently is understanding <em>where a file lives at any moment</em>.</p>
+
+  <h3>The four locations</h3>
+  <p>Every change moves through four places. Today's lab is built entirely around tracking files across them:</p>
+  <ul>
+    <li><strong>Workspace</strong> (working directory): the actual files you edit on disk.</li>
+    <li><strong>Staging Area</strong> (index): a holding area for changes you have marked to include in the next commit.</li>
+    <li><strong>Local Repository</strong>: the committed history stored on your own machine.</li>
+    <li><strong>Remote Repository</strong>: the shared copy on Gitee that your team pulls from and pushes to.</li>
+  </ul>
+
+  <figure class="git-flow">
+    <svg viewBox="0 0 920 300" role="img" aria-label="Diagram of the four Git locations and the commands that move changes between them" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ah-fwd" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L7,3 L0,6 Z" fill="var(--green)"/>
+        </marker>
+        <marker id="ah-back" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L7,3 L0,6 Z" fill="var(--coral)"/>
+        </marker>
+      </defs>
+
+      <!-- forward arrows (top): add → commit → push -->
+      <g font-family="'JetBrains Mono',monospace" font-size="13" fill="var(--green)" text-anchor="middle">
+        <line x1="187" y1="78" x2="253" y2="78" stroke="var(--green)" stroke-width="2" marker-end="url(#ah-fwd)"/>
+        <text x="220" y="64">git add</text>
+        <line x1="427" y1="78" x2="493" y2="78" stroke="var(--green)" stroke-width="2" marker-end="url(#ah-fwd)"/>
+        <text x="460" y="64">git commit</text>
+        <line x1="667" y1="78" x2="733" y2="78" stroke="var(--green)" stroke-width="2" marker-end="url(#ah-fwd)"/>
+        <text x="700" y="64">git push</text>
+      </g>
+
+      <!-- the four locations -->
+      <g font-family="'Hanken Grotesk',sans-serif" text-anchor="middle">
+        <rect x="15"  y="90" width="170" height="84" rx="10" fill="var(--paper-2)" stroke="var(--green)" stroke-width="2"/>
+        <text x="100" y="126" font-size="16" font-weight="700" fill="var(--ink)">Workspace</text>
+        <text x="100" y="148" font-size="12" fill="var(--muted)">files on your disk</text>
+
+        <rect x="255" y="90" width="170" height="84" rx="10" fill="var(--paper-2)" stroke="var(--amber)" stroke-width="2"/>
+        <text x="340" y="126" font-size="16" font-weight="700" fill="var(--ink)">Staging Area</text>
+        <text x="340" y="148" font-size="12" fill="var(--muted)">the index</text>
+
+        <rect x="495" y="90" width="170" height="84" rx="10" fill="var(--paper-2)" stroke="var(--green)" stroke-width="2"/>
+        <text x="580" y="126" font-size="16" font-weight="700" fill="var(--ink)">Local Repository</text>
+        <text x="580" y="148" font-size="12" fill="var(--muted)">.git history</text>
+
+        <rect x="735" y="90" width="170" height="84" rx="10" fill="var(--ink)" stroke="var(--ink)" stroke-width="2"/>
+        <text x="820" y="126" font-size="16" font-weight="700" fill="var(--paper)">Remote Repository</text>
+        <text x="820" y="148" font-size="12" fill="#b9b3a2">Gitee</text>
+      </g>
+
+      <!-- backward arrows (bottom): reset (unstage) and fetch (remote → local) -->
+      <g font-family="'JetBrains Mono',monospace" font-size="13" fill="var(--coral)" text-anchor="middle">
+        <line x1="253" y1="200" x2="187" y2="200" stroke="var(--coral)" stroke-width="2" marker-end="url(#ah-back)"/>
+        <text x="220" y="222">git reset</text>
+        <line x1="733" y1="200" x2="667" y2="200" stroke="var(--coral)" stroke-width="2" marker-end="url(#ah-back)"/>
+        <text x="700" y="222">git fetch</text>
+
+        <!-- git pull: remote all the way back into the workspace (fetch + merge) -->
+        <path d="M820 176 L820 264 L100 264 L100 176" fill="none" stroke="var(--coral)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ah-back)"/>
+        <text x="460" y="256">git pull <tspan font-size="11" fill="var(--muted)">(fetch + merge)</tspan></text>
+      </g>
+    </svg>
+    <figcaption>Changes flow left → right toward sharing (green: <code>add</code>, <code>commit</code>, <code>push</code>). Coming back (coral): <code>reset</code> unstages, <code>fetch</code> downloads commits into your local repo only, and <code>pull</code> goes further (<code>fetch + merge</code>), landing others' work right in your workspace. <code>git clone</code> creates the whole local copy from a remote in one shot.</figcaption>
+  </figure>
+
+  <h3>The core commands</h3>
+  <p>Use this block as a quick map of which command moves a change between which two locations, then read the detail below for <em>when</em> and <em>how</em> to reach for each one.</p>
+  <pre><code><span class="k">git clone</span> &lt;url&gt;     <span class="c"># copy a remote repo to your workspace</span>
+<span class="k">git status</span>          <span class="c"># what changed, and where it lives now</span>
+<span class="k">git add</span> &lt;file&gt;       <span class="c"># workspace  → staging area</span>
+<span class="k">git reset</span>           <span class="c"># staging area → workspace (unstage)</span>
+<span class="k">git commit</span>          <span class="c"># staging area → local repository</span>
+<span class="k">git push</span>            <span class="c"># local repo  → remote repository</span>
+<span class="k">git pull</span>            <span class="c"># remote repo → local + workspace</span>
+<span class="k">git log</span>             <span class="c"># view commit history</span>
+<span class="k">git diff</span>            <span class="c"># view exact changes</span></code></pre>
+
+  <p class="cmd-note">The examples below all use the <code>hello</code> repository you pushed to Gitee in the Setup Lab smoke test (<code>git@gitee.com:adasuper/hello.git</code>, swap in your own username). Imagine you are coming back to it on a fresh machine to make a small change.</p>
+
+  <h4><code>git clone &lt;url&gt;</code></h4>
+  <p><strong>When</strong>: once per project, to make a local copy of a repository that already exists on Gitee.</p>
+  <p><strong>How</strong>: run it in the folder where you want the project to land. It creates a new sub-folder, downloads the full history, and wires up the remote (named <code>origin</code>) for you, so <code>git init</code> + <code>git remote add</code> are unnecessary.</p>
+  <p><strong>Example</strong>: grab your <code>hello</code> repo onto a new machine and step into it:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> clone git@gitee.com:adasuper/hello.git
+<span class="k">cd</span> hello</code></pre>
+
+  <h4><code>git status</code></h4>
+  <p><strong>When</strong>: constantly, before and after almost every other command. It is your map of where each file currently lives.</p>
+  <p><strong>How</strong>: it needs no arguments and changes nothing; it lists files that are modified but unstaged, files staged for the next commit, and files Git isn't tracking yet.</p>
+  <p><strong>Example</strong>: after editing <code>hello.cpp</code> to print a friendlier message:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> status
+<span class="c"># Changes not staged for commit:</span>
+<span class="c">#   modified:   hello.cpp</span></code></pre>
+
+  <h4><code>git add &lt;file&gt;</code></h4>
+  <p><strong>When</strong>: after editing, to mark exactly which changes belong in your next commit (<em>workspace → staging</em>).</p>
+  <p><strong>How</strong>: name specific files to stage them deliberately, or use <code>.</code> to stage everything changed. Staging is what lets you commit two edits separately even if you made them at the same time.</p>
+  <p><strong>Example</strong>: stage your edited <code>hello.cpp</code>:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> add hello.cpp         <span class="c"># just this file</span>
+<span class="k">git</span> add .                  <span class="c"># everything changed in the hello folder</span></code></pre>
+
+  <h4><code>git reset &lt;file&gt;</code></h4>
+  <p><strong>When</strong>: you staged something by mistake and want to take it back out of the next commit (<em>staging → workspace</em>).</p>
+  <p><strong>How</strong>: it unstages the file while <strong>keeping your edits</strong>: your file on disk is untouched, it just won't be in the next commit. It is the exact undo of <code>git add</code> (which is why Lab 1 has you add then unstage).</p>
+  <p><strong>Example</strong>: you staged <code>hello.cpp</code> but realise you aren't done editing it:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> reset hello.cpp        <span class="c"># back to unstaged; your edits remain</span></code></pre>
+
+  <h4><code>git reset --soft</code> vs <code>git reset --hard</code></h4>
+  <p><code>git reset</code> can also rewind a whole <em>commit</em> by pointing the branch at an earlier one. The mode flag decides how far the undo reaches across the three locations, and this is where you can lose work, so understand it before using it.</p>
+  <ul>
+    <li><strong><code>--soft</code></strong>: moves the branch back, but <em>keeps everything staged</em>. The commit is undone; its changes sit ready in the staging area as if you'd just run <code>git add</code>. Use it to redo a commit message or fold several commits into one. <em>Nothing is lost.</em></li>
+    <li><strong><code>--mixed</code></strong> (the default, what you get with no flag): moves the branch back and <em>unstages</em> the changes, but leaves your edits in the workspace. This is the same family as the file-level <code>git reset &lt;file&gt;</code> above. <em>Nothing is lost.</em></li>
+    <li><strong><code>--hard</code></strong>: moves the branch back and <em>throws away</em> the changes in both the staging area and the workspace, resetting your files on disk to match the target commit. <em>This permanently deletes uncommitted work</em>: there is no undo.</li>
+  </ul>
+  <pre style="margin:8px 0"><code><span class="k">git</span> reset --soft HEAD~1    <span class="c"># undo last commit, keep changes staged</span>
+<span class="k">git</span> reset HEAD~1           <span class="c"># (--mixed) undo last commit, keep changes in workspace</span>
+<span class="k">git</span> reset --hard HEAD~1    <span class="c"># undo last commit AND discard the changes: careful!</span></code></pre>
+  <div class="callout warn"><span class="tag">Handle --hard with care</span><p><code>--hard</code> is the only one of the three that destroys work you haven't committed. Reach for <code>--soft</code> or the default <code>--mixed</code> unless you are absolutely certain you want those edits gone. <code>HEAD~1</code> means "one commit before the current tip"; <code>HEAD~2</code> would go back two, and so on.</p></div>
+
+  <h4><code>git commit -m "message"</code></h4>
+  <p><strong>When</strong>: once a staged set of changes forms one complete, logical unit of work (<em>staging → local repository</em>).</p>
+  <p><strong>How</strong>: always include a clear message with <code>-m</code>. The commit is a permanent snapshot in your local history: it is <em>not</em> on Gitee yet until you push.</p>
+  <p><strong>Example</strong>: record your greeting change as a commit:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> commit -m <span class="s">"print a friendlier greeting"</span></code></pre>
+
+  <h4><code>git push</code></h4>
+  <p><strong>When</strong>: after committing, to publish your local commits so teammates and the CI pipeline can see them (<em>local → remote</em>).</p>
+  <p><strong>How</strong>: the first push of a new branch needs <code>-u origin &lt;branch&gt;</code> to link it; after that, a bare <code>git push</code> is enough.</p>
+  <p><strong>Example</strong>: the smoke test already ran the first form, so from now on a bare push is all you need:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> push -u origin master    <span class="c"># first time (done in the smoke test)</span>
+<span class="k">git</span> push                      <span class="c"># every push to hello after that</span></code></pre>
+
+  <h4><code>git pull</code> <span style="font-weight:400">(and <code>git fetch</code>)</span></h4>
+  <p><strong>When</strong>: before you start working, and whenever a teammate has pushed to <code>hello</code>, to bring their commits into your copy.</p>
+  <p><strong>How</strong>: run it with a clean workspace (commit or stash your own changes first) to avoid merge conflicts. The distinction matters: <code>git fetch</code> only <em>downloads</em> new commits into your local repository (<em>remote → local repo</em>) and leaves your working files untouched, so you can inspect what changed first. <code>git pull</code> is <code>fetch</code> followed by <code>merge</code>: it goes one step further and updates the files on your disk too (<em>remote → local repo → workspace</em>).</p>
+  <p><strong>Example</strong>: sync the <code>hello</code> repo before adding your next change:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> fetch                   <span class="c"># download new commits, hello.cpp on disk unchanged</span>
+<span class="k">git</span> pull                    <span class="c"># download AND update hello.cpp on disk</span></code></pre>
+
+  <h4><code>git log</code></h4>
+  <p><strong>When</strong>: any time you need to see the history of a repository: what was changed, by whom, and when.</p>
+  <p><strong>How</strong>: it lists past commits newest-first with author, date, and message. Add <code>--oneline</code> for a compact one-row-per-commit view.</p>
+  <p><strong>Example</strong>: review the history of <code>hello</code> after your new commit:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> log --oneline
+<span class="c"># a1b2c3d  print a friendlier greeting</span>
+<span class="c"># e4f5a6b  first commit: hello</span></code></pre>
+
+  <h4><code>git diff</code></h4>
+  <p><strong>When</strong>: to review the exact line-by-line changes you've made, typically right before <code>git add</code> or <code>git commit</code>.</p>
+  <p><strong>How</strong>: <code>git diff</code> alone shows unstaged edits (workspace vs. staging); <code>git diff --staged</code> shows what's already staged for the next commit (staging vs. last commit).</p>
+  <p><strong>Example</strong>: check what you changed in <code>hello.cpp</code> before staging it:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> diff                    <span class="c"># unstaged edits to hello.cpp</span>
+<span class="k">git</span> diff --staged           <span class="c"># what the next commit will record</span></code></pre>
+
+  <h3>The journey of a change</h3>
+  <p>You edit a file (workspace) → <code>git add</code> it (staging) → <code>git commit</code> it (local repo) → <code>git push</code> it (remote). Each command moves the change one step closer to being shared. Knowing which command moves a file between which two locations is the whole game, and the worksheet in Lab 1 makes you trace it explicitly.</p>
+
+  <h3>Good habits</h3>
+  <ul>
+    <li><strong>Commit small, logical units of work: not "everything at once."</strong><br>A commit that does one thing is easy to understand, and if it introduces a bug you can undo just that change without losing unrelated work. A giant "did lots of stuff" commit hides what actually happened and is painful to reverse.</li>
+    <li><strong>Write clear messages: <em>"add input prompt"</em>, not <em>"stuff"</em>.</strong><br>Months later, the message is often the only clue to <em>why</em> a change was made. A good message lets you (and teammates) scan the history and find the right commit without reading every line of code.</li>
+    <li><strong>Run <code>git status</code> often; it is your map.</strong><br>It tells you exactly which files are modified, staged, or untracked before you act. Checking first prevents the common mistakes of committing the wrong file or forgetting to stage one you meant to include.</li>
+    <li><strong>Always <code>git pull</code> before you start working, and pull once more right before you push.</strong><br>Pulling first means you build on your teammates' latest work instead of an outdated copy. Pulling again just before pushing catches anything that landed while you were coding, so conflicts surface locally where they are easy to fix, rather than your push being rejected because the remote moved ahead.</li>
+    <li><strong>Keep a useful <code>README.md</code> describing the project.</strong><br>It is the first thing anyone (including future you) reads to learn what the project does and how to build and run it. A clear README turns a pile of files into a project someone can actually pick up.</li>
+  </ul>
+
+  <h3>Going further</h3>
+  <p>This lecture covers the handful of commands you need day to day. When you want the complete, authoritative reference for any Git command and its options, consult the official documentation:</p>
+  <div class="dl-row"><a class="dl" href="https://git-scm.com/docs" target="_blank" rel="noopener"><span class="arr">↗</span> Official Git documentation: git-scm.com/docs</a></div>
+
+  <div class="next-prev">
+    <a href="#m1-lab">← Setup Lab</a>
+    <a href="#m2-lab">Lab 1 →</a>
+  </div>
+</section>
+

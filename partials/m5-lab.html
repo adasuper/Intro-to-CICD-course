@@ -1,0 +1,224 @@
+<!-- ============================== M5 LAB (LAB 4) ============================== -->
+<section class="page" id="m5-lab">
+  <div class="eyebrow">Module 5 · Lab 4 · Class 10</div>
+  <h2 class="page-title">Lab 4: Build the Game with a Makefile</h2>
+  <p class="sub-meta">Split the game into logic, I/O, and an entry point, then write your own Makefile that builds it into a <code>build/</code> folder.</p>
+
+  <h3>1 · Split the game into source files</h3>
+  <p>The whole point of this lab is to write the <strong>Makefile</strong>, so all the C++ is given. Split the seed game into three layers, with headers in <code>include/</code> and sources in <code>src/</code>:</p>
+  <pre><code>tictactoe/
+├── include/
+│   ├── Board.h     <span class="c"># pure logic: board state + rules + win detection</span>
+│   └── Game.h      <span class="c"># I/O: drawing the board, reading moves, the loop</span>
+├── src/
+│   ├── Board.cpp
+│   ├── Game.cpp
+│   └── main.cpp    <span class="c"># entry point</span>
+└── Makefile        <span class="c"># you write this in Section 2</span></code></pre>
+  <p>Create each file at the path shown and paste in the code below.</p>
+
+  <p><strong><code>include/Board.h</code></strong> — the pure logic (no I/O, so it can be tested without a keyboard later):</p>
+  <pre><code><span class="c">// include/Board.h</span>
+<span class="k">#ifndef</span> BOARD_H
+<span class="k">#define</span> BOARD_H
+<span class="k">#include</span> <span class="s">&lt;array&gt;</span>
+
+<span class="k">class</span> Board {
+<span class="k">public</span>:
+    Board();                                <span class="c">// empty board, cells labelled '1'..'9'</span>
+    <span class="k">bool</span> isValidMove(<span class="k">int</span> cell) <span class="k">const</span>;       <span class="c">// cell in 1..9 and not already taken</span>
+    <span class="k">void</span> applyMove(<span class="k">int</span> cell, <span class="k">char</span> player);  <span class="c">// place 'X' or 'O' at cell</span>
+    <span class="k">bool</span> isFull() <span class="k">const</span>;                    <span class="c">// all nine cells taken</span>
+    <span class="k">char</span> winner() <span class="k">const</span>;                    <span class="c">// 'X', 'O', or ' ' if none yet</span>
+    <span class="k">char</span> cellMark(<span class="k">int</span> cell) <span class="k">const</span>;          <span class="c">// what to display for cell 1..9</span>
+<span class="k">private</span>:
+    std::array&lt;<span class="k">char</span>, 9&gt; cells;
+};
+<span class="k">#endif</span></code></pre>
+
+  <p><strong><code>src/Board.cpp</code></strong> — the implementation of that logic:</p>
+  <pre><code><span class="c">// src/Board.cpp</span>
+<span class="k">#include</span> <span class="s">"Board.h"</span>
+
+Board::Board() {
+    cells = {<span class="s">'1'</span>,<span class="s">'2'</span>,<span class="s">'3'</span>,<span class="s">'4'</span>,<span class="s">'5'</span>,<span class="s">'6'</span>,<span class="s">'7'</span>,<span class="s">'8'</span>,<span class="s">'9'</span>};
+}
+
+<span class="k">bool</span> Board::isValidMove(<span class="k">int</span> cell) <span class="k">const</span> {
+    <span class="k">if</span> (cell &lt; 1 || cell &gt; 9) <span class="k">return</span> <span class="k">false</span>;
+    <span class="k">char</span> c = cells[cell - 1];
+    <span class="k">return</span> c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>;
+}
+
+<span class="k">void</span> Board::applyMove(<span class="k">int</span> cell, <span class="k">char</span> player) {
+    cells[cell - 1] = player;
+}
+
+<span class="k">bool</span> Board::isFull() <span class="k">const</span> {
+    <span class="k">for</span> (<span class="k">char</span> c : cells)
+        <span class="k">if</span> (c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>) <span class="k">return</span> <span class="k">false</span>;
+    <span class="k">return</span> <span class="k">true</span>;
+}
+
+<span class="k">char</span> Board::winner() <span class="k">const</span> {
+    <span class="k">const</span> <span class="k">int</span> lines[8][3] = {
+        {0,1,2}, {3,4,5}, {6,7,8},
+        {0,3,6}, {1,4,7}, {2,5,8},
+        {0,4,8}, {2,4,6}
+    };
+    <span class="k">for</span> (<span class="k">auto</span>&amp; l : lines) {
+        <span class="k">char</span> a = cells[l[0]];
+        <span class="k">if</span> ((a == <span class="s">'X'</span> || a == <span class="s">'O'</span>) &amp;&amp; a == cells[l[1]] &amp;&amp; a == cells[l[2]])
+            <span class="k">return</span> a;
+    }
+    <span class="k">return</span> <span class="s">' '</span>;
+}
+
+<span class="k">char</span> Board::cellMark(<span class="k">int</span> cell) <span class="k">const</span> {
+    <span class="k">return</span> cells[cell - 1];
+}</code></pre>
+
+  <p><strong><code>include/Game.h</code></strong> — the I/O layer, which owns a <code>Board</code>:</p>
+  <pre><code><span class="c">// include/Game.h</span>
+<span class="k">#ifndef</span> GAME_H
+<span class="k">#define</span> GAME_H
+<span class="k">#include</span> <span class="s">"Board.h"</span>
+
+<span class="k">class</span> Game {
+<span class="k">public</span>:
+    <span class="k">void</span> run();          <span class="c">// play one game to the end</span>
+<span class="k">private</span>:
+    <span class="k">void</span> draw() <span class="k">const</span>;   <span class="c">// print the board</span>
+    Board board;
+    <span class="k">char</span> player = <span class="s">'X'</span>;
+};
+<span class="k">#endif</span></code></pre>
+
+  <p><strong><code>src/Game.cpp</code></strong> — drawing the board and the game loop:</p>
+  <pre><code><span class="c">// src/Game.cpp</span>
+<span class="k">#include</span> <span class="s">"Game.h"</span>
+<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
+
+<span class="k">void</span> Game::draw() <span class="k">const</span> {
+    <span class="k">for</span> (<span class="k">int</span> r = 0; r &lt; 3; ++r) {
+        std::cout &lt;&lt; <span class="s">' '</span> &lt;&lt; board.cellMark(r * 3 + 1)
+                  &lt;&lt; <span class="s">'|'</span> &lt;&lt; board.cellMark(r * 3 + 2)
+                  &lt;&lt; <span class="s">'|'</span> &lt;&lt; board.cellMark(r * 3 + 3) &lt;&lt; <span class="s">'\n'</span>;
+    }
+}
+
+<span class="k">void</span> Game::run() {
+    <span class="k">while</span> (<span class="k">true</span>) {
+        draw();
+        std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">", cell 1-9: "</span>;
+        <span class="k">int</span> cell;
+        std::cin &gt;&gt; cell;
+        <span class="k">if</span> (!board.isValidMove(cell)) {
+            std::cout &lt;&lt; <span class="s">"invalid\n"</span>;
+            <span class="k">continue</span>;
+        }
+        board.applyMove(cell, player);
+        <span class="k">if</span> (board.winner() != <span class="s">' '</span>) {
+            draw();
+            std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">" wins!\n"</span>;
+            <span class="k">return</span>;
+        }
+        <span class="k">if</span> (board.isFull()) {
+            draw();
+            std::cout &lt;&lt; <span class="s">"Draw\n"</span>;
+            <span class="k">return</span>;
+        }
+        player = (player == <span class="s">'X'</span>) ? <span class="s">'O'</span> : <span class="s">'X'</span>;
+    }
+}</code></pre>
+
+  <p><strong><code>src/main.cpp</code></strong> — the entry point, just three lines:</p>
+  <pre><code><span class="c">// src/main.cpp</span>
+<span class="k">#include</span> <span class="s">"Game.h"</span>
+
+<span class="k">int</span> main() {
+    Game game;
+    game.run();
+}</code></pre>
+
+  <h3>2 · Write your own Makefile</h3>
+  <p>Now write the <code>Makefile</code> yourself, in the project root, modelled on the lecture (Class 9, Sections 9–10). Do not copy a finished file: build it from the requirements below. Remember that every recipe line must start with a real <kbd>Tab</kbd>.</p>
+  <div class="callout"><span class="tag">Your Makefile must</span>
+  <ol style="margin:0">
+    <li>Define variables: <code>CXX = g++</code>, <code>CXXFLAGS = -std=c++17 -Wall -Iinclude</code>, and <code>BUILD = build</code>.</li>
+    <li>Detect the shell with the <code>uname</code> check from the lecture, setting <code>EXE</code> (the program: <code>build/tictactoe</code>, or <code>build/tictactoe.exe</code> on Windows), <code>MKDIR</code>, <code>RMDIR</code>, and <code>RUN</code>.</li>
+    <li>Have a <strong>default target</strong> that links the three object files (<code>build/Board.o build/Game.o build/main.o</code>) into <code>$(EXE)</code>.</li>
+    <li>Have a <strong>pattern rule</strong> that compiles each <code>src/%.cpp</code> into <code>build/%.o</code>, listing the headers in <code>include/</code> as prerequisites so editing a header triggers a rebuild.</li>
+    <li>Have a rule that <strong>creates the <code>build/</code> folder</strong> before anything is compiled into it.</li>
+    <li>Declare <code>.PHONY</code> targets <code>run</code> (build, then run <code>$(EXE)</code>) and <code>clean</code> (delete the <code>build/</code> folder).</li>
+  </ol>
+  </div>
+  <p>The only differences from the lecture's <code>hello</code> Makefile are the names: the program is <code>tictactoe</code>, and there are <em>three</em> source files instead of two.</p>
+
+  <p>Once your Makefile builds and runs the game, <strong>paste the finished file in the box below</strong> for submission:</p>
+  <div class="ws-bar"><span class="label">// paste your finished Makefile here</span></div>
+  <div class="fill" contenteditable="true" spellcheck="false" style="display:block;white-space:pre-wrap;min-height:260px;border:1px solid var(--line);border-radius:8px;padding:14px;font-size:12.5px;line-height:1.55"></div>
+
+  <h3>3 · Test your Makefile</h3>
+  <p>From the project root, run these three commands and check each behaves as described:</p>
+  <pre><code><span class="k">make</span>           <span class="c"># compiles src/*.cpp into build/*.o, links build/tictactoe</span>
+<span class="k">make</span> run       <span class="c"># builds if needed, then starts the game</span>
+<span class="k">make</span> clean     <span class="c"># deletes the whole build/ folder</span></code></pre>
+  <ul>
+    <li><strong><code>make</code></strong> creates the <code>build/</code> folder and the executable inside it. Run <code>make</code> a second time: it should report everything is <em>up to date</em> and compile nothing.</li>
+    <li><strong><code>make run</code></strong> launches the game. Play through a win (e.g. X on cells 1, 2, 3) and a draw to confirm the logic works.</li>
+    <li><strong><code>make clean</code></strong> removes <code>build/</code> entirely, so <code>git status</code> shows only your source files and the <code>Makefile</code>.</li>
+  </ul>
+
+  <h3>4 · Log your work &amp; commit via a PR</h3>
+  <div class="callout warn">
+    <span class="tag">Open this lab in a new tab first</span>
+    <p>The box in Section 2 and the log below are typed directly into this page and are <strong>not saved</strong>: navigating away will erase them. Open this page in a new tab, then use the print button at the end to save a PDF when you're done.</p>
+  </div>
+  <p>Take the finished project through the Git workflow from Lab 3, and log every step below. <strong>Steps 1 and 2 are given as examples.</strong> Using the <strong>+ Add step</strong> button, add the remaining steps you take to reach the final state. Your steps <strong>must</strong> include:</p>
+  <ul>
+    <li>doing all the new work on a <strong>task branch</strong> (you created <code>feature/make</code> in Step 1) — never commit directly to <code>master</code>;</li>
+    <li>adding your <code>Makefile</code> to the project;</li>
+    <li>editing <code>.gitignore</code> so the generated <code>build/</code> folder is excluded from version control;</li>
+    <li>committing and pushing the task branch to Gitee;</li>
+    <li>opening a <strong>Pull Request</strong> to merge the task branch into <code>master</code>;</li>
+    <li>after the merge, <strong>deleting the task branch</strong> on Gitee and locally.</li>
+  </ul>
+  <p>For each step, fill in the Git command(s) and the non-Git operations. Write <code>N/A</code> where there are none; if a step uses several Git commands, put them on one line separated by <code>|</code>.</p>
+
+  <div class="ws-bar"><span class="label">// Lab 4 work log: fillable</span></div>
+
+  <div id="lab4-steps">
+    <div class="step">
+      <div class="head"><span class="badge">Step 1</span><span class="instr">Create a feature branch <code>feature/make</code> off <code>master</code> and switch to it.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">git switch -c feature/make</span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">N/A</span></p>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 2</span><span class="instr">Add the project's source files to your workspace.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">N/A</span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">Create the <code>include/</code> and <code>src/</code> folders and add the five source files (Board.h, Game.h, Board.cpp, Game.cpp, main.cpp) at the paths shown in Section 1.</span></p>
+    </div>
+  </div>
+  <button class="btn-add" data-addstep="#lab4-steps" data-tpl="#lab4-step-tpl">+ Add step</button>
+  <button class="btn-add" data-removestep="#lab4-steps">− Remove last step</button>
+
+  <template id="lab4-step-tpl">
+    <div class="step">
+      <div class="head"><span class="badge">Step</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+  </template>
+
+  <div class="callout"><span class="tag">Done when</span><p>A single <code>make</code> builds a working <code>tictactoe</code> in the <code>build/</code> folder, <code>make run</code> plays the game, <code>make clean</code> removes <code>build/</code>, the generated folder is gitignored (but the <code>Makefile</code> and sources are committed), and the project is merged into <code>master</code> via a PR.</p></div>
+
+  <div class="callout tip"><span class="tag">Submit</span><p>Save this page as a PDF for submission. It should show your finished <strong>Makefile pasted in Section 2</strong> and the completed <strong>work log in Section 4</strong>.</p></div>
+  <div class="ws-bar"><span class="label">// Lab 4 submission</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
+
+  <div class="next-prev">
+    <a href="#m5-lecture">← Lecture</a>
+    <a href="#m6-lecture">Module 6 →</a>
+  </div>
+</section>
+

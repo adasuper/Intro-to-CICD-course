@@ -1,0 +1,79 @@
+<!-- ============================== M3 LECTURE ============================== -->
+<section class="page" id="m3-lecture">
+  <div class="eyebrow">Module 3 · Lecture · Class 5a</div>
+  <h2 class="page-title">Ignoring Files with .gitignore</h2>
+  <p class="sub-meta">Keeping machine-specific junk and regenerated artifacts out of the repository.</p>
+
+  <h3>Why ignore files at all?</h3>
+  <p>A repository should hold <strong>source</strong>, the files a human writes, and nothing that can be <em>regenerated</em> from that source or that only makes sense on one person's machine. Committing everything else causes four concrete problems:</p>
+  <ul>
+    <li><strong>Bloat.</strong> Compiled binaries and build folders are large and change on every build, inflating the repository and slowing down every clone.</li>
+    <li><strong>Noise.</strong> Generated files flood <code>git status</code> and <code>git diff</code>, burying the real source changes you actually want to review.</li>
+    <li><strong>Non-portability.</strong> A binary you compiled won't run on a teammate's different OS, it is useless to them, yet still downloaded on every pull.</li>
+    <li><strong>Needless conflicts.</strong> Files that differ <em>per machine</em> (editor settings, build output) get rewritten by everyone, so they collide constantly, even though nobody meaningfully changed the project.</li>
+  </ul>
+  <p>The fix is a <code>.gitignore</code> file: a list of patterns telling Git which paths to leave untracked. Crucially, <code>.gitignore</code> itself <em>is</em> committed, so the whole team automatically shares the same rules. A typical one for this course's C++ project:</p>
+  <pre><code><span class="c"># .gitignore for a C++ project</span>
+*.o             <span class="c"># object files</span>
+*.exe           <span class="c"># Windows executables</span>
+*.out           <span class="c"># a.out-style binaries</span>
+ttt             <span class="c"># our compiled game binary</span>
+.vscode/        <span class="c"># per-developer editor settings</span></code></pre>
+
+  <h3>What should you ignore?</h3>
+  <p>A good rule of thumb: <strong>if a file can be regenerated, is specific to one machine, or should stay secret, ignore it.</strong> In practice the things you exclude fall into a few categories:</p>
+  <ul>
+    <li><strong>Build output and compiled artifacts.</strong> Anything your compiler or build tool produces from the source: executables and object files: <code>*.o</code>, <code>*.exe</code>, <code>*.out</code>, <code>a.out</code>, and our game binary <code>ttt</code>.</li>
+    <li><strong>Editor and IDE settings.</strong> Per-developer configuration that differs from machine to machine: <code>.vscode/</code>, JetBrains' <code>.idea/</code>, Vim swap files (<code>*.swp</code>).</li>
+    <li><strong>Operating-system junk.</strong> Files the OS sprinkles into folders: <code>.DS_Store</code> on macOS, <code>Thumbs.db</code> on Windows.</li>
+    <li><strong>Downloaded dependencies.</strong> Packages a tool can fetch again on demand, so there is no need to store them: e.g. <code>vcpkg_installed/</code>, or <code>node_modules/</code> in a JavaScript project.</li>
+    <li><strong>Logs and temporary files.</strong> Throwaway output such as <code>*.log</code> and <code>*.tmp</code>.</li>
+    <li><strong>Secrets and local-only config.</strong> Anything with passwords, API keys, or tokens: <code>.env</code> files, credential files. <em>Never</em> commit these, even by accident.</li>
+  </ul>
+  <p>By contrast, you should <strong>always commit</strong> the things a teammate genuinely needs: your source files (<code>*.cpp</code>, <code>*.h</code>), the build <em>instructions</em> (<code>Makefile</code>), tests, the <code>README.md</code>, and <code>.gitignore</code> itself. The test is simple: <em>could a teammate rebuild this from what's committed?</em> If yes, the generated result doesn't belong in the repo.</p>
+
+  <h3>A cautionary tale: committing <code>.vscode/</code></h3>
+  <p>It is tempting to <code>git add .</code> and commit <em>everything</em>, including the <code>.vscode/</code> folder VS Code creates. Here is why that bites you. The folder holds <strong>machine-specific</strong> settings: for example each developer's <code>.vscode/settings.json</code> records the absolute path to <em>their</em> compiler:</p>
+  <pre><code><span class="c">// Alice's .vscode/settings.json</span>
+{ <span class="s">"C_Cpp.default.compilerPath"</span>: <span class="s">"C:/msys64/ucrt64/bin/g++.exe"</span> }
+
+<span class="c">// Bob's .vscode/settings.json (different machine!)</span>
+{ <span class="s">"C_Cpp.default.compilerPath"</span>: <span class="s">"/usr/local/bin/g++"</span> }</code></pre>
+  <p>Now watch what happens once that file is tracked:</p>
+  <ol>
+    <li>Alice opens the project; VS Code rewrites <code>settings.json</code> with <em>her</em> path. She commits and pushes it.</li>
+    <li>Bob pulls, opens the project; VS Code immediately rewrites the <em>same line</em> with <em>his</em> path. He commits and pushes.</li>
+    <li>Alice opens VS Code again the next day, it rewrites the line back to her path. She pushes…</li>
+  </ol>
+  <p>The result is an endless tug-of-war: every teammate's editor keeps overwriting the same line, producing a <strong>merge conflict on a file that has nothing to do with the actual program</strong>. You waste time resolving conflicts in settings nobody cares about. Listing <code>.vscode/</code> in <code>.gitignore</code> from the start avoids the whole mess: each person keeps their own local settings, untracked.</p>
+
+  <div class="callout warn">
+    <span class="tag">Already committed it?</span>
+    <p><code>.gitignore</code> only stops Git from tracking files it is <em>not already</em> tracking. If <code>.vscode/</code> (or a build artifact) is already committed, adding it to <code>.gitignore</code> does nothing until you stop tracking it explicitly:</p>
+    <pre style="margin-top:10px"><code><span class="k">git rm</span> -r --cached .vscode   <span class="c"># untrack, but keep the files on disk</span>
+<span class="k">git commit</span> -m <span class="s">"stop tracking editor settings"</span></code></pre>
+  </div>
+
+  <h3>.gitignore syntax in detail</h3>
+  <p>Each non-blank line is one pattern. Patterns are matched relative to the location of the <code>.gitignore</code> file. The rules:</p>
+  <table class="log">
+    <thead><tr><th>Pattern</th><th>Meaning</th><th>Example match</th></tr></thead>
+    <tbody>
+      <tr><td><code># text</code></td><td>A <strong>comment</strong>. Blank lines are ignored too, so you can group rules.</td><td class="desc">n/a</td></tr>
+      <tr><td><code>ttt</code></td><td>Matches a file <em>or</em> folder named <code>ttt</code> anywhere in the tree.</td><td class="desc"><code>ttt</code>, <code>src/ttt</code></td></tr>
+      <tr><td><code>build/</code></td><td>Trailing <code>/</code> matches <strong>directories only</strong> (and everything inside).</td><td class="desc"><code>build/</code>, not a file named <code>build</code></td></tr>
+      <tr><td><code>*.o</code></td><td><code>*</code> matches any run of characters <em>except</em> <code>/</code>. Great for extensions.</td><td class="desc"><code>main.o</code>, <code>board.o</code></td></tr>
+      <tr><td><code>/secret.txt</code></td><td>A leading <code>/</code> <strong>anchors</strong> the pattern to the folder of the <code>.gitignore</code>, so only the root one matches.</td><td class="desc"><code>secret.txt</code> at root, not <code>sub/secret.txt</code></td></tr>
+      <tr><td><code>logs/**/*.log</code></td><td><code>**</code> matches across <strong>nested directories</strong>.</td><td class="desc"><code>logs/a/b/run.log</code></td></tr>
+      <tr><td><code>file?.txt</code></td><td><code>?</code> matches exactly <strong>one</strong> character.</td><td class="desc"><code>file1.txt</code>, not <code>file10.txt</code></td></tr>
+      <tr><td><code>*.log<br>!keep.log</code></td><td><code>!</code> <strong>negates</strong> a pattern: it re-includes something a previous line excluded. (You cannot re-include a file if its parent folder is ignored.)</td><td class="desc">ignores every <code>.log</code> except <code>keep.log</code></td></tr>
+    </tbody>
+  </table>
+  <p>Order matters for negation: a later <code>!</code> line overrides an earlier ignore. For everything else, the patterns are simply a set.</p>
+
+  <div class="next-prev">
+    <a href="#m2-lab">← Lab 1</a>
+    <a href="#m3-lecture-conflict">Conflict resolution →</a>
+  </div>
+</section>
+

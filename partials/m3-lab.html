@@ -1,0 +1,220 @@
+<!-- ============================== M3 LAB (LAB 2) ============================== -->
+<section class="page" id="m3-lab">
+  <div class="eyebrow">Module 3 · Lab 2 · Class 6</div>
+  <h2 class="page-title">Lab 2: .gitignore &amp; Conflict Resolution</h2>
+  <p class="sub-meta">Two activities on one repository: clean up an accidentally-committed build artifact, then resolve a merge conflict.</p>
+
+  <div class="callout warn">
+    <span class="tag">Open this lab in a new tab first</span>
+    <p>Your worksheet answers are typed directly into this page and are <strong>not saved</strong>: navigating away (for example, back to the lecture notes to look something up) will <strong>erase everything you've entered</strong>. Before you start, right-click this page and choose <em>"Open in new tab/window"</em> (or press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> and click a nav link) so you can read the lecture in one tab and keep your log safe in another. When you're done, use the print button to save a PDF.</p>
+  </div>
+
+  <h3>Prerequisites: two clones of your project</h3>
+  <ol>
+    <li>Create two folders on your desktop: <strong>Repo1</strong> and <strong>Repo2</strong>.</li>
+    <li>Open a Git Bash window in each.</li>
+    <li>Clone your Tic-Tac-Toe repository into both folders.</li>
+    <li>Navigate each Git Bash window into its clone. Repo1 and Repo2 act as two different teammates sharing one remote.</li>
+  </ol>
+
+  <!-- Activity A: gitignore -->
+  <h3>Activity A: The accidentally-committed build artifact</h3>
+  <div class="callout">
+    <span class="tag">Scenario</span>
+    <p>You are working with a teammate. While building the game you produced a compiled artifact, <code>ttt.exe</code>, in your workspace that should never be committed (an anonymous professor deducts 2.5 points for committed build artifacts). You have <em>already pushed it</em> to the remote, and only then created a <code>.gitignore</code>. You push everything, but the artifact is still on the remote, and your teammate has already pulled it. Now you must both fix your repositories.</p>
+  </div>
+
+  <h4>Steps to reproduce the problem</h4>
+  <ol>
+    <li>In Repo1, create a file <code>ttt.exe</code> (a stand-in for a compiled binary: just make a small file with this exact name).</li>
+    <li>In Repo1, add, commit, and push <code>ttt.exe</code>.</li>
+    <li>In Repo1, create a <code>.gitignore</code> file with an entry that ignores <code>ttt.exe</code>. (Ensure the file's extension really is <code>.gitignore</code>, not <code>.txt</code>: enable "show file extensions.")</li>
+    <li>In Repo1, add, commit, and push the <code>.gitignore</code>.</li>
+    <li>In Repo2, pull from the remote. (Repo2 now also has the unwanted artifact.)</li>
+  </ol>
+
+  <div class="callout tip">
+    <span class="tag">Desired end state</span>
+    <ul style="margin:0">
+      <li>Both workspaces still <em>have</em> <code>ttt.exe</code> on disk.</li>
+      <li>Both workspaces have a <code>.gitignore</code> ignoring it.</li>
+      <li>The remote has the <code>.gitignore</code> (with the entry) but contains <strong>no</strong> build artifact.</li>
+    </ul>
+  </div>
+
+  <h4>How to resolve: your task</h4>
+  <p><strong>Step 1 is given as an example. Add as many steps as necessary to reach the desired end state. For each step, describe the action clearly, record the Git command(s) used, and explain <em>why</em> you are doing it. If a step has no Git command, write <code>N/A</code>; if it uses several, put them on one line separated by <code>|</code>.</strong></p>
+
+  <div class="ws-bar"><span class="label">// Activity A worksheet</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
+
+  <div id="actA-steps">
+  <div class="step">
+    <div class="head"><span class="badge">Step 1</span><span class="instr">In Repo1, remove the <code>.gitignore</code> entry for the artifact.</span></div>
+    <p style="margin:0 0 6px"><strong>Git command used:</strong> N/A (edit the <code>.gitignore</code> file by hand)</p>
+    <p style="margin:0"><strong>Explanation:</strong> To change anything about a file on the remote, that file cannot be ignored. So first <em>un-ignore</em> the artifact you intend to delete. (Alternatively, leave the entry and force-add with <code>git add --force</code>.)</p>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 2</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+    <p style="margin:0 0 6px"><strong>Git command used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+    <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+  </div>
+  <div class="step">
+    <div class="head"><span class="badge">Step 3</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+    <p style="margin:0 0 6px"><strong>Git command used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+    <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+  </div>
+  <div class="step">
+    <div class="head"><span class="badge">Step 4</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+    <p style="margin:0 0 6px"><strong>Git command used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+    <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+  </div>
+  <div class="step">
+    <div class="head"><span class="badge">Step 5</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+    <p style="margin:0 0 6px"><strong>Git command used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+    <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+  </div>
+  </div>
+  <button class="btn-add" data-addstep="#actA-steps" data-tpl="#actA-step-tpl">+ Add step</button>
+  <button class="btn-add" data-removestep="#actA-steps">− Remove last step</button>
+
+  <template id="actA-step-tpl">
+    <div class="step">
+      <div class="head"><span class="badge">Step</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+      <p style="margin:0 0 6px"><strong>Git command used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Explanation:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+  </template>
+
+  <!-- Activity B: conflict resolution table -->
+  <h3 style="margin-top:54px">Activity B: Resolve a merge conflict</h3>
+  <p>Now trace a conflict step by step, like the worked example in the lecture. Using a file <code>ConflictPractice.txt</code> inside your project repo, two clones (Repo 1 and Repo 2, acting as two teammates sharing one remote) edit the <em>same line</em>. The target final content of the file in every location is <code>OriginalText Workspace1 Workspace2</code>. <strong>You may NOT use <code>git reset</code>.</strong></p>
+  <div class="callout tip">
+    <span class="tag">For each step</span>
+    <p>Write the <strong>git command(s)</strong> you ran, then fill the table with the content of <code>ConflictPractice.txt</code> in each of the seven locations <em>after</em> the operation. If a step has no git command (a plain file edit), write <code>N/A</code>; if it uses several, put them on one line separated by <code>|</code>. Use <code>(empty)</code> where the file isn't present yet. Steps 1–14 lead to the conflict; <strong>add your own resolution steps</strong> after Step 14 to reach the given final state.</p>
+  </div>
+
+  <div class="ws-bar"><span class="label">// Activity B worksheet: fillable &amp; printable</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
+
+  <div id="actB-steps">
+    <div class="step">
+      <div class="head"><span class="badge">Step 1</span><span class="instr">Create <code>ConflictPractice.txt</code> in <strong>Repo 1</strong>'s workspace.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill given">CP.txt (empty)</div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 2</span><span class="instr">In Repo 1, add the text <code>OriginalText</code> to the file.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill given">OriginalText</div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 3</span><span class="instr">Repo 1: add the file to the staging area.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 4</span><span class="instr">Repo 1: commit to the local repository.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 5</span><span class="instr">Repo 1: push to the remote repository.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 6</span><span class="instr">In <strong>Repo 2</strong>, pull from the remote.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 7</span><span class="instr">Repo 1: on the same line, append <code>Workspace1</code> (file now reads <code>OriginalText Workspace1</code>).</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 8</span><span class="instr">Repo 1: add the file to the staging area.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 9</span><span class="instr">Repo 1: commit.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 10</span><span class="instr">Repo 1: push.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 11</span><span class="instr">Repo 2: on the same line of its (un-pulled) copy, append <code>Workspace2</code> (file reads <code>OriginalText Workspace2</code>).</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 12</span><span class="instr">Repo 2: add the file to the staging area.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 13</span><span class="instr">Repo 2: commit.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge" style="background:var(--coral)">Step 14</span><span class="instr">Repo 2: pull from the remote. Git reports a <strong style="color:var(--coral)">CONFLICT</strong> on the shared line.</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill cflct">⚠ conflict</div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 15</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe your resolution action (no git reset!)&gt;</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+    <div class="step">
+      <div class="head"><span class="badge">Step 16</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe your resolution action (no git reset!)&gt;</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+  </div>
+  <button class="btn-add" data-addstep="#actB-steps" data-tpl="#actB-step-tpl">+ Add step</button>
+  <button class="btn-add" data-removestep="#actB-steps">− Remove last step</button>
+
+  <div class="step" style="border-color:var(--green)">
+    <div class="head"><span class="badge" style="background:var(--green)">Goal</span><span class="instr"><strong>Final state (given):</strong> every location holds the merged content <code>OriginalText Workspace1 Workspace2</code>.</span></div>
+    <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+    <tbody><tr><td><div class="fill given">OriginalText Workspace1 Workspace2</div></td><td><div class="fill given">OriginalText Workspace1 Workspace2</div></td><td><div class="fill given">OriginalText Workspace1 Workspace2</div></td><td><div class="fill given">OriginalText Workspace1 Workspace2</div></td><td><div class="fill given">OriginalText Workspace1 Workspace2</div></td><td><div class="fill given">OriginalText Workspace1 Workspace2</div></td><td><div class="fill given">OriginalText Workspace1 Workspace2</div></td></tr></tbody></table>
+  </div>
+
+  <template id="actB-step-tpl">
+    <div class="step">
+      <div class="head"><span class="badge">Step</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe your resolution action (no git reset!)&gt;</span></div>
+      <p style="margin:6px 0 4px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <table class="loc status"><thead><tr><th>Workspace 1</th><th>Staging 1</th><th>Local Repo 1</th><th>Remote</th><th>Local Repo 2</th><th>Staging 2</th><th>Workspace 2</th></tr></thead>
+      <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+    </div>
+  </template>
+
+  <div class="next-prev">
+    <a href="#m3-lecture-conflict">← Lecture</a>
+    <a href="#m4-lecture">Module 4 →</a>
+  </div>
+</section>
+

@@ -1,0 +1,164 @@
+<!-- ============================== M4 LECTURE ============================== -->
+<section class="page" id="m4-lecture">
+  <div class="eyebrow">Module 4 · Lecture · Class 7</div>
+  <h2 class="page-title">Git Branching</h2>
+  <p class="sub-meta">Diverging from the main line of development to work without interfering with it.</p>
+
+  <h3>1 · What is branching?</h3>
+  <p class="lead">Branching is not new in Git: almost every version-control system supports it. <strong>Branching means diverging from the main line of development and continuing to work without interfering with that main line.</strong></p>
+  <p>Branches in Git are extremely lightweight. Think of a branch as nothing more than a <strong>movable pointer to a specific commit</strong>. Because there is no memory overhead, it is cheap and natural to use branches to logically divide your work. Creating one is instant; switching between them just changes which version of the files you see on disk.</p>
+  <div class="callout tip"><span class="tag">Visualize it</span><p>As you read, try each action in the interactive branch playground, hosted locally so it works even when the original site is slow or blocked: <a class="inline" href="vendor/learngitbranching/index.html" target="_blank" rel="noopener">open Learn Git Branching</a>. Watching the pointers move is the fastest way to build intuition. This tool is the open-source <a class="inline" href="https://learngitbranching.js.org/" target="_blank" rel="noopener">Learn Git Branching</a> by Peter Cottle, used here under the MIT license; all credit goes to the original author.</p></div>
+
+  <h3>2 · When do you branch?</h3>
+  <p>So far you have worked on a single branch (<code>master</code>). There are times when you need to temporarily diverge and work on a "separate project". Three common scenarios:</p>
+
+  <h4>Keep development off the delivered system</h4>
+  <p>You are adding new features to an <em>already delivered</em> system, and you want to make sure your ongoing work does not destabilise the version users depend on until it is ready.</p>
+  <p><strong>Solution:</strong> keep a <code>dev</code> branch separate from <code>master</code>. Merge into <code>master</code> only when the new features are ready to ship.</p>
+
+  <h4>Hot bug fix</h4>
+  <p>You are mid-way through a new feature when QA reports a critical bug in already-released code that must be fixed immediately.</p>
+  <p><strong>Solution:</strong> switch to <code>master</code>, create a <code>bugfix</code> branch from it, fix the bug, and merge it back into <code>master</code>. Then switch back to your feature branch and carry on, your unfinished work undisturbed.</p>
+
+  <h4>Work in parallel</h4>
+  <p>Several engineers share one project. The work is split and assigned to individuals who mostly work at the same time. Having everyone commit to one shared branch quickly gets messy.</p>
+  <p><strong>Solution:</strong> each member creates their own task branch off <code>dev</code>. When a task is finished, it merges back into <code>dev</code>.</p>
+
+  <div class="callout"><span class="tag">Notice the pattern</span><p>The word <strong>merge</strong> appears in every scenario. Branches usually represent short-lived work that exists only temporarily. As soon as a branch has served its purpose, merge it back and <strong>delete it</strong>. Leaving stale branches around (and not merging in time) is a common source of avoidable merge conflicts.</p></div>
+
+  <h3>3 · Working with branches</h3>
+  <p>The commands below are all you need day to day. The activities use your <code>hello</code> repository from the Setup Lab.</p>
+
+  <h4>1) Create a branch: <code>git branch &lt;name&gt;</code></h4>
+  <ul>
+    <li>Creates a new branch pointing at the current commit (it does <em>not</em> switch you to it).</li>
+    <li>Does not work if the parent branch is empty (has no commits yet).</li>
+  </ul>
+  <div class="callout tip"><span class="tag">Activity: create a dev branch and list branches</span>
+    <pre style="margin:8px 0 0"><code><span class="c"># in a fresh folder</span>
+<span class="k">git</span> clone git@gitee.com:adasuper/hello.git
+<span class="k">cd</span> hello
+<span class="k">git</span> branch dev          <span class="c"># create dev; you are STILL on master</span>
+<span class="k">git</span> branch             <span class="c"># list local branches</span>
+<span class="c">#   dev</span>
+<span class="c"># * master                (the * and green mark the current branch)</span>
+<span class="k">git</span> branch -a          <span class="c"># also show remote branches</span>
+<span class="c">#   dev</span>
+<span class="c"># * master</span>
+<span class="c">#   remotes/origin/HEAD -> origin/master</span>
+<span class="c">#   remotes/origin/master</span></code></pre>
+  </div>
+  <p>Only <code>origin/master</code> shows up under remotes because you have not pushed the new <code>dev</code> branch yet. (More on remote branches below.)</p>
+
+  <h4>2) Switch to a branch: <code>git checkout &lt;name&gt;</code></h4>
+  <ul>
+    <li>Switches to the named branch and updates your workspace files to match it.</li>
+    <li><code>git switch &lt;name&gt;</code> does exactly the same thing (newer, clearer syntax).</li>
+    <li><code>git checkout -b &lt;name&gt;</code> <strong>creates and switches</strong> in one step.</li>
+  </ul>
+  <div class="callout tip"><span class="tag">Activity: switch to dev, then create-and-switch to testing</span>
+    <pre style="margin:8px 0 0"><code><span class="k">git</span> checkout dev        <span class="c"># Switched to branch 'dev'</span>
+<span class="k">git</span> switch master         <span class="c"># same idea, switch back</span>
+<span class="k">git</span> checkout -b testing  <span class="c"># create 'testing' and switch to it at once</span></code></pre>
+  </div>
+
+  <h4>3) Delete a branch: <code>git branch -d &lt;name&gt;</code></h4>
+  <ul>
+    <li>Deletes the named local branch.</li>
+    <li>You cannot delete the branch you are currently on: switch away first.</li>
+    <li>You cannot delete a branch with unmerged changes (use <code>-D</code> to force, carefully).</li>
+  </ul>
+  <div class="callout tip"><span class="tag">Activity: delete the testing branch</span>
+    <pre style="margin:8px 0 0"><code><span class="k">git</span> checkout dev
+<span class="k">git</span> branch -d testing    <span class="c"># Deleted branch testing (was dfc0baa).</span></code></pre>
+  </div>
+
+  <h4>4) Merge a branch: <code>git merge &lt;name&gt;</code></h4>
+  <p>Merging brings another branch's work into the current branch. There are two outcomes:</p>
+  <p><strong>Fast-forward.</strong> If <code>master</code> has not moved since you branched, Git just slides the <code>master</code> pointer forward to the tip of <code>dev</code>. No new commit is created.</p>
+  <pre><code><span class="c"># commit once on dev, then merge into master</span>
+<span class="k">git</span> checkout dev
+<span class="c"># create code.txt, then:</span>
+<span class="k">git</span> add -A
+<span class="k">git</span> commit -m <span class="s">"added code.txt"</span>
+<span class="k">git</span> checkout master
+<span class="k">git</span> merge dev            <span class="c"># Fast-forward</span>
+
+<span class="c"># before:   c0 - c1 - c2        master -> c1,  dev -> c2</span>
+<span class="c"># after:    c0 - c1 - c2        master -> c2,  dev -> c2   (pointer just moved)</span></code></pre>
+  <p><strong>Merge commit (three-way merge).</strong> If <em>both</em> branches gained commits since they diverged, Git creates a special <strong>merge commit</strong> with two parents that ties the histories together. This may require resolving a conflict, exactly as in Lab 2.</p>
+  <pre><code><span class="c"># commit on master AND on dev, then merge</span>
+<span class="c"># on master: modify code.txt, add, commit</span>
+<span class="k">git</span> checkout dev
+<span class="c"># create resource.txt, add, commit</span>
+<span class="k">git</span> checkout master
+<span class="k">git</span> merge dev            <span class="c"># creates a merge commit</span>
+
+<span class="c"># before:        c3              master -> c3</span>
+<span class="c">#               /</span>
+<span class="c">#         c0 - c1 - c2 - c4     dev  -> c4</span>
+<span class="c"># after:         c3 ----- c5    c5 = merge commit (parents c3 and c4)</span>
+<span class="c">#               /        /</span>
+<span class="c">#         c0 - c1 - c2 - c4</span></code></pre>
+  <div class="callout tip"><span class="tag">Keep the feature branch fresh</span><p>After merging <code>dev</code> into <code>master</code>, also update <code>dev</code> so it includes the latest <code>master</code>, which avoids future conflicts: <code>git checkout dev</code> then <code>git merge master</code>.</p></div>
+
+  <h4>5) Combine history with rebase: <code>git rebase &lt;name&gt;</code></h4>
+  <p>Rebasing is another way to combine work. It takes a set of commits, "copies" them, and replays them on top of the checked-out branch, producing a <strong>linear history</strong> instead of a merge commit.</p>
+  <div class="callout warn"><span class="tag">Rebase rewrites history</span><p>Rebasing creates <em>copies</em> of commits; the originals are no longer reachable by their branch. On shared branches this can <strong>wipe out other people's work</strong>. Do not rebase unless you are 100% sure it is the right tool, and never rebase commits others have already pulled.</p></div>
+  <p>The typical local flow: fix a bug on a <code>bugfix</code> branch, rebase it onto <code>master</code> so the fix sits neatly after <code>master</code>'s latest commit, resolve any conflict, then fast-forward <code>master</code> and delete the branch. For a deeper comparison see the reference link at the end.</p>
+
+  <h4>6) Remote branches</h4>
+  <p>So far everything has been local. A name like <code>origin/master</code> is a <strong>remote-tracking branch</strong>: the convention is <code>&lt;remote name&gt;/&lt;branch name&gt;</code>. It reflects the state of the remote <em>as of your last pull or fetch</em>.</p>
+  <p>Crucially, remote-tracking branches live in your <strong>local</strong> repository. Treat them as cached references to the real remote (they are sometimes called "upstreams"). They only update when you communicate with the remote.</p>
+
+  <h4>7) Publish a new local branch: <code>git push --set-upstream origin &lt;name&gt;</code></h4>
+  <p>A plain <code>git push</code> only pushes the <em>current</em> branch, and only if it already has a remote counterpart. The first time you push a brand-new local branch, Git does not yet know where to send it:</p>
+  <pre><code><span class="k">git</span> checkout dev
+<span class="k">git</span> push
+<span class="c"># fatal: The current branch dev has no upstream branch.</span>
+<span class="c"># To push the current branch and set the remote as upstream, use</span>
+<span class="c">#     git push --set-upstream origin dev</span></code></pre>
+  <p>The fix is given to you in the message. Running it creates <code>origin/dev</code> and links your local <code>dev</code> to it, so future pushes on <code>dev</code> are just <code>git push</code>:</p>
+  <pre><code><span class="k">git</span> push --set-upstream origin dev   <span class="c"># or the short form: git push -u origin dev</span></code></pre>
+
+  <h4>8) Pull branches from the remote</h4>
+  <p>When a teammate (or a second clone) has pushed work, you bring it in with <code>git pull</code> on the matching branch. A fresh <code>git clone</code> already captures information about all remote branches.</p>
+  <div class="callout tip"><span class="tag">Activity: sync a change across two clones</span>
+    <pre style="margin:8px 0 0"><code><span class="c"># in a second workspace, Repo2:</span>
+<span class="k">git</span> clone git@gitee.com:adasuper/hello.git
+<span class="k">git</span> branch -a            <span class="c"># all branch info captured by the clone</span>
+<span class="c"># ... in Repo1, change dev, add, commit, push ...</span>
+<span class="c"># back in Repo2:</span>
+<span class="k">git</span> checkout dev
+<span class="k">git</span> pull                 <span class="c"># receive Repo1's latest dev work</span></code></pre>
+  </div>
+  <div class="callout"><span class="tag">A cleaner way to see push and pull</span><p>Now that you understand remote branches: <strong><code>git pull</code> is merging the remote branch into your local branch</strong>, and <strong><code>git push</code> is merging your local branch into the remote branch</strong>.</p></div>
+
+  <h4>9) Delete a remote branch: <code>git push -d origin &lt;name&gt;</code></h4>
+  <p>Deleting a branch locally (<code>git branch -d task</code>) leaves the remote copy in place. To remove it from the remote too:</p>
+  <pre><code><span class="k">git</span> push -d origin task   <span class="c"># delete the remote branch origin/task</span></code></pre>
+  <p>As always, trim short-lived branches once they have served their purpose to keep the repository tidy.</p>
+
+  <h3>The Pull Request workflow on Gitee</h3>
+  <p>On a team, you usually do not merge a feature branch yourself. Instead you open a <strong>Pull Request</strong> so the change can be reviewed first:</p>
+  <ol>
+    <li>Push your feature branch to Gitee (<code>git push -u origin feature/x</code>).</li>
+    <li>Open a <strong>Pull Request</strong> (PR) proposing to merge it into <code>master</code>.</li>
+    <li>A teammate reviews the changes and comments.</li>
+    <li>Merge the PR, delete the branch, and everyone pulls the updated <code>master</code>.</li>
+  </ol>
+  <p>PRs are where code review happens, and, once we add CI in Module 6, where automated tests <strong>gate</strong> the merge. PRs can also be linked to <strong>issues</strong> so that merging automatically closes the task it addressed.</p>
+
+  <h3>References</h3>
+  <ul>
+    <li><a class="inline" href="https://git-scm.com/book/en/v2" target="_blank" rel="noopener">Pro Git book (git-scm.com)</a></li>
+    <li>Learn Git Branching by Peter Cottle (interactive branch visualizer, MIT license): <a class="inline" href="vendor/learngitbranching/index.html" target="_blank" rel="noopener">local copy</a> · <a class="inline" href="https://learngitbranching.js.org/" target="_blank" rel="noopener">original site</a></li>
+    <li><a class="inline" href="https://www.atlassian.com/git/tutorials/merging-vs-rebasing" target="_blank" rel="noopener">Atlassian: merging vs. rebasing</a></li>
+  </ul>
+
+  <div class="next-prev">
+    <a href="#m3-lab">← Lab 2</a>
+    <a href="#m4-lab">Lab 3 →</a>
+  </div>
+</section>
+

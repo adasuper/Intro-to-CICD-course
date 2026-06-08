@@ -1,0 +1,50 @@
+<!-- ============================== M7 FINAL PROJECT ============================== -->
+<section class="page" id="m7">
+  <div class="eyebrow">Module 7 · Capstone · Classes 13–16</div>
+  <h2 class="page-title">Final Project</h2>
+  <p class="sub-meta">In teams, extend the game through the full workflow you've learned: from issue to released, tested build.</p>
+
+  <p class="lead">Everything so far has built the machinery: version control, a clean repo, branches, a Make build, and an automated test pipeline. Now you put it to work. In teams of 2–3, add <strong>one feature</strong> to Tic-Tac-Toe and take it through the complete professional loop.</p>
+
+  <h3>Schedule</h3>
+  <div class="timing"><span class="t">Class 13</span><span><strong>Discussion &amp; planning.</strong> Form teams, choose a feature, open issues on Gitee, assign owners, plan branches, agree on "done."</span></div>
+  <div class="timing"><span class="t">Classes 14–15</span><span><strong>Implementation.</strong> Issue-driven development: branch per issue → code + a unit test → push → PR → CI gate → review → merge.</span></div>
+  <div class="timing"><span class="t">Class 16</span><span><strong>Integration &amp; demo.</strong> Final merge to <code>master</code>, tag a <code>v1.0</code> release, and present.</span></div>
+
+  <h3>Choose a feature</h3>
+  <div class="opt-grid">
+    <div class="opt"><span class="lvl easy">Easy</span><b>Random-move AI</b><p>A single-player mode where the computer plays a random legal move.</p></div>
+    <div class="opt"><span class="lvl hard">Hard</span><b>Unbeatable AI (minimax)</b><p>An opponent that never loses, and is very testable ("must take a winning move," "must never lose").</p></div>
+    <div class="opt"><span class="lvl med">Medium</span><b>N×N board</b><p>Generalise the board and win logic to larger sizes / Connect-Four style.</p></div>
+    <div class="opt"><span class="lvl med">Medium</span><b>Score &amp; replay</b><p>A persistent high-score file and a play-again loop with difficulty levels.</p></div>
+  </div>
+
+  <h3>Definition of done</h3>
+  <ul>
+    <li>The feature works and is merged into <code>master</code> via a Pull Request.</li>
+    <li>It has at least one meaningful <strong>unit test</strong> for any new logic.</li>
+    <li>CI (Gitee Go) is <span style="color:var(--green);font-weight:700">green</span> on <code>master</code>.</li>
+    <li>The work is traceable: issues linked to PRs.</li>
+    <li>A <code>v1.0</code> release is tagged on Gitee.</li>
+  </ul>
+
+  <h3>Assessment rubric</h3>
+  <table class="rubric">
+    <thead><tr><th>Criterion</th><th>Weight</th></tr></thead>
+    <tbody>
+      <tr><td>Working feature, merged to <code>master</code></td><td class="pct">30%</td></tr>
+      <tr><td>At least one meaningful unit test</td><td class="pct">20%</td></tr>
+      <tr><td>CI pipeline passing on <code>master</code></td><td class="pct">20%</td></tr>
+      <tr><td>Clean issue → branch → PR history showing the workflow</td><td class="pct">20%</td></tr>
+      <tr><td>Tagged release + clear demo</td><td class="pct">10%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout tip"><span class="tag">Demo</span><p>Each team shows: the green pipeline, the issue→PR history, the tagged release, and the feature played live. Close with a one-minute reflection on what branching and CI saved you.</p></div>
+
+  <div class="next-prev">
+    <a href="#m6-lab">← Lab 5</a>
+    <a href="#home" class="">Back to Home</a>
+  </div>
+</section>
+

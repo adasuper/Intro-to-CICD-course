@@ -1,0 +1,208 @@
+<!-- ============================== M4 LAB (LAB 3) ============================== -->
+<section class="page" id="m4-lab">
+  <div class="eyebrow">Module 4 · Lab 3 · Class 8</div>
+  <h2 class="page-title">Lab 3: Branching on the Tic-Tac-Toe Game</h2>
+  <p class="sub-meta">Two developers grow the game on a <code>dev</code> branch, fix a planted bug on a <code>bugfix</code> branch, and sync it back into <code>master</code>. For every step, record the Git command(s) and any non-Git operations.</p>
+
+  <div class="callout warn">
+    <span class="tag">Open this lab in a new tab first</span>
+    <p>Your worksheet answers are typed directly into this page and are <strong>not saved</strong>: navigating away (for example, back to the lecture notes) will <strong>erase everything you've entered</strong>. Before you start, right-click this page and choose <em>"Open in new tab/window"</em> (or <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + click a nav link) so you can read the lecture in one tab and keep your log safe in another. When you're done, use the print button to save a PDF.</p>
+  </div>
+
+  <p>Two developers, <strong>Alice</strong> and <strong>Ben</strong>, continue the Tic-Tac-Toe project from Lab 1. Its <code>master</code> branch already holds the <code>tictactoe.cpp</code> seed (hot-seat board, no win detection). On a shared <code>dev</code> branch each developer adds <strong>one real function</strong> to the game:</p>
+  <ul>
+    <li><strong>Alice</strong> adds <code>checkWin()</code> for win detection. <em>It ships with an intentional bug.</em></li>
+    <li><strong>Ben</strong> adds <code>boardFull()</code> for draw detection.</li>
+  </ul>
+  <p>During play-testing the bug surfaces, so a short-lived <code>bugfix/anti-diagonal</code> branch is created off <code>dev</code> to fix it. When development is done, <code>dev</code> is merged into <code>master</code> so that <strong><code>master</code> ends up fully synced with <code>dev</code></strong>. Work through the scenario on your own machine using two clones (Repo1 = Alice, Repo2 = Ben), and <strong>fill in the Git command(s) and non-Git operations for every step.</strong></p>
+
+  <div class="callout tip">
+    <span class="tag">The two functions you'll add</span>
+    <p>Add these <em>above</em> <code>main()</code> in <code>tictactoe.cpp</code> and call them from the game loop (after placing a mark: if <code>checkWin</code> is true announce the winner and stop; else if <code>boardFull</code> is true announce a draw and stop). Paste them exactly as shown, including Alice's bug, which you'll hunt down later.</p>
+  </div>
+
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c">// Alice's feature: true if player p holds a full row, column, or diagonal.</span>
+<span class="k">bool</span> checkWin(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b, <span class="k">char</span> p) {
+    <span class="k">const</span> <span class="k">int</span> lines[8][3] = {
+        {0,1,2}, {3,4,5}, {6,7,8},   <span class="c">// rows</span>
+        {0,3,6}, {1,4,7}, {2,5,8},   <span class="c">// columns</span>
+        {0,4,8}, {2,4,8}             <span class="c">// diagonals</span>
+    };
+    <span class="k">for</span> (<span class="k">auto</span>&amp; line : lines)
+        <span class="k">if</span> (b[line[0]] == p &amp;&amp; b[line[1]] == p &amp;&amp; b[line[2]] == p)
+            <span class="k">return</span> <span class="k">true</span>;
+    <span class="k">return</span> <span class="k">false</span>;
+}</code></pre>
+  </div>
+
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c">// Ben's feature: true once every cell holds a mark (no '1'..'9' left).</span>
+<span class="k">bool</span> boardFull(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b) {
+    <span class="k">for</span> (<span class="k">char</span> c : b)
+        <span class="k">if</span> (c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>)
+            <span class="k">return</span> <span class="k">false</span>;
+    <span class="k">return</span> <span class="k">true</span>;
+}</code></pre>
+  </div>
+
+  <div class="ws-bar"><span class="label">// Lab 3 branching log: fillable &amp; printable</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
+  <p><strong>Step 1 is given as an example.</strong> For each remaining step, fill in the Git command(s) and the non-Git operations (file edits, website actions, builds, etc.). <strong>If a step has no Git command or no non-Git operation, write <code>N/A</code> in that field. If a step uses several Git commands, put them on one line separated by <code>|</code></strong> (for example, <code>git add tictactoe.cpp | git commit -m "add checkWin"</code>).</p>
+
+  <div id="lab3-steps">
+    <div class="step">
+      <div class="head"><span class="badge">Step 1</span><span class="instr">Alice created the project on <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a> and cloned it into a folder "Repo1". The remote's <code>master</code> branch already contains the <code>tictactoe.cpp</code> seed from Lab 1.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">git clone git@gitee.com:&lt;user&gt;/tictactoe.git</span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">Create the folder "Repo1"; confirm <code>tictactoe.cpp</code> (seed) is present on <code>master</code>.</span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 2</span><span class="instr">In Repo1, Alice created a local branch <code>dev</code> off <code>master</code> and switched to it.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 3</span><span class="instr">On <code>dev</code>, Alice added the <code>checkWin()</code> function (above) to <code>tictactoe.cpp</code> and called it after each move so the game announces a winner. She saved, staged, and committed to her local <code>dev</code>.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 4</span><span class="instr">Alice published the new branch by pushing <code>dev</code> to the remote (setting the upstream).</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 5</span><span class="instr">Ben cloned the remote into a folder "Repo2" and switched to the <code>dev</code> branch (so his workspace now has Alice's <code>checkWin</code>).</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 6</span><span class="instr">On <code>dev</code>, Ben added the <code>boardFull()</code> function (above) and used it to detect a draw. He saved, staged, and committed to his local <code>dev</code>.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 7</span><span class="instr">Ben pushed <code>dev</code> to the remote. (No one else has pushed since his clone, so this fast-forwards.) The remote <code>dev</code> now holds both functions.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge" style="background:var(--coral)">Step 8</span><span class="instr">Play-testing exposes a <strong style="color:var(--coral)">bug</strong>: marking the anti-diagonal (cells <code>3</code>, <code>5</code>, <code>7</code>) does <em>not</em> announce a win. Ben pulled <code>dev</code> to be current, then created a branch <code>bugfix/anti-diagonal</code> off <code>dev</code> and switched to it.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 9</span><span class="instr">Ben fixed <code>checkWin</code>: in the lookup table the anti-diagonal was written <code>{2,4,8}</code> but should be <code>{2,4,6}</code>. He corrected that one entry, saved, staged, and committed to <code>bugfix/anti-diagonal</code>.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 10</span><span class="instr">Ben merged <code>bugfix/anti-diagonal</code> back into <code>dev</code> and deleted the <code>bugfix/anti-diagonal</code> branch locally.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 11</span><span class="instr">Ben pushed <code>dev</code> to the remote, so the remote <code>dev</code> now has the corrected <code>checkWin</code>.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge">Step 12</span><span class="instr">In Repo1, Alice switched to <code>dev</code> and pulled to get Ben's <code>boardFull</code> and the fix. She rebuilt and confirmed the anti-diagonal win is now detected.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+
+    <div class="step">
+      <div class="head"><span class="badge" style="background:var(--green)">Step 13</span><span class="instr">Development is finished. The rest of the operations should be on <strong>Gitee.com</strong>. What steps do Alice and Ben need to do to reach the End State? Add steps when necessary.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+  </div>
+  <button class="btn-add" data-addstep="#lab3-steps" data-tpl="#lab3-step-tpl">+ Add step</button>
+  <button class="btn-add" data-removestep="#lab3-steps">− Remove last step</button>
+
+  <template id="lab3-step-tpl">
+    <div class="step">
+      <div class="head"><span class="badge">Step</span><span class="instr" contenteditable="true" style="flex:1">&lt;describe the action you take&gt;</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
+    </div>
+  </template>
+
+  <div class="step" style="border-color:var(--green);margin-top:28px">
+    <div class="head"><span class="badge" style="background:var(--green)">End State</span><span class="instr"><strong>The lab is complete when:</strong><br>1. On Gitee.com, there is only one <code>master</code> branch with the finished Tic-Tac-Toe game source code.<br>2. Both Alice's and Ben's local workspaces have only one <code>master</code> branch with the finished code.<br><br>Below is what <code>tictactoe.cpp</code> looks like in that final <code>master</code>; use it to verify your game compiles and detects every win, including cells 3-5-7.</span></div>
+  </div>
+
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c">// tictactoe.cpp: end state (win + draw detection, bug fixed)</span>
+<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
+<span class="k">#include</span> <span class="s">&lt;array&gt;</span>
+
+<span class="k">bool</span> checkWin(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b, <span class="k">char</span> p) {
+    <span class="k">const</span> <span class="k">int</span> lines[8][3] = {
+        {0,1,2}, {3,4,5}, {6,7,8},
+        {0,3,6}, {1,4,7}, {2,5,8},
+        {0,4,8}, {2,4,6}             <span class="c">// anti-diagonal fixed</span>
+    };
+    <span class="k">for</span> (<span class="k">auto</span>&amp; line : lines)
+        <span class="k">if</span> (b[line[0]] == p &amp;&amp; b[line[1]] == p &amp;&amp; b[line[2]] == p)
+            <span class="k">return</span> <span class="k">true</span>;
+    <span class="k">return</span> <span class="k">false</span>;
+}
+
+<span class="k">bool</span> boardFull(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b) {
+    <span class="k">for</span> (<span class="k">char</span> c : b)
+        <span class="k">if</span> (c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>)
+            <span class="k">return</span> <span class="k">false</span>;
+    <span class="k">return</span> <span class="k">true</span>;
+}
+
+<span class="k">int</span> main() {
+    std::array&lt;<span class="k">char</span>, 9&gt; board = {<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>};
+    <span class="k">char</span> player = <span class="s">'X'</span>;
+
+    <span class="k">auto</span> draw = [&amp;] {
+        <span class="k">for</span> (<span class="k">int</span> r = 0; r &lt; 3; ++r)
+            std::cout &lt;&lt; <span class="s">' '</span> &lt;&lt; board[r*3] &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r*3+1] &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r*3+2] &lt;&lt; <span class="s">'\n'</span>;
+    };
+
+    <span class="k">while</span> (<span class="k">true</span>) {
+        draw();
+        std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">", cell 1-9: "</span>;
+
+        <span class="k">int</span> cell;
+        std::cin &gt;&gt; cell;
+        <span class="k">if</span> (cell &lt; 1 || cell &gt; 9 || board[cell-1] == <span class="s">'X'</span> || board[cell-1] == <span class="s">'O'</span>) {
+            std::cout &lt;&lt; <span class="s">"invalid\n"</span>;
+            <span class="k">continue</span>;
+        }
+
+        board[cell-1] = player;
+        <span class="k">if</span> (checkWin(board, player)) { draw(); std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">" wins!\n"</span>; <span class="k">break</span>; }
+        <span class="k">if</span> (boardFull(board))        { draw(); std::cout &lt;&lt; <span class="s">"Draw\n"</span>; <span class="k">break</span>; }
+        player = (player == <span class="s">'X'</span>) ? <span class="s">'O'</span> : <span class="s">'X'</span>;
+    }
+}</code></pre>
+  </div>
+
+  <div class="callout"><span class="tag">Submit</span><p>Submit (1) this completed worksheet as a PDF, and (2) a screenshot of your commit graph: run <code>git log --graph --oneline --all</code> (or open the commit graph on Gitee). It should show the <code>bugfix/anti-diagonal</code> branch merging into <code>dev</code>, and <code>dev</code> merging into <code>master</code>.</p></div>
+
+  <div class="next-prev">
+    <a href="#m4-lecture">← Lecture</a>
+    <a href="#m5-lecture">Module 5 →</a>
+  </div>
+</section>
+

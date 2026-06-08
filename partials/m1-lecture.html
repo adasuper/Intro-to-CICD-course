@@ -1,0 +1,96 @@
+<!-- ============================== M1 LECTURE ============================== -->
+<section class="page" id="m1-lecture">
+  <div class="eyebrow">Module 1 · Lecture · Class 1</div>
+  <h2 class="page-title">Intro to CI/CD &amp; DevOps</h2>
+  <p class="sub-meta">What the pipeline is, why it exists, and the tools we will use to build one.</p>
+
+  <p class="lead">Modern software is rarely written once and shipped once. It is changed constantly, by many people, and each change has to be integrated, built, tested, and delivered without breaking what already works. <strong>DevOps</strong> is the culture and set of practices that make this fast and reliable; <strong>CI/CD</strong> is the automation at its heart.</p>
+
+  <h3>Key ideas</h3>
+  <h4>DevOps</h4>
+  <p>A way of working that unites <em>development</em> (writing code) and <em>operations</em> (building, testing, releasing, running) so that software moves from a developer's machine to its users smoothly and repeatedly. The goals are short feedback loops, automation of repetitive steps, and shared responsibility for quality.</p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DevOps infinity loop: Dev side (Code, Test) and Ops side (Deploy, Operate, Monitor) joined by Plan and Release.">
+      <path d="M 303.1 272.3 A 128 128 0 0 1 106.9 272.3" fill="none" stroke="#3f72b8" stroke-width="30" stroke-linecap="round"/>
+      <path d="M 106.9 272.3 A 128 128 0 0 1 106.9 107.7" fill="none" stroke="#15b39b" stroke-width="30" stroke-linecap="round"/>
+      <path d="M 106.9 107.7 A 128 128 0 0 1 303.1 107.7" fill="none" stroke="#2aa8d8" stroke-width="30" stroke-linecap="round"/>
+      <path d="M 416.9 107.7 A 128 128 0 0 1 613.1 107.7" fill="none" stroke="#2aa8d8" stroke-width="30" stroke-linecap="round"/>
+      <path d="M 613.1 107.7 A 128 128 0 0 1 613.1 272.3" fill="none" stroke="#15b39b" stroke-width="30" stroke-linecap="round"/>
+      <path d="M 613.1 272.3 A 128 128 0 0 1 416.9 272.3" fill="none" stroke="#3f72b8" stroke-width="30" stroke-linecap="round"/>
+      <line x1="303.1" y1="272.3" x2="416.9" y2="107.7" stroke="#f2991f" stroke-width="30" stroke-linecap="round"/>
+      <line x1="303.1" y1="107.7" x2="416.9" y2="272.3" stroke="#b23bd1" stroke-width="30" stroke-linecap="round"/>
+      <rect x="147" y="164" width="116" height="52" rx="5" fill="#1c1a14"/>
+      <text x="205" y="191" text-anchor="middle" dominant-baseline="middle" font-family="Fraunces,serif" font-weight="900" font-size="30" fill="#f6f2e9" letter-spacing="2">DEV</text>
+      <rect x="457" y="164" width="116" height="52" rx="5" fill="#1c1a14"/>
+      <text x="515" y="191" text-anchor="middle" dominant-baseline="middle" font-family="Fraunces,serif" font-weight="900" font-size="30" fill="#f6f2e9" letter-spacing="2">OPS</text>
+      <text x="205.0" y="62.0" text-anchor="middle" dominant-baseline="middle" font-family="Hanken Grotesk,sans-serif" font-weight="700" font-size="16" fill="#fff" letter-spacing="1.5">CODE</text>
+      <text x="205.0" y="318.0" text-anchor="middle" dominant-baseline="middle" font-family="Hanken Grotesk,sans-serif" font-weight="700" font-size="16" fill="#fff" letter-spacing="1.5">TEST</text>
+      <text x="515.0" y="62.0" text-anchor="middle" dominant-baseline="middle" font-family="Hanken Grotesk,sans-serif" font-weight="700" font-size="16" fill="#fff" letter-spacing="1.5">DEPLOY</text>
+      <text x="515.0" y="318.0" text-anchor="middle" dominant-baseline="middle" font-family="Hanken Grotesk,sans-serif" font-weight="700" font-size="16" fill="#fff" letter-spacing="1.5">MONITOR</text>
+      <text x="643.0" y="190.0" text-anchor="middle" dominant-baseline="middle" font-family="Hanken Grotesk,sans-serif" font-weight="700" font-size="15" fill="#fff" letter-spacing="1.5" transform="rotate(90 643.0 190.0)">OPERATE</text>
+      <text x="337.2" y="222.9" text-anchor="middle" dominant-baseline="middle" font-family="Hanken Grotesk,sans-serif" font-weight="700" font-size="15" fill="#fff" letter-spacing="1.5" transform="rotate(-55.3 337.2 222.9)">PLAN</text>
+      <text x="354.3" y="181.8" text-anchor="middle" dominant-baseline="middle" font-family="Hanken Grotesk,sans-serif" font-weight="700" font-size="15" fill="#fff" letter-spacing="1.5" transform="rotate(55.3 354.3 181.8)">RELEASE</text>
+    </svg>
+    <figcaption>The DevOps lifecycle as a continuous loop: the Dev side (Plan → Code → Build → Test) flows into the Ops side (Release → Deploy → Operate → Monitor) and back again; it never stops.</figcaption>
+  </figure>
+
+  <h4>Continuous Integration (CI)</h4>
+  <p>Every change is merged into a shared repository frequently, and <em>each merge automatically triggers a build and a set of tests</em>. If a change breaks the build or fails a test, the team finds out within minutes instead of weeks. CI is the antidote to "integration hell," where code that worked in isolation collapses when combined.</p>
+
+  <h4>Continuous Delivery / Deployment (CD)</h4>
+  <p>CD extends CI: once a change passes all checks, the system automatically prepares it for release (delivery) or even releases it (deployment). The payoff is that shipping becomes a routine, low-risk button-press rather than a stressful manual event.</p>
+
+  <h3>The pipeline, end to end</h3>
+  <p>A CI/CD <strong>pipeline</strong> is an automated sequence that runs on every change:</p>
+  <pre><code><span class="k">source control</span>  →  <span class="k">build</span>  →  <span class="k">test</span>  →  <span class="k">integrate</span>  →  <span class="k">deliver</span></code></pre>
+  <p>This course builds each stage from the ground up, and the last lab wires them together into a working pipeline.</p>
+
+  <h3>The toolchain we will use</h3>
+  <ul>
+    <li><strong>Git</strong>: the version-control system that records every change to the code.</li>
+    <li><strong>Gitee (码云)</strong>: our remote host for repositories, pull requests, issue tracking, <em>and</em> CI/CD. We use Gitee because it is fast and reliable from within China, where GitHub access is often slow or unstable.</li>
+    <li><strong>A C++ compiler (g++) + Make</strong>: to build the project in a structured, repeatable way.</li>
+    <li><strong>Gitee Go</strong>: Gitee's built-in CI/CD service, which runs our build and tests automatically on every push.</li>
+  </ul>
+
+  <div class="callout">
+    <span class="tag">Course project</span>
+    <p>Everything is taught around one small program: a <strong>console Tic-Tac-Toe game</strong> in C++. It starts as a single file you version with Git, becomes a structured, Make-built project, and finishes as a repository whose every commit is automatically built and tested by Gitee Go.</p>
+  </div>
+
+  <h3>Glossary to remember</h3>
+  <ul>
+    <li><strong>Repository (repo)</strong>: a project tracked by Git, including its full history.</li>
+    <li><strong>Commit</strong>: a recorded snapshot of changes, with a message.</li>
+    <li><strong>Branch</strong>: an independent line of development.</li>
+    <li><strong>Merge</strong>: combining the work of two branches.</li>
+    <li><strong>Pipeline</strong>: the automated build/test/deliver sequence.</li>
+    <li><strong>Unit test</strong>: a small automated check that one piece of code behaves correctly.</li>
+    <li><strong>Artifact</strong>: a file produced by the build (e.g. a compiled program).</li>
+  </ul>
+
+  <h3>DevOps technology &amp; tools</h3>
+  <p>Every stage of the loop is backed by a category of technology, and each category has many tools. A typical DevOps toolchain looks like this:</p>
+  <table class="log">
+    <thead><tr><th>Stage</th><th>Technology / purpose</th><th>Example tools</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Plan</strong></td><td>Planning &amp; issue tracking</td><td>Jira, Trello, Gitee / GitLab Issues</td></tr>
+      <tr><td><strong>Code</strong></td><td>Source control &amp; editors</td><td>Git, VS Code, Gitee / GitLab / GitHub</td></tr>
+      <tr><td><strong>Build</strong></td><td>Compiling &amp; build systems</td><td>Make, CMake, Maven, Gradle</td></tr>
+      <tr><td><strong>Test</strong></td><td>Automated testing</td><td>CTest, GoogleTest, Catch2, JUnit, Selenium</td></tr>
+      <tr><td><strong>Release</strong></td><td>CI/CD orchestration</td><td>Gitee Go, Jenkins, GitLab CI, GitHub Actions</td></tr>
+      <tr><td><strong>Deploy</strong></td><td>Deployment &amp; containers</td><td>Docker, Kubernetes, Ansible</td></tr>
+      <tr><td><strong>Operate</strong></td><td>Infrastructure &amp; configuration</td><td>Kubernetes, Ansible, Terraform</td></tr>
+      <tr><td><strong>Monitor</strong></td><td>Monitoring &amp; logging</td><td>Prometheus, Grafana, ELK Stack, Nagios</td></tr>
+    </tbody>
+  </table>
+  <p>No team uses all of these: the point is that <em>every</em> stage can be automated, and the tools are what wire the stages into one continuous loop.</p>
+  <div class="callout"><span class="tag">In this course</span><p>We use a small, self-contained slice of this toolchain: <strong>Git + Gitee</strong> (Plan &amp; Code), <strong>Make</strong> (Build), a lightweight <strong>test program</strong> (Test), and <strong>Gitee Go</strong> (Release / CI). Containerised deploy-and-operate tools such as Docker and Kubernetes are powerful next steps beyond this short course.</p></div>
+
+  <div class="next-prev">
+    <a href="#home">← Home</a>
+    <a href="#m1-lab">Setup Lab →</a>
+  </div>
+</section>
+
