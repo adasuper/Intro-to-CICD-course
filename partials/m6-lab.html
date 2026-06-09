@@ -2,24 +2,25 @@
 <section class="page" id="m6-lab">
   <div class="eyebrow">Module 6 · Lab 5 · Class 12</div>
   <h2 class="page-title">Lab 5: Test Pipeline on Gitee Go</h2>
-  <p class="sub-meta">Automate your pytest suite in a Gitee Go pipeline. Watch it go red, then green.</p>
+  <p class="sub-meta">Automate your pytest suite, then drive a change through the branch, PR, and master pipelines.</p>
 
-  <p>This lab uses the tested project from Lab 4 (<code>board.py</code>, <code>tictactoe.py</code>, and your <code>test_board.py</code>). You'll put <code>pytest</code> behind an automated pipeline that runs on every push.</p>
+  <p>This lab uses the tested project from Lab 4 (<code>src/board.py</code>, <code>src/tictactoe.py</code>, and your <code>tests/test_board.py</code>). You'll put <code>pytest</code> behind automated pipelines and watch all three pipeline types from Class 11 fire.</p>
 
   <h3>1 · Confirm the tests pass locally</h3>
-  <p>From the project root, make sure the suite is green before automating it — the pipeline can only run what already works on your machine:</p>
+  <p>From the project root, make sure the suite is green before automating it; the pipeline can only run what already works on your machine:</p>
   <pre><code><span class="k">pytest</span></code></pre>
-  <p>If <code>pytest</code> isn't found, install it with <code>pip install pytest</code> (see Module 1). It's good practice to record the dependency so the pipeline installs the same thing — create a <code>requirements.txt</code> with one line:</p>
+  <p>If <code>pytest</code> isn't found, install it with <code>pip install pytest</code> (see Module 1). Record the test dependencies so the pipeline installs the same ones: create a <code>requirements.txt</code>. The pipeline writes an HTML test report, which needs the <code>pytest-html</code> plugin:</p>
   <pre><code><span class="c"># requirements.txt</span>
-pytest</code></pre>
+pytest
+pytest-html</code></pre>
 
-  <h3>2 · Create the Gitee Go pipeline</h3>
-  <p>Enable Gitee Go on your repo (the <strong>Services</strong> tab), create a pipeline from the <strong>Python</strong> template, and replace it with the file below — Gitee stores it under <code>.workflow/</code> in your repo. It installs pytest, runs the tests, then publishes a versioned release (see Class 11 for a key-by-key explanation):</p>
+  <h3>2 · Set up the three pipelines</h3>
+  <p>Enable Gitee Go on your repo (the <strong>Services</strong> tab). You'll create <strong>three</strong> pipelines under <code>.workflow/</code>, one per trigger type from Class 11. Start with the <strong>master pipeline</strong>: create a pipeline from the <strong>Python</strong> template and replace it with the file below, the three-stage <strong>Compile → Test → Publish</strong> file (see Class 11 for a key-by-key explanation):</p>
   <div class="code-block"><button class="btn-copy" data-copy>⧉ Copy</button>
   <pre><code><span class="c"># .workflow/master-pipeline.yml</span>
 version: '1.0'
 name: master-pipeline
-displayName: TicTacToe
+displayName: MasterPipeline
 triggers:
   trigger: auto
   push:
@@ -27,19 +28,53 @@ triggers:
       include:
         - master
 stages:
+  - name: compile
+    displayName: Compile
+    strategy: naturally
+    trigger: auto
+    steps:
+      - step: build@python
+        name: build_python
+        displayName: Python Build
+        pythonVersion: '3.13'
+        commands:
+          - python3 -m pip install --upgrade pip
+          - pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+          - pip3 install -r requirements.txt
+          - python3 -m compileall src
+        artifacts:
+          - name: BUILD_ARTIFACT
+            path:
+              - ./
+      - step: publish@general_artifacts
+        name: publish_general_artifacts
+        displayName: Upload Artifact
+        dependArtifact: BUILD_ARTIFACT
+        artifactName: output
+        dependsOn: build_python
   - name: test
     displayName: Test
     strategy: naturally
     trigger: auto
+    executor: []
     steps:
-      - step: build@python            <span class="c"># Python environment</span>
-        name: run_tests
-        displayName: Run pytest
-        pythonVersion: '3.12'
+      - step: ut@python
+        name: unit_test_python
+        displayName: Python Unit Tests
+        pythonVersion: '3.13'
         commands:
-          - pip install pytest        <span class="c"># or: pip install -r requirements.txt</span>
-          - pytest
-  - name: release                     <span class="c"># runs only if test is green</span>
+          - pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+          - pip3 install -r requirements.txt
+          - pytest --html=report/index.html
+        report:
+          path: report
+          index: index.html
+        checkpoints: []
+        caches: []
+        notify: []
+        strategy:
+          retry: '0'
+  - name: release
     displayName: Publish
     strategy: naturally
     trigger: auto
@@ -47,19 +82,48 @@ stages:
       - step: publish@release_artifacts
         name: publish_release_artifacts
         displayName: Publish
+        dependArtifact: output
         version: 1.0.0.0
-        autoIncrement: true</code></pre></div>
-  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">The exact step type and field names come from Gitee Go's template editor and can change; keep the <em>shape</em> (a <code>test</code> stage that installs pytest and runs it, then a <code>release</code> stage) and map it onto the current interface.</p>
+        autoIncrement: true
+        strategy: {}</code></pre></div>
+  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">This is the real file from Gitee's Python template; the empty fields (<code>executor</code>, <code>checkpoints</code>, <code>caches</code>, <code>notify</code>, <code>strategy</code>) are editor defaults you can leave as-is.</p>
+  <p><strong>Now add a branch pipeline and a PR pipeline.</strong> Both are copies of the master pipeline with the <code>release</code> (Publish) stage <strong>removed</strong> (you don't publish from unmerged work) and a different trigger. When you create each one in Gitee Go, pick its trigger type and Gitee writes the matching <code>triggers</code> block:</p>
+  <div class="code-block"><button class="btn-copy" data-copy>⧉ Copy</button>
+  <pre><code><span class="c"># branch pipeline: fires on a push to any non-master branch (Compile + Test, no Publish)</span>
+triggers:
+  trigger: auto
+  push:
+    branches:
+      exclude:
+        - master</code></pre></div>
+  <div class="code-block"><button class="btn-copy" data-copy>⧉ Copy</button>
+  <pre><code><span class="c"># PR pipeline: fires when a Pull Request targets master (Compile + Test, no Publish)</span>
+triggers:
+  trigger: auto
+  pr:
+    branches:
+      include:
+        - master</code></pre></div>
+  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">The exact trigger keys come from the Gitee Go editor when you choose a pipeline's trigger type (master branch / regular branch / pull request); keep the shape: branch and PR pipelines run <strong>Compile + Test</strong>, never Publish.</p>
 
-  <h3>3 · Make it go red, then green</h3>
+  <h3>3 · Exercise the branch pipeline: red, then green</h3>
   <ol>
-    <li>Commit and push the <code>.workflow/</code> file (and <code>requirements.txt</code>), then watch the pipeline turn <span style="color:var(--green);font-weight:700">green</span>.</li>
-    <li>Deliberately break a test (e.g. change an expected winner) and push: watch it turn <span style="color:var(--coral);font-weight:700">red</span> and read the failing assertion in the logs.</li>
-    <li>Fix it and push again → green.</li>
-    <li><em>(Optional)</em> Add a <code>pull_request</code> trigger so a Pull Request can't merge while tests fail.</li>
+    <li>Create a <code>dev</code> branch off <code>master</code> and switch to it: <code>git switch -c dev</code>.</li>
+    <li>Make a small change on <code>dev</code> that introduces a <strong>bug one of your tests catches</strong>: for example, in <code>src/board.py</code> change the anti-diagonal line back to <code>(2, 4, 8)</code>, so <code>test_anti_diagonal_win</code> will fail. Commit and push the branch: <code>git push -u origin dev</code>.</li>
+    <li>On Gitee, watch the <strong>branch pipeline</strong> run and turn <span style="color:var(--coral);font-weight:700">red</span>. Open the failed <code>Test</code> stage and read the failing assertion in the HTML report.</li>
+    <li>Fix the bug (restore <code>(2, 4, 6)</code>), commit, and push again. The branch pipeline re-runs and turns <span style="color:var(--green);font-weight:700">green</span>.</li>
   </ol>
 
-  <div class="callout"><span class="tag">Done when</span><p>Every push to your repository automatically runs <code>pytest</code> on Gitee Go, you have seen a full red → green cycle, and a passing run on <code>master</code> publishes a versioned release.</p></div>
+  <h3>4 · Open a PR (PR pipeline), then merge (master pipeline)</h3>
+  <ol>
+    <li>On Gitee, open a <strong>Pull Request</strong> from <code>dev</code> into <code>master</code>. The <strong>PR pipeline</strong> runs against the proposed merge; confirm it is <span style="color:var(--green);font-weight:700">green</span> (a red PR pipeline blocks the merge).</li>
+    <li><strong>Merge</strong> the PR. The push to <code>master</code> triggers the <strong>master pipeline</strong>: Compile → Test → <strong>Publish</strong>, which publishes a versioned release.</li>
+    <li>Tidy up: delete the <code>dev</code> branch (Gitee's button after the merge, and <code>git branch -d dev</code> locally).</li>
+  </ol>
+
+  <div class="callout"><span class="tag">Submit</span><p>A screenshot of <strong>all three pipelines' run history</strong>: the <strong>branch</strong> pipeline showing a red run followed by a green run, the <strong>PR</strong> pipeline's green run, and the <strong>master</strong> pipeline's green run that published the release.</p></div>
+
+  <div class="callout tip"><span class="tag">Done when</span><p>All three pipelines exist and have fired: the branch pipeline went red then green, the PR pipeline gated the merge, and merging ran the master pipeline through to a published release.</p></div>
 
   <div class="next-prev">
     <a href="#m6-lecture">← Lecture</a>

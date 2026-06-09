@@ -4,13 +4,13 @@
   <h2 class="page-title">Testing with pytest</h2>
   <p class="sub-meta">Write small checks that prove your code behaves, and run them all with one command.</p>
 
-  <p class="lead">Until now you've tested by hand: run the program, type some moves, eyeball the output. That doesn't scale — it's slow, easy to skip, and a fix in one place can silently break another. <strong>Automated tests</strong> are small programs that check your code for you, in seconds, every time. <strong>pytest</strong> is the tool that finds and runs them.</p>
+  <p class="lead">Until now you've tested by hand: run the program, type some moves, eyeball the output. That doesn't scale: it's slow, easy to skip, and a fix in one place can silently break another. <strong>Automated tests</strong> are small programs that check your code for you, in seconds, every time. <strong>pytest</strong> is the tool that finds and runs them.</p>
 
   <h3>1 · Why automated tests</h3>
-  <p>Manual testing has three problems: it's <em>slow</em>, it gets <em>skipped</em> when you're in a hurry, and it misses <strong>regressions</strong> — a change that quietly breaks something that used to work. An automated test pins down one expected behaviour once; from then on, every time you change the code, the test tells you in seconds whether you broke it.</p>
+  <p>Manual testing has three problems: it's <em>slow</em>, it gets <em>skipped</em> when you're in a hurry, and it misses <strong>regressions</strong>: a change that quietly breaks something that used to work. An automated test pins down one expected behaviour once; from then on, every time you change the code, the test tells you in seconds whether you broke it.</p>
   <ul>
     <li>The anti-diagonal bug from Lab 3 (cells 3-5-7 not detected) is exactly the kind of thing a single test would have caught the moment it was introduced.</li>
-    <li>Tests double as <strong>documentation</strong> — they show, in code, how a function is meant to be used.</li>
+    <li>Tests double as <strong>documentation</strong>: they show, in code, how a function is meant to be used.</li>
     <li>They are a <strong>safety net for refactoring</strong>: change the insides freely, and if the tests still pass, the behaviour is intact.</li>
     <li>The payoff compounds in Module 6, where the CI pipeline runs your tests automatically on every push.</li>
   </ul>
@@ -20,21 +20,21 @@
   <p>Take the <code>hello</code> project. Instead of one script that prints directly, move the logic into a function that <em>returns</em> a string:</p>
   <div class="code-block">
     <button class="btn-copy" data-copy>⧉ Copy</button>
-    <pre><code><span class="c"># greeter.py — pure logic, no I/O</span>
+    <pre><code><span class="c"># greeter.py: pure logic, no I/O</span>
 <span class="k">def</span> greet(name):
     <span class="k">return</span> <span class="s">f"Hello, {name}!"</span></code></pre>
   </div>
   <p>The I/O (asking for a name, printing the result) lives elsewhere. Now <code>greet()</code> is trivially testable: hand it a name, check the string it returns. <strong>A function that returns a value is easy to test; a function that only prints is not.</strong></p>
 
   <h3>3 · Organise the project: <code>src/</code> and <code>tests/</code></h3>
-  <p>So far everything has lived in one folder. As a project grows, that gets crowded — source files, test files, and generated junk all jumbled together. The common convention is to give each a home: application code in a <code>src/</code> folder, tests in a <code>tests/</code> folder.</p>
+  <p>So far everything has lived in one folder. As a project grows, that gets crowded: source files, test files, and generated junk all jumbled together. The common convention is to give each a home: application code in a <code>src/</code> folder, tests in a <code>tests/</code> folder.</p>
   <pre><code>hello/
 ├── src/
 │   └── greeter.py       <span class="c"># the code under test</span>
 ├── tests/
 │   └── test_greeter.py  <span class="c"># the tests</span>
 └── pyproject.toml       <span class="c"># tells pytest where the code lives</span></code></pre>
-  <p>There's one catch: once <code>greeter.py</code> moves into <code>src/</code>, the line <code>from greeter import greet</code> can no longer find it — <code>src/</code> isn't on Python's import path. Rather than set <code>PYTHONPATH</code> by hand every time, add a small <code>pyproject.toml</code> at the project root and let pytest handle it:</p>
+  <p>There's one catch: once <code>greeter.py</code> moves into <code>src/</code>, the line <code>from greeter import greet</code> can no longer find it: <code>src/</code> isn't on Python's import path. Rather than set <code>PYTHONPATH</code> by hand every time, add a small <code>pyproject.toml</code> at the project root and let pytest handle it:</p>
   <div class="code-block">
     <button class="btn-copy" data-copy>⧉ Copy</button>
     <pre><code><span class="c"># pyproject.toml</span>
@@ -54,13 +54,13 @@ pythonpath = [<span class="s">"src"</span>]</code></pre>
     result = greet(<span class="s">"world"</span>)            <span class="c"># Act</span>
     <span class="k">assert</span> result == <span class="s">"Hello, world!"</span>    <span class="c"># Assert</span></code></pre>
   </div>
-  <p>Every test follows the same three beats — <strong>Arrange</strong> a situation, <strong>Act</strong> by calling the code, <strong>Assert</strong> the result. The <code>assert</code> is plain Python: if its expression is false, the test fails. To run every test in the project, go to the <strong>project root</strong> (the folder with <code>pyproject.toml</code>) and just type:</p>
+  <p>Every test follows the same three beats: <strong>Arrange</strong> a situation, <strong>Act</strong> by calling the code, <strong>Assert</strong> the result. The <code>assert</code> is plain Python: if its expression is false, the test fails. To run every test in the project, go to the <strong>project root</strong> (the folder with <code>pyproject.toml</code>) and just type:</p>
   <pre><code><span class="k">pytest</span></code></pre>
-  <p>pytest reads <code>pyproject.toml</code>, puts <code>src/</code> on the import path, then finds and runs every <code>test_*.py</code> under <code>tests/</code> — you never name the files yourself. A passing run is <span style="color:var(--green);font-weight:700">green</span>; each dot is one passing test:</p>
+  <p>pytest reads <code>pyproject.toml</code>, puts <code>src/</code> on the import path, then finds and runs every <code>test_*.py</code> under <code>tests/</code>; you never name the files yourself. A passing run is <span style="color:var(--green);font-weight:700">green</span>; each dot is one passing test:</p>
   <pre><code>tests/test_greeter.py .                              [100%]
 
 1 passed in 0.01s</code></pre>
-  <p>If you break it (say <code>greet</code> returns <code>"Hi, {name}"</code>), pytest shows an <strong>F</strong> and — because it rewrites <code>assert</code> statements — the actual vs. expected values, so you see <em>why</em> it failed:</p>
+  <p>If you break it (say <code>greet</code> returns <code>"Hi, {name}"</code>), pytest shows an <strong>F</strong> and (because it rewrites <code>assert</code> statements) the actual vs. expected values, so you see <em>why</em> it failed:</p>
   <pre><code>tests/test_greeter.py F                              [100%]
 
     <span class="k">def</span> test_greet_uses_the_name():
@@ -72,7 +72,7 @@ E       AssertionError: assert 'Hi, world' == 'Hello, world!'
   <p>Add <code>pytest -v</code> for a verbose list of each test by name.</p>
 
   <h3>5 · Cover the cases</h3>
-  <p>Good tests check the <strong>happy path</strong> <em>and</em> the <strong>edges</strong>. Give each behaviour its own <code>test_</code> function and name it so a failure reads like a sentence (<code>test_greet_handles_empty_name</code>). When several cases differ only in their inputs, don't copy-paste — <strong>parametrize</strong> one test to run once per row:</p>
+  <p>Good tests check the <strong>happy path</strong> <em>and</em> the <strong>edges</strong>. Give each behaviour its own <code>test_</code> function and name it so a failure reads like a sentence (<code>test_greet_handles_empty_name</code>). When several cases differ only in their inputs, don't copy-paste; <strong>parametrize</strong> one test to run once per row:</p>
   <div class="code-block">
     <button class="btn-copy" data-copy>⧉ Copy</button>
     <pre><code><span class="k">import</span> pytest
@@ -89,9 +89,9 @@ E       AssertionError: assert 'Hi, world' == 'Hello, world!'
   <p>pytest runs this test three times, reporting each row separately, so one failing case doesn't hide the others.</p>
 
   <h3>6 · The exit code (why CI cares)</h3>
-  <p>When it finishes, <code>pytest</code> returns an <strong>exit code</strong>: <code>0</code> if every test passed, non-zero if any failed. That single number is the signal the CI pipeline watches in Module 6 — <span style="color:var(--green);font-weight:700">green</span> when it's 0, <span style="color:var(--coral);font-weight:700">red</span> otherwise. The pipeline runs the very same <code>pytest</code> command you run locally, on a clean machine.</p>
+  <p>When it finishes, <code>pytest</code> returns an <strong>exit code</strong>: <code>0</code> if every test passed, non-zero if any failed. That single number is the signal the CI pipeline watches in Module 6: <span style="color:var(--green);font-weight:700">green</span> when it's 0, <span style="color:var(--coral);font-weight:700">red</span> otherwise. The pipeline runs the very same <code>pytest</code> command you run locally, on a clean machine.</p>
 
-  <div class="callout tip"><span class="tag">On to the lab</span><p>In <strong>Lab 4</strong> you'll make the Tic-Tac-Toe rules testable by moving them into a <code>Board</code> class, then write pytest tests for it — including a <strong>regression test</strong> for the Lab 3 anti-diagonal bug. In <strong>Module 6</strong>, Gitee Go runs <code>pytest</code> automatically on every push.</p></div>
+  <div class="callout tip"><span class="tag">On to the lab</span><p>In <strong>Lab 4</strong> you'll make the Tic-Tac-Toe rules testable by moving them into a <code>Board</code> class, then write pytest tests for it, including a <strong>regression test</strong> for the Lab 3 anti-diagonal bug. In <strong>Module 6</strong>, Gitee Go runs <code>pytest</code> automatically on every push.</p></div>
 
   <div class="next-prev">
     <a href="#m4-lab">← Lab 3</a>

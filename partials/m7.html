@@ -1,15 +1,15 @@
 <!-- ============================== M7 FINAL PROJECT ============================== -->
 <section class="page" id="m7">
-  <div class="eyebrow">Module 7 · Capstone · Classes 13–16</div>
+  <div class="eyebrow">Module 7 · Capstone · Final Project</div>
   <h2 class="page-title">Final Project</h2>
   <p class="sub-meta">In teams, extend the game through the full workflow you've learned: from issue to released, tested code.</p>
 
   <p class="lead">Everything so far has built the machinery: version control, a clean repo, branches, automated tests, and a CI/CD pipeline. Now you put it to work. In teams of 2–3, add <strong>one feature</strong> to Tic-Tac-Toe and take it through the complete professional loop.</p>
 
   <h3>Schedule</h3>
-  <div class="timing"><span class="t">Class 13</span><span><strong>Discussion &amp; planning.</strong> Form teams, choose a feature, open issues on Gitee, assign owners, plan branches, agree on "done."</span></div>
-  <div class="timing"><span class="t">Classes 14–15</span><span><strong>Implementation.</strong> Issue-driven development: branch per issue → code + a unit test → push → PR → CI gate → review → merge.</span></div>
-  <div class="timing"><span class="t">Class 16</span><span><strong>Integration &amp; demo.</strong> Final merge to <code>master</code>, tag a <code>v1.0</code> release, and present.</span></div>
+  <div class="timing"><span class="t">Plan</span><span><strong>Discussion &amp; planning.</strong> Form teams, choose a feature, open issues on Gitee, assign owners, plan branches, agree on "done."</span></div>
+  <div class="timing"><span class="t">Build</span><span><strong>Implementation.</strong> Issue-driven development: branch per issue → code + a unit test → push → PR → CI gate → review → merge.</span></div>
+  <div class="timing"><span class="t">Demo</span><span><strong>Integration &amp; demo.</strong> Final merge to <code>master</code> and present.</span></div>
 
   <h3>Choose a feature</h3>
   <div class="opt-grid">
@@ -19,13 +19,112 @@
     <div class="opt"><span class="lvl med">Medium</span><b>Score &amp; replay</b><p>A persistent high-score file and a play-again loop with difficulty levels.</p></div>
   </div>
 
+  <h3>Follow Git Flow</h3>
+  <p>Professional teams don't commit straight to the main line; they follow a <strong>branching model</strong>. The most common is <strong>Git Flow</strong>: two long-lived branches (<code>main</code> and <code>develop</code>) plus short-lived <code>feature</code>, <code>release</code>, and <code>hotfix</code> branches that each have one job. For this project, <strong>develop your feature using this flow</strong>.</p>
+
+  <svg viewBox="0 0 1080 600" role="img" aria-label="Git Flow branching model diagram" style="width:100%;height:auto;max-width:980px;display:block;margin:8px 0 18px;font-family:'JetBrains Mono',monospace">
+    <title>Git Flow: main, hotfix, release, develop and feature branches</title>
+    <defs>
+      <marker id="gf-arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L7,3 L0,6 Z" fill="#6b7280"/>
+      </marker>
+    </defs>
+
+    <!-- lane labels -->
+    <g>
+      <rect x="30" y="47"  width="200" height="46" rx="8" fill="#aeddf7"/>
+      <text x="130" y="76" text-anchor="middle" font-size="21" font-weight="700" fill="#0b3a52">main</text>
+      <rect x="30" y="147" width="200" height="46" rx="8" fill="#e8821e"/>
+      <text x="130" y="176" text-anchor="middle" font-size="21" font-weight="700" fill="#fff">hotfix</text>
+      <rect x="30" y="237" width="200" height="46" rx="8" fill="#29c4c4"/>
+      <text x="130" y="266" text-anchor="middle" font-size="21" font-weight="700" fill="#fff">release</text>
+      <rect x="30" y="337" width="200" height="46" rx="8" fill="#9b6dd6"/>
+      <text x="130" y="366" text-anchor="middle" font-size="21" font-weight="700" fill="#fff">develop</text>
+      <rect x="30" y="427" width="200" height="46" rx="8" fill="#34c98b"/>
+      <text x="130" y="456" text-anchor="middle" font-size="21" font-weight="700" fill="#fff">feature</text>
+      <rect x="30" y="527" width="200" height="46" rx="8" fill="#34c98b"/>
+      <text x="130" y="556" text-anchor="middle" font-size="21" font-weight="700" fill="#fff">feature</text>
+    </g>
+
+    <!-- arrows (drawn first; nodes drawn on top cover the tails) -->
+    <g stroke="#6b7280" stroke-width="3" fill="none" marker-end="url(#gf-arrow)">
+      <!-- main line -->
+      <line x1="300" y1="70" x2="550" y2="70"/>
+      <line x1="580" y1="70" x2="990" y2="70"/>
+      <!-- develop line -->
+      <line x1="340" y1="360" x2="430" y2="360"/>
+      <line x1="460" y1="360" x2="550" y2="360"/>
+      <line x1="580" y1="360" x2="750" y2="360"/>
+      <line x1="780" y1="360" x2="990" y2="360"/>
+      <!-- branch from main into develop -->
+      <line x1="300" y1="70" x2="335.9" y2="330.3"/>
+      <!-- hotfix -->
+      <line x1="300" y1="70" x2="434.6" y2="154.1"/>
+      <line x1="460" y1="170" x2="557" y2="89.2"/>
+      <line x1="460" y1="170" x2="564" y2="334.6"/>
+      <!-- top feature -->
+      <line x1="460" y1="360" x2="556" y2="432"/>
+      <line x1="580" y1="450" x2="650" y2="450"/>
+      <line x1="680" y1="450" x2="757.7" y2="380.1"/>
+      <!-- bottom feature -->
+      <line x1="340" y1="360" x2="408.4" y2="522.4"/>
+      <line x1="420" y1="550" x2="480" y2="550"/>
+      <line x1="510" y1="550" x2="570" y2="550"/>
+      <line x1="600" y1="550" x2="660" y2="550"/>
+      <!-- release -->
+      <line x1="780" y1="360" x2="841.3" y2="283.4"/>
+      <line x1="860" y1="260" x2="920" y2="260"/>
+      <line x1="950" y1="260" x2="1009.6" y2="98.1"/>
+      <line x1="950" y1="260" x2="1002.8" y2="335.4"/>
+    </g>
+
+    <!-- nodes -->
+    <g stroke-width="3">
+      <!-- main -->
+      <g fill="#aeddf7" stroke="#5aa9d6">
+        <circle cx="300" cy="70" r="24"/><circle cx="580" cy="70" r="24"/><circle cx="1020" cy="70" r="24"/>
+      </g>
+      <!-- hotfix -->
+      <circle cx="460" cy="170" r="24" fill="#e8821e" stroke="#b5650f"/>
+      <!-- release -->
+      <g fill="#29c4c4" stroke="#1a8f8f">
+        <circle cx="860" cy="260" r="24"/><circle cx="950" cy="260" r="24"/>
+      </g>
+      <!-- develop -->
+      <g fill="#9b6dd6" stroke="#6f47a8">
+        <circle cx="340" cy="360" r="24"/><circle cx="460" cy="360" r="24"/><circle cx="580" cy="360" r="24"/><circle cx="780" cy="360" r="24"/><circle cx="1020" cy="360" r="24"/>
+      </g>
+      <!-- features -->
+      <g fill="#34c98b" stroke="#1f9d68">
+        <circle cx="580" cy="450" r="24"/><circle cx="680" cy="450" r="24"/>
+        <circle cx="420" cy="550" r="24"/><circle cx="510" cy="550" r="24"/><circle cx="600" cy="550" r="24"/><circle cx="690" cy="550" r="24"/>
+      </g>
+    </g>
+
+    <!-- version tags on main -->
+    <g font-size="13" font-weight="700" fill="#0b3a52" text-anchor="middle">
+      <text x="300" y="75">v0.1</text><text x="580" y="75">v0.2</text><text x="1020" y="75">v1.0</text>
+    </g>
+
+    <text x="900" y="558" font-size="30" font-weight="700" fill="#9aa1ac" letter-spacing="1">GIT FLOW</text>
+  </svg>
+
+  <p>Each branch has one job:</p>
+  <ul>
+    <li><strong><code>main</code></strong>: always-releasable history; here it's your repo's default branch (<code>master</code> on Gitee).</li>
+    <li><strong><code>develop</code></strong>: the integration branch where finished features come together.</li>
+    <li><strong><code>feature/&lt;name&gt;</code></strong>: one per issue, branched off <code>develop</code> and merged back via a Pull Request once CI is green. <em>This is where your team's work happens.</em></li>
+    <li><strong><code>release/*</code></strong>: a stabilising branch cut from <code>develop</code> when you're ready to ship; merges into <code>main</code> and back into <code>develop</code>.</li>
+    <li><strong><code>hotfix/*</code></strong>: an urgent fix branched off <code>main</code> and merged back into both <code>main</code> and <code>develop</code>.</li>
+  </ul>
+  <div class="callout"><span class="tag">Do this</span><p>Develop your feature on a <code>feature/&lt;name&gt;</code> branch off <code>develop</code>, open a PR back into <code>develop</code> once the pipeline is green, and keep <code>master</code> for integrated, releasable code. Never commit straight to <code>master</code>.</p></div>
+
   <h3>Definition of done</h3>
   <ul>
     <li>The feature works and is merged into <code>master</code> via a Pull Request.</li>
     <li>It has at least one meaningful <strong>unit test</strong> for any new logic.</li>
     <li>CI (Gitee Go) is <span style="color:var(--green);font-weight:700">green</span> on <code>master</code>.</li>
     <li>The work is traceable: issues linked to PRs.</li>
-    <li>A <code>v1.0</code> release is tagged on Gitee.</li>
   </ul>
 
   <h3>Assessment rubric</h3>
@@ -36,11 +135,11 @@
       <tr><td>At least one meaningful unit test</td><td class="pct">20%</td></tr>
       <tr><td>CI pipeline passing on <code>master</code></td><td class="pct">20%</td></tr>
       <tr><td>Clean issue → branch → PR history showing the workflow</td><td class="pct">20%</td></tr>
-      <tr><td>Tagged release + clear demo</td><td class="pct">10%</td></tr>
+      <tr><td>Clear demo of the working feature</td><td class="pct">10%</td></tr>
     </tbody>
   </table>
 
-  <div class="callout tip"><span class="tag">Demo</span><p>Each team shows: the green pipeline, the issue→PR history, the tagged release, and the feature played live. Close with a one-minute reflection on what branching and CI saved you.</p></div>
+  <div class="callout tip"><span class="tag">Demo</span><p>Each team shows: the green pipeline, the issue→PR history, and the feature played live. Close with a one-minute reflection on what branching and CI saved you.</p></div>
 
   <div class="next-prev">
     <a href="#m6-lab">← Lab 5</a>

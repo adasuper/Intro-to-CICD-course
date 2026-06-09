@@ -39,14 +39,14 @@ print(<span class="s">"Hi there!"</span>)</code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill chg">"Hello, world!"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill chg">"Hi there!"</div></td></tr></tbody></table></li>
     <li><strong>Alice ships first.</strong> Her push succeeds because nobody else has pushed since she cloned:
-      <pre style="margin:8px 0"><code><span class="c"># Alice (Repo1)</span>
+      <pre style="margin:8px 0"><code><span class="c"># Alice (Repo A)</span>
 <span class="k">git</span> add hello.py
 <span class="k">git</span> commit -m <span class="s">"reword the greeting"</span>
 <span class="k">git</span> push                     <span class="c"># ✓ remote now has Alice's line</span></code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill chg">"Hello, world!"</div></td><td><div class="fill chg">"Hello, world!"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill given">"Hi there!"</div></td></tr></tbody></table></li>
     <li><strong>Bob's push is rejected.</strong> Bob committed locally too, but the remote moved ahead of him, so Git refuses the push:
-      <pre style="margin:8px 0"><code><span class="c"># Bob (Repo2)</span>
+      <pre style="margin:8px 0"><code><span class="c"># Bob (Repo B)</span>
 <span class="k">git</span> add hello.py
 <span class="k">git</span> commit -m <span class="s">"shorten the greeting"</span>
 <span class="k">git</span> push
@@ -94,7 +94,7 @@ print(<span class="s">"Hi there!"</span>)</code></pre>
       <pre style="margin:8px 0"><code><span class="k">git</span> add hello.py</code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hi there!"</div></td><td><div class="fill given">"Hello there!"</div></td></tr></tbody></table>
-      <p style="margin:6px 0 0;font-size:13px;color:var(--ink-2,#555)">Staging records the resolved file in the index. None of these five locations change yet, that happens at the commit.</p></li>
+      <p style="margin:6px 0 0;font-size:13px;color:var(--ink-2,#555)">Staging records the resolved file in the index. None of these five locations change yet; that happens at the commit.</p></li>
     <li><strong>Complete the merge</strong> with a commit describing what you reconciled, then push:
       <pre style="margin:8px 0"><code><span class="k">git</span> commit -m <span class="s">"merged two changes"</span>   <span class="c"># records the merge</span>
 <span class="k">git</span> push                          <span class="c"># ✓ remote now has the reconciled line</span></code></pre>
