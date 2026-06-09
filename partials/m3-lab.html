@@ -2,7 +2,7 @@
 <section class="page" id="m3-lab">
   <div class="eyebrow">Module 3 · Lab 2 · Class 6</div>
   <h2 class="page-title">Lab 2: .gitignore &amp; Conflict Resolution</h2>
-  <p class="sub-meta">Two activities on one repository: clean up an accidentally-committed build artifact, then resolve a merge conflict.</p>
+  <p class="sub-meta">Two activities on one repository: clean up an accidentally-committed generated artifact, then resolve a merge conflict.</p>
 
   <div class="callout warn">
     <span class="tag">Open this lab in a new tab first</span>
@@ -18,17 +18,17 @@
   </ol>
 
   <!-- Activity A: gitignore -->
-  <h3>Activity A: The accidentally-committed build artifact</h3>
+  <h3>Activity A: The accidentally-committed generated artifact</h3>
   <div class="callout">
     <span class="tag">Scenario</span>
-    <p>You are working with a teammate. While building the game you produced a compiled artifact, <code>ttt.exe</code>, in your workspace that should never be committed (an anonymous professor deducts 2.5 points for committed build artifacts). You have <em>already pushed it</em> to the remote, and only then created a <code>.gitignore</code>. You push everything, but the artifact is still on the remote, and your teammate has already pulled it. Now you must both fix your repositories.</p>
+    <p>You are working with a teammate. While running the game, Python produced a generated <code>__pycache__/</code> folder (its bytecode cache) in your workspace that should never be committed (an anonymous professor deducts 2.5 points for committed generated files). You have <em>already pushed it</em> to the remote, and only then created a <code>.gitignore</code>. You push everything, but the artifact is still on the remote, and your teammate has already pulled it. Now you must both fix your repositories.</p>
   </div>
 
   <h4>Steps to reproduce the problem</h4>
   <ol>
-    <li>In Repo1, create a file <code>ttt.exe</code> (a stand-in for a compiled binary: just make a small file with this exact name).</li>
-    <li>In Repo1, add, commit, and push <code>ttt.exe</code>.</li>
-    <li>In Repo1, create a <code>.gitignore</code> file with an entry that ignores <code>ttt.exe</code>. (Ensure the file's extension really is <code>.gitignore</code>, not <code>.txt</code>: enable "show file extensions.")</li>
+    <li>In Repo1, create a <code>__pycache__</code> folder with a file inside (a stand-in for Python's bytecode cache: just make a <code>__pycache__/tictactoe.pyc</code> file with any content).</li>
+    <li>In Repo1, add, commit, and push the <code>__pycache__</code> folder.</li>
+    <li>In Repo1, create a <code>.gitignore</code> file with an entry that ignores <code>__pycache__/</code>. (Ensure the file's extension really is <code>.gitignore</code>, not <code>.txt</code>: enable "show file extensions.")</li>
     <li>In Repo1, add, commit, and push the <code>.gitignore</code>.</li>
     <li>In Repo2, pull from the remote. (Repo2 now also has the unwanted artifact.)</li>
   </ol>
@@ -36,9 +36,9 @@
   <div class="callout tip">
     <span class="tag">Desired end state</span>
     <ul style="margin:0">
-      <li>Both workspaces still <em>have</em> <code>ttt.exe</code> on disk.</li>
+      <li>Both workspaces still <em>have</em> <code>__pycache__/</code> on disk.</li>
       <li>Both workspaces have a <code>.gitignore</code> ignoring it.</li>
-      <li>The remote has the <code>.gitignore</code> (with the entry) but contains <strong>no</strong> build artifact.</li>
+      <li>The remote has the <code>.gitignore</code> (with the entry) but contains <strong>no</strong> <code>__pycache__</code>.</li>
     </ul>
   </div>
 

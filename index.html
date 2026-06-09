@@ -15,7 +15,7 @@
 <aside class="sidebar">
   <div class="brand">
     <a href="#home">
-      <span class="status"><span class="dot"></span>build: passing</span>
+      <span class="status"><span class="dot"></span>ci: passing</span>
       <h1>Introduction<br>to CI/CD</h1>
       <p>A short summer course · 4 days</p>
     </a>
@@ -40,12 +40,12 @@
     <a class="nav-link sub" href="#m4-lecture">Lecture · Branches &amp; PRs</a>
     <a class="nav-link sub" href="#m4-lab">Lab 3 · Branch the game</a>
 
-    <div class="group-label">Module 5 · Make</div>
-    <a class="nav-link sub" href="#m5-lecture">Lecture · Build systems</a>
-    <a class="nav-link sub" href="#m5-lab">Lab 4 · Build with Make</a>
+    <div class="group-label">Module 5 · Testing</div>
+    <a class="nav-link sub" href="#m5-lecture">Lecture · Testing with pytest</a>
+    <a class="nav-link sub" href="#m5-lab">Lab 4 · Test the game</a>
 
-    <div class="group-label">Module 6 · CI/CD Config</div>
-    <a class="nav-link sub" href="#m6-lecture">Lecture · Pipelines &amp; tests</a>
+    <div class="group-label">Module 6 · Pipeline Config</div>
+    <a class="nav-link sub" href="#m6-lecture">Lecture · CI/CD pipelines</a>
     <a class="nav-link sub" href="#m6-lab">Lab 5 · Gitee Go pipeline</a>
 
     <div class="group-label">Module 7 · Capstone</div>
@@ -64,13 +64,13 @@
 <!-- ============================== HOME ============================== -->
 <section class="page" id="home">
   <div class="hero">
-    <span class="status"><span class="dot"></span>build: passing · 4 days · 7 modules</span>
+    <span class="status"><span class="dot"></span>ci: passing · 4 days · 7 modules</span>
     <h1>Introduction to CI<span class="slash">/</span>CD</h1>
     <p class="tagline">A short summer course</p>
-    <p class="desc lead">A hands-on, four-day introduction to version control, build systems, and continuous integration &amp; delivery: taught entirely around one small C++ project: a console <strong>Tic-Tac-Toe</strong> game that grows, lab by lab, into an automatically built and tested pipeline on <strong>Gitee</strong>.</p>
+    <p class="desc lead">A hands-on, four-day introduction to version control, testing, and continuous integration &amp; delivery: taught entirely around one small Python project: a console <strong>Tic-Tac-Toe</strong> game that grows, lab by lab, into an automatically tested pipeline on <strong>Gitee</strong>.</p>
     <div class="meta-row">
-      <span class="pill">Prereq: <b>basic C++</b></span>
-      <span class="pill">Tools: <b>Git · Gitee · Make · Gitee&nbsp;Go</b></span>
+      <span class="pill">Prereq: <b>basic Python</b></span>
+      <span class="pill">Tools: <b>Git · Gitee · pytest · Gitee&nbsp;Go</b></span>
     </div>
   </div>
 
@@ -101,12 +101,12 @@
   </div>
   <div class="module-card">
     <div class="num">05</div>
-    <div class="info"><h3>Make</h3><p>Day 3 · Classes 9–10 · Lab 4</p></div>
+    <div class="info"><h3>Testing</h3><p>Day 3 · Classes 9–10 · Lab 4</p></div>
     <div class="links"><a class="lecture" href="#m5-lecture">Lecture</a><a class="lab" href="#m5-lab">Lab 4</a></div>
   </div>
   <div class="module-card">
     <div class="num">06</div>
-    <div class="info"><h3>CI/CD Configuration</h3><p>Day 3 · Classes 11–12 · Lab 5</p></div>
+    <div class="info"><h3>Pipeline Configuration</h3><p>Day 3 · Classes 11–12 · Lab 5</p></div>
     <div class="links"><a class="lecture" href="#m6-lecture">Lecture</a><a class="lab" href="#m6-lab">Lab 5</a></div>
   </div>
   <div class="module-card">
@@ -115,7 +115,7 @@
     <div class="links"><a class="lab" href="#m7">Project Brief</a></div>
   </div>
 
-  <p class="footer-note">The course project thread: a single Tic-Tac-Toe codebase carried across every module: versioned in Lab 1, kept clean and conflict-free in Lab 2, branched in Lab 3, built with Make in Lab 4, and put behind an automated build-and-test pipeline in Lab 5, before teams extend it in the final project.</p>
+  <p class="footer-note">The course project thread: a single Tic-Tac-Toe codebase carried across every module: versioned in Lab 1, kept clean and conflict-free in Lab 2, branched in Lab 3, unit-tested in Lab 4, and put behind an automated test pipeline in Lab 5, before teams extend it in the final project.</p>
 </section>
 
 <!-- ============================== M1 LECTURE ============================== -->
@@ -163,20 +163,20 @@
 
   <h3>The pipeline, end to end</h3>
   <p>A CI/CD <strong>pipeline</strong> is an automated sequence that runs on every change:</p>
-  <pre><code><span class="k">source control</span>  →  <span class="k">build</span>  →  <span class="k">test</span>  →  <span class="k">integrate</span>  →  <span class="k">deliver</span></code></pre>
+  <pre><code><span class="k">source control</span>  →  <span class="k">test</span>  →  <span class="k">integrate</span>  →  <span class="k">deliver</span></code></pre>
   <p>This course builds each stage from the ground up, and the last lab wires them together into a working pipeline.</p>
 
   <h3>The toolchain we will use</h3>
   <ul>
     <li><strong>Git</strong>: the version-control system that records every change to the code.</li>
     <li><strong>Gitee (码云)</strong>: our remote host for repositories, pull requests, issue tracking, <em>and</em> CI/CD. We use Gitee because it is fast and reliable from within China, where GitHub access is often slow or unstable.</li>
-    <li><strong>A C++ compiler (g++) + Make</strong>: to build the project in a structured, repeatable way.</li>
+    <li><strong>Python 3 + pytest</strong>: to run the project and check it with automated tests in a structured, repeatable way.</li>
     <li><strong>Gitee Go</strong>: Gitee's built-in CI/CD service, which runs our build and tests automatically on every push.</li>
   </ul>
 
   <div class="callout">
     <span class="tag">Course project</span>
-    <p>Everything is taught around one small program: a <strong>console Tic-Tac-Toe game</strong> in C++. It starts as a single file you version with Git, becomes a structured, Make-built project, and finishes as a repository whose every commit is automatically built and tested by Gitee Go.</p>
+    <p>Everything is taught around one small program: a <strong>console Tic-Tac-Toe game</strong> in Python. It starts as a single file you version with Git, gains a suite of automated tests, and finishes as a repository whose every commit is automatically tested by Gitee Go.</p>
   </div>
 
   <h3>Glossary to remember</h3>
@@ -187,7 +187,7 @@
     <li><strong>Merge</strong>: combining the work of two branches.</li>
     <li><strong>Pipeline</strong>: the automated build/test/deliver sequence.</li>
     <li><strong>Unit test</strong>: a small automated check that one piece of code behaves correctly.</li>
-    <li><strong>Artifact</strong>: a file produced by the build (e.g. a compiled program).</li>
+    <li><strong>Artifact</strong>: a file produced by the pipeline (e.g. a test report or a packaged release).</li>
   </ul>
 
   <h3>DevOps technology &amp; tools</h3>
@@ -198,7 +198,7 @@
       <tr><td><strong>Plan</strong></td><td>Planning &amp; issue tracking</td><td>Jira, Trello, Gitee / GitLab Issues</td></tr>
       <tr><td><strong>Code</strong></td><td>Source control &amp; editors</td><td>Git, VS Code, Gitee / GitLab / GitHub</td></tr>
       <tr><td><strong>Build</strong></td><td>Compiling &amp; build systems</td><td>Make, CMake, Maven, Gradle</td></tr>
-      <tr><td><strong>Test</strong></td><td>Automated testing</td><td>CTest, GoogleTest, Catch2, JUnit, Selenium</td></tr>
+      <tr><td><strong>Test</strong></td><td>Automated testing</td><td>pytest, unittest, JUnit, Jest, Selenium</td></tr>
       <tr><td><strong>Release</strong></td><td>CI/CD orchestration</td><td>Gitee Go, Jenkins, GitLab CI, GitHub Actions</td></tr>
       <tr><td><strong>Deploy</strong></td><td>Deployment &amp; containers</td><td>Docker, Kubernetes, Ansible</td></tr>
       <tr><td><strong>Operate</strong></td><td>Infrastructure &amp; configuration</td><td>Kubernetes, Ansible, Terraform</td></tr>
@@ -206,7 +206,7 @@
     </tbody>
   </table>
   <p>No team uses all of these: the point is that <em>every</em> stage can be automated, and the tools are what wire the stages into one continuous loop.</p>
-  <div class="callout"><span class="tag">In this course</span><p>We use a small, self-contained slice of this toolchain: <strong>Git + Gitee</strong> (Plan &amp; Code), <strong>Make</strong> (Build), a lightweight <strong>test program</strong> (Test), and <strong>Gitee Go</strong> (Release / CI). Containerised deploy-and-operate tools such as Docker and Kubernetes are powerful next steps beyond this short course.</p></div>
+  <div class="callout"><span class="tag">In this course</span><p>We use a small, self-contained slice of this toolchain: <strong>Git + Gitee</strong> (Plan &amp; Code), <strong>pytest</strong> (Test), and <strong>Gitee Go</strong> (Release / CI). Containerised deploy-and-operate tools such as Docker and Kubernetes are powerful next steps beyond this short course.</p></div>
 
   <div class="next-prev">
     <a href="#home">← Home</a>
@@ -222,7 +222,7 @@
 
   <div class="callout tip">
     <span class="tag">Goal</span>
-    <p>By the end of this lab you have a working C++ toolchain, a Gitee account with SSH access, and you have successfully pushed a small program to a Gitee repository.</p>
+    <p>By the end of this lab you have a working Python toolchain, a Gitee account with SSH access, and you have successfully pushed a small program to a Gitee repository.</p>
   </div>
 
   <div class="callout">
@@ -254,71 +254,43 @@
 <span class="k">git</span> config --global user.name <span class="s">"Your Name"</span>
 <span class="k">git</span> config --global user.email <span class="s">"you@example.com"</span></code></pre>
 
-  <h3>2 · Install a C++ compiler (g++)</h3>
-  <p>You need the GCC / g++ compiler. On Windows, pick <strong>one</strong> of the two options below: Option A is the simplest for beginners.</p>
-
+  <h3>2 · Install Python 3</h3>
+  <p>You need <strong>Python 3</strong> (3.10 or newer). On Windows, install it from python.org and be sure to add it to your PATH.</p>
   <div class="os">
-    <div class="os-h">Windows · Option A: WinLibs (easiest: download &amp; unzip)</div>
-    <div class="dl-row"><a class="dl" href="https://winlibs.com/" target="_blank" rel="noopener"><span class="arr">⇣</span> winlibs.com</a></div>
+    <div class="os-h">Windows</div>
+    <div class="dl-row"><a class="dl" href="https://www.python.org/downloads/" target="_blank" rel="noopener"><span class="arr">⇣</span> python.org/downloads</a></div>
     <ol>
-      <li>On WinLibs, under the newest release download the <strong>UCRT runtime · Win64 · Zip archive</strong> (the "GCC + MinGW-w64 (UCRT)" build).</li>
-      <li>Extract the zip to <code>C:\mingw64</code>: you should end up with a <code>C:\mingw64\bin</code> folder.</li>
-      <li>Add <code>C:\mingw64\bin</code> to your <strong>PATH</strong>: press <kbd>Win</kbd>+<kbd>R</kbd>, run <code>sysdm.cpl</code> → <em>Advanced</em> → <em>Environment Variables</em> → select <em>Path</em> → <em>Edit</em> → <em>New</em> → paste the folder → OK.</li>
+      <li>Download the latest <strong>Windows installer (64-bit)</strong> from the link.</li>
+      <li>Run it and, on the first screen, <strong>tick "Add python.exe to PATH"</strong> before clicking <em>Install Now</em>. This is the step people forget; without it the <code>python</code> command isn't found.</li>
       <li>Close and reopen Git Bash so the new PATH takes effect.</li>
     </ol>
   </div>
-
-  <div class="os">
-    <div class="os-h">Windows · Option B: MSYS2 (a full toolchain manager)</div>
-    <div class="dl-row"><a class="dl" href="https://www.msys2.org/" target="_blank" rel="noopener"><span class="arr">⇣</span> msys2.org</a></div>
-    <ol>
-      <li>Download and run the installer; keep the default location <code>C:\msys64</code>.</li>
-      <li>When it finishes, open <strong>"MSYS2 UCRT64"</strong> from the Start menu.</li>
-      <li>Update the package database: run this, let the window close if asked, reopen it and run again until it reports "nothing to do":
-        <pre style="margin:8px 0"><code><span class="k">pacman</span> -Syu</code></pre></li>
-      <li>Install the compiler toolchain (press <kbd>Enter</kbd> to accept all packages):
-        <pre style="margin:8px 0"><code><span class="k">pacman</span> -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain</code></pre></li>
-      <li>Add <code>C:\msys64\ucrt64\bin</code> to your Windows <strong>PATH</strong> (same steps as Option A), then reopen Git Bash.</li>
-    </ol>
-    <div class="mirror">In China, set MSYS2 to a domestic mirror <em>first</em>: it is far faster. Follow the Tsinghua guide at <a href="https://mirrors.tuna.tsinghua.edu.cn/help/msys2/" target="_blank" rel="noopener">mirrors.tuna.tsinghua.edu.cn/help/msys2/</a>: add the <code>tuna</code> <code>Server&nbsp;=</code> lines to the top of the <code>mirrorlist.*</code> files in <code>C:\msys64\etc\pacman.d\</code>, then run <code>pacman -Syu</code>.</div>
-  </div>
-
   <div class="os">
     <div class="os-h">macOS / Linux</div>
-    <p style="margin:6px 0 0">macOS: <code>xcode-select --install</code> (installs clang/g++ and git). Linux: <code>sudo apt install build-essential</code>.</p>
+    <p style="margin:6px 0 0">macOS: <code>brew install python</code>, or use the python.org installer. Linux: <code>sudo apt install python3 python3-pip</code>. On macOS/Linux the commands are usually <code>python3</code> and <code>pip3</code>.</p>
   </div>
+  <p>Verify in a fresh terminal (both the interpreter and its package installer, pip):</p>
+  <pre><code><span class="k">python</span> --version
+<span class="k">pip</span> --version</code></pre>
+  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">If <code>python</code> isn't found on Windows, reopen the terminal; if it still fails, re-run the installer and confirm "Add python.exe to PATH" was ticked. On macOS/Linux use <code>python3</code>/<code>pip3</code>.</p>
 
-  <p>Verify in a fresh terminal:</p>
-  <pre><code><span class="k">g++</span> --version</code></pre>
+  <h3>3 · Install pytest (the test runner)</h3>
+  <p><strong>pytest</strong> is the testing framework used from Module 5 onward. It installs with <code>pip</code>, Python's package manager, which came with Python in Step 2:</p>
+  <pre><code><span class="k">pip</span> install pytest</code></pre>
+  <div class="mirror">In China, PyPI can be slow. Use the Tsinghua mirror: <code>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pytest</code> (or set it as your default, per the <a href="https://mirrors.tuna.tsinghua.edu.cn/help/pypi/" target="_blank" rel="noopener">Tsinghua PyPI guide</a>).</div>
+  <p style="margin:10px 0 0">Verify:</p>
+  <pre><code><span class="k">pytest</span> --version</code></pre>
+  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">If <code>pytest</code> isn't found directly, run it via the module form <code>python -m pytest --version</code> (and use <code>pip3</code>/<code>python3</code> on macOS/Linux).</p>
 
-  <h3>3 · Make (your build tool)</h3>
-  <p><strong>Make</strong> is the build system used from Module 5 onward. You do <em>not</em> need a separate download: it ships with the compiler toolchain you just installed.</p>
-  <div class="os">
-    <div class="os-h">Windows</div>
-    <p style="margin:6px 0 0">Both compiler options from Step 2 ship the tool as <code>mingw32-make.exe</code>, inside the same <code>bin</code> folder you already added to your PATH. To be able to type plain <code>make</code> (as this course does), copy that file to <code>make.exe</code> in the same folder:</p>
-    <ul style="margin:6px 0 0">
-      <li><strong>Option A (WinLibs):</strong> copy <code>C:\mingw64\bin\mingw32-make.exe</code> → <code>C:\mingw64\bin\make.exe</code></li>
-      <li><strong>Option B (MSYS2):</strong> copy <code>C:\msys64\ucrt64\bin\mingw32-make.exe</code> → <code>C:\msys64\ucrt64\bin\make.exe</code></li>
-    </ul>
-    <p style="margin:6px 0 0">(Just copy and rename, keeping the original <code>mingw32-make.exe</code> in place. Then reopen Git Bash so it picks up the new name.)</p>
-  </div>
-  <div class="os">
-    <div class="os-h">macOS / Linux</div>
-    <p style="margin:6px 0 0">macOS: <code>make</code> comes with the Xcode command-line tools from Step 2. Linux: it is part of <code>build-essential</code>.</p>
-  </div>
-  <p>Verify:</p>
-  <pre><code><span class="k">make</span> --version</code></pre>
-
-  <h3>4 · Install VS Code &amp; extensions</h3>
-  <p>VS Code is the editor. Install it, then add two Microsoft extensions from inside VS Code.</p>
+  <h3>4 · Install VS Code &amp; the Python extension</h3>
+  <p>VS Code is the editor. Install it, then add Microsoft's Python extension from inside VS Code.</p>
   <div class="dl-row"><a class="dl" href="https://code.visualstudio.com/Download" target="_blank" rel="noopener"><span class="arr">⇣</span> code.visualstudio.com</a></div>
   <ol>
     <li>Download and install VS Code for your operating system.</li>
     <li>Open VS Code → click the <strong>Extensions</strong> icon in the left bar (or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>).</li>
-    <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools" target="_blank" rel="noopener">C/C++</a></strong> (by Microsoft).</li>
-    <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools" target="_blank" rel="noopener">Makefile Tools</a></strong> (by Microsoft).</li>
+    <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-python.python" target="_blank" rel="noopener">Python</a></strong> (by Microsoft) — it bundles Pylance plus run/debug and test support.</li>
   </ol>
-  <div class="callout tip"><span class="tag">Tip</span><p>The first time you build a C++ file, VS Code may ask which compiler to use: choose the <code>g++</code> you installed in Step 2.</p></div>
+  <div class="callout tip"><span class="tag">Tip</span><p>The first time you run a Python file, VS Code may ask which interpreter to use: choose the <strong>Python 3</strong> you installed in Step 2 (Command Palette with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <em>Python: Select Interpreter</em>).</p></div>
 
   <h3>5 · Create a Gitee account &amp; SSH key</h3>
   <p>Gitee hosts your repositories and runs the CI pipeline. To push your commits up to Gitee, your computer has to prove <em>who it is</em> every time it connects. There are two ways to do that, <strong>HTTPS</strong> and <strong>SSH</strong>, and it is worth understanding the difference before you set one up.</p>
@@ -362,27 +334,25 @@
   <div class="callout"><span class="tag">"Does not provide shell access" is success</span><p>A correct test prints something like <em>"Hi user(@user)! You've successfully authenticated, but GITEE.COM does not provide shell access."</em> That is <strong>not an error</strong>. The first half means your key worked and Gitee knows who you are. The second half is normal: the <code>git</code> account exists only to handle <code>push</code>/<code>pull</code>, not to give you a command prompt, so it logs you out instead of opening a shell (which is why we pass <code>-T</code>). A real failure looks different: <code>Permission denied (publickey)</code>.</p></div>
 
   <h3>6 · Smoke test (the checkpoint)</h3>
-  <p>Prove the whole toolchain works end-to-end. First, pick a folder to work in and create the file you'll compile.</p>
+  <p>Prove the whole toolchain works end-to-end. First, pick a folder to work in and create the file you'll run.</p>
   <ol>
     <li>Choose a home for your project: somewhere easy to find, <em>not</em> inside a synced folder like OneDrive or Desktop. A path with no spaces or non-English characters avoids headaches later. For example:
       <pre style="margin:8px 0"><code><span class="c"># create the folder and move into it</span>
 <span class="k">mkdir</span> -p ~/dev/hello
 <span class="k">cd</span> ~/dev/hello</code></pre>
       <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)"><code>mkdir -p ~/dev/hello</code> makes a <code>dev/hello</code> folder in your home directory (<code>-p</code> creates parents as needed and won't complain if it already exists); <code>cd</code> moves your terminal <em>into</em> that folder, so every command after this runs there.</p></li>
-    <li>Create <code>hello.cpp</code> in this folder. Either run the <code>echo</code> command in the block below, or, if you prefer, open the folder in VS Code (<code>code .</code>) and create <code>hello.cpp</code> by hand with the same contents.</li>
+    <li>Create <code>hello.py</code> in this folder. Either run the <code>echo</code> command in the block below, or, if you prefer, open the folder in VS Code (<code>code .</code>) and create <code>hello.py</code> by hand with the same contents.</li>
     <li>Create the remote repository on Gitee so you have somewhere to push to. On <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a>: <strong>+</strong> (top-right) → <strong>New Repository</strong>. Set <strong>Repository name</strong> to <code>hello</code>, and, importantly, leave it <strong>empty</strong>: do <em>not</em> tick "Initialize this repository", and don't add a README, <code>.gitignore</code>, or licence. An empty repo lets your local commits push cleanly without conflicts. Click <strong>Create</strong>.</li>
   </ol>
-  <div class="callout"><span class="tag">This folder is your workspace</span><p>The folder you just made is your <strong>local workspace</strong>: the actual files on your disk that you edit and compile. When you run <code>git init</code> below, Git starts tracking changes <em>inside</em> this folder. How a file moves from your workspace all the way to Gitee (workspace → staging → local repo → remote) is the core of the <strong>next class</strong>, so don't worry about the <code>git</code> commands' details yet: just run them and watch it work.</p></div>
+  <div class="callout"><span class="tag">This folder is your workspace</span><p>The folder you just made is your <strong>local workspace</strong>: the actual files on your disk that you edit and run. When you run <code>git init</code> below, Git starts tracking changes <em>inside</em> this folder. How a file moves from your workspace all the way to Gitee (workspace → staging → local repo → remote) is the core of the <strong>next class</strong>, so don't worry about the <code>git</code> commands' details yet: just run them and watch it work.</p></div>
   <p>Now run the full sequence from inside that folder:</p>
-  <pre><code><span class="c"># compile and run a hello program</span>
-<span class="k">echo</span> <span class="s">'#include &lt;iostream&gt;
-int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
-<span class="k">g++</span> hello.cpp -o hello
-./hello
+  <pre><code><span class="c"># write and run a hello program</span>
+<span class="k">echo</span> <span class="s">'print("toolchain OK")'</span> &gt; hello.py
+<span class="k">python</span> hello.py
 
 <span class="c"># version it and push to a new empty Gitee repo</span>
 <span class="k">git</span> init
-<span class="k">git</span> add hello.cpp
+<span class="k">git</span> add hello.py
 <span class="k">git</span> commit -m <span class="s">"first commit: hello"</span>
 <span class="k">git</span> remote add origin git@gitee.com:&lt;your-user&gt;/hello.git
 <span class="k">git</span> push -u origin master</code></pre>
@@ -390,7 +360,7 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
 
   <div class="callout">
     <span class="tag">Done when</span>
-    <p>You can run <code>./hello</code>, and <code>hello.cpp</code> appears in your repository on the Gitee website.</p>
+    <p>You can run <code>python hello.py</code>, and <code>hello.py</code> appears in your repository on the Gitee website.</p>
   </div>
 
   <div class="next-prev">
@@ -495,23 +465,23 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   <h4><code>git status</code></h4>
   <p><strong>When</strong>: constantly, before and after almost every other command. It is your map of where each file currently lives.</p>
   <p><strong>How</strong>: it needs no arguments and changes nothing; it lists files that are modified but unstaged, files staged for the next commit, and files Git isn't tracking yet.</p>
-  <p><strong>Example</strong>: after editing <code>hello.cpp</code> to print a friendlier message:</p>
+  <p><strong>Example</strong>: after editing <code>hello.py</code> to print a friendlier message:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> status
 <span class="c"># Changes not staged for commit:</span>
-<span class="c">#   modified:   hello.cpp</span></code></pre>
+<span class="c">#   modified:   hello.py</span></code></pre>
 
   <h4><code>git add &lt;file&gt;</code></h4>
   <p><strong>When</strong>: after editing, to mark exactly which changes belong in your next commit (<em>workspace → staging</em>).</p>
   <p><strong>How</strong>: name specific files to stage them deliberately, or use <code>.</code> to stage everything changed. Staging is what lets you commit two edits separately even if you made them at the same time.</p>
-  <p><strong>Example</strong>: stage your edited <code>hello.cpp</code>:</p>
-  <pre style="margin:8px 0"><code><span class="k">git</span> add hello.cpp         <span class="c"># just this file</span>
+  <p><strong>Example</strong>: stage your edited <code>hello.py</code>:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> add hello.py         <span class="c"># just this file</span>
 <span class="k">git</span> add .                  <span class="c"># everything changed in the hello folder</span></code></pre>
 
   <h4><code>git reset &lt;file&gt;</code></h4>
   <p><strong>When</strong>: you staged something by mistake and want to take it back out of the next commit (<em>staging → workspace</em>).</p>
   <p><strong>How</strong>: it unstages the file while <strong>keeping your edits</strong>: your file on disk is untouched, it just won't be in the next commit. It is the exact undo of <code>git add</code> (which is why Lab 1 has you add then unstage).</p>
-  <p><strong>Example</strong>: you staged <code>hello.cpp</code> but realise you aren't done editing it:</p>
-  <pre style="margin:8px 0"><code><span class="k">git</span> reset hello.cpp        <span class="c"># back to unstaged; your edits remain</span></code></pre>
+  <p><strong>Example</strong>: you staged <code>hello.py</code> but realise you aren't done editing it:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> reset hello.py        <span class="c"># back to unstaged; your edits remain</span></code></pre>
 
   <h4><code>git reset --soft</code> vs <code>git reset --hard</code></h4>
   <p><code>git reset</code> can also rewind a whole <em>commit</em> by pointing the branch at an earlier one. The mode flag decides how far the undo reaches across the three locations, and this is where you can lose work, so understand it before using it.</p>
@@ -542,8 +512,8 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   <p><strong>When</strong>: before you start working, and whenever a teammate has pushed to <code>hello</code>, to bring their commits into your copy.</p>
   <p><strong>How</strong>: run it with a clean workspace (commit or stash your own changes first) to avoid merge conflicts. The distinction matters: <code>git fetch</code> only <em>downloads</em> new commits into your local repository (<em>remote → local repo</em>) and leaves your working files untouched, so you can inspect what changed first. <code>git pull</code> is <code>fetch</code> followed by <code>merge</code>: it goes one step further and updates the files on your disk too (<em>remote → local repo → workspace</em>).</p>
   <p><strong>Example</strong>: sync the <code>hello</code> repo before adding your next change:</p>
-  <pre style="margin:8px 0"><code><span class="k">git</span> fetch                   <span class="c"># download new commits, hello.cpp on disk unchanged</span>
-<span class="k">git</span> pull                    <span class="c"># download AND update hello.cpp on disk</span></code></pre>
+  <pre style="margin:8px 0"><code><span class="k">git</span> fetch                   <span class="c"># download new commits, hello.py on disk unchanged</span>
+<span class="k">git</span> pull                    <span class="c"># download AND update hello.py on disk</span></code></pre>
 
   <h4><code>git log</code></h4>
   <p><strong>When</strong>: any time you need to see the history of a repository: what was changed, by whom, and when.</p>
@@ -556,8 +526,8 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   <h4><code>git diff</code></h4>
   <p><strong>When</strong>: to review the exact line-by-line changes you've made, typically right before <code>git add</code> or <code>git commit</code>.</p>
   <p><strong>How</strong>: <code>git diff</code> alone shows unstaged edits (workspace vs. staging); <code>git diff --staged</code> shows what's already staged for the next commit (staging vs. last commit).</p>
-  <p><strong>Example</strong>: check what you changed in <code>hello.cpp</code> before staging it:</p>
-  <pre style="margin:8px 0"><code><span class="k">git</span> diff                    <span class="c"># unstaged edits to hello.cpp</span>
+  <p><strong>Example</strong>: check what you changed in <code>hello.py</code> before staging it:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> diff                    <span class="c"># unstaged edits to hello.py</span>
 <span class="k">git</span> diff --staged           <span class="c"># what the next commit will record</span></code></pre>
 
   <h3>The journey of a change</h3>
@@ -593,51 +563,40 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
     <p>Your worksheet answers are typed directly into this page and are <strong>not saved</strong>: navigating away (for example, back to the lecture notes to look something up) will <strong>erase everything you've entered</strong>. Before you start, right-click this page and choose <em>"Open in new tab/window"</em> (or press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> and click a nav link) so you can read the lecture in one tab and keep your log safe in another. When you're done, use the print button to save a PDF.</p>
   </div>
 
-  <p>You will create the seed of the course project, a single file <code>tictactoe.cpp</code>, and version it. <strong>For every step, record the equivalent Git command and the contents of each location after the command runs.</strong> If a step needs no Git command, write <code>N/A</code>; if it needs several, put them on one line separated by <code>|</code>. Steps 0–2 are filled in for you as examples. Type directly into the cells; use the print button to save your completed worksheet as a PDF to submit.</p>
+  <p>You will create the seed of the course project, a single file <code>tictactoe.py</code>, and version it. <strong>For every step, record the equivalent Git command and the contents of each location after the command runs.</strong> If a step needs no Git command, write <code>N/A</code>; if it needs several, put them on one line separated by <code>|</code>. Steps 0–2 are filled in for you as examples. Type directly into the cells; use the print button to save your completed worksheet as a PDF to submit.</p>
 
   <div class="callout tip">
     <span class="tag">The file you will track</span>
-    <p>When a step says to create <code>tictactoe.cpp</code>, paste the seed game below (a two-player hot-seat board; win detection arrives in Lab 2). For tracking purposes, write it in the table as <code>tictactoe.cpp ("seed")</code>.</p>
+    <p>When a step says to create <code>tictactoe.py</code>, paste the seed game below (a two-player hot-seat board; win detection arrives in Lab 2). For tracking purposes, write it in the table as <code>tictactoe.py ("seed")</code>.</p>
   </div>
   <div class="code-block">
     <button class="btn-copy" data-copy>⧉ Copy</button>
-    <pre><code><span class="c">// tictactoe.cpp: seed (hot-seat, no win detection yet)</span>
-<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
-<span class="k">#include</span> <span class="s">&lt;array&gt;</span>
+    <pre><code><span class="c"># tictactoe.py: seed (hot-seat, no win detection yet)</span>
 
-<span class="k">int</span> main() {
-    std::array&lt;<span class="k">char</span>, 9&gt; board = {<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>};
-    <span class="k">char</span> player = <span class="s">'X'</span>;
-    <span class="k">int</span>  filled = 0;
+board = [<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>]
+player = <span class="s">'X'</span>
+filled = 0
 
-    <span class="k">auto</span> draw = [&amp;] {
-        <span class="k">for</span> (<span class="k">int</span> r = 0; r &lt; 3; ++r) {
-            std::cout &lt;&lt; <span class="s">' '</span> &lt;&lt; board[r * 3]
-                      &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r * 3 + 1]
-                      &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r * 3 + 2] &lt;&lt; <span class="s">'\n'</span>;
-        }
-    };
 
-    <span class="k">while</span> (filled &lt; 9) {
-        draw();
-        std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">", cell 1-9: "</span>;
+<span class="k">def</span> draw():
+    <span class="k">for</span> r <span class="k">in</span> range(3):
+        print(<span class="s">f" {board[r*3]}|{board[r*3+1]}|{board[r*3+2]}"</span>)
 
-        <span class="k">int</span> cell;
-        std::cin &gt;&gt; cell;
 
-        <span class="k">if</span> (cell &lt; 1 || cell &gt; 9 || board[cell - 1] == <span class="s">'X'</span> || board[cell - 1] == <span class="s">'O'</span>) {
-            std::cout &lt;&lt; <span class="s">"invalid\n"</span>;
-            <span class="k">continue</span>;
-        }
+<span class="k">while</span> filled &lt; 9:
+    draw()
+    cell = input(<span class="s">f"Player {player}, cell 1-9: "</span>)
 
-        board[cell - 1] = player;
-        ++filled;
-        player = (player == <span class="s">'X'</span>) ? <span class="s">'O'</span> : <span class="s">'X'</span>;
-    }
+    <span class="k">if</span> <span class="k">not</span> cell.isdigit() <span class="k">or</span> <span class="k">not</span> (1 &lt;= int(cell) &lt;= 9) <span class="k">or</span> board[int(cell) - 1] <span class="k">in</span> (<span class="s">'X'</span>, <span class="s">'O'</span>):
+        print(<span class="s">"invalid"</span>)
+        <span class="k">continue</span>
 
-    draw();
-    std::cout &lt;&lt; <span class="s">"Board full - draw (win detection in Lab 2)\n"</span>;
-}</code></pre>
+    board[int(cell) - 1] = player
+    filled += 1
+    player = <span class="s">'O'</span> <span class="k">if</span> player == <span class="s">'X'</span> <span class="k">else</span> <span class="s">'X'</span>
+
+draw()
+print(<span class="s">"Board full - draw (win detection in Lab 2)"</span>)</code></pre>
   </div>
 
   <div class="ws-bar">
@@ -663,15 +622,15 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
 
   <!-- STEP 2 (given) -->
   <div class="step">
-    <div class="head"><span class="badge">Step 2</span><span class="instr">Create <code>tictactoe.cpp</code> in your workspace with the seed game above.</span></div>
+    <div class="head"><span class="badge">Step 2</span><span class="instr">Create <code>tictactoe.py</code> in your workspace with the seed game above.</span></div>
     <div class="cmd-line">Command: <b>N/A</b></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
-    <tbody><tr><td><div class="fill given">tictactoe.cpp ("seed")</div></td><td><div class="fill given"></div></td><td><div class="fill given"></div></td><td><div class="fill given"></div></td></tr></tbody></table>
+    <tbody><tr><td><div class="fill given">tictactoe.py ("seed")</div></td><td><div class="fill given"></div></td><td><div class="fill given"></div></td><td><div class="fill given"></div></td></tr></tbody></table>
   </div>
 
   <!-- STEPS 3-14 (blank) -->
   <div class="step">
-    <div class="head"><span class="badge">Step 3</span><span class="instr">Add <strong>only</strong> <code>tictactoe.cpp</code> to the staging area: name the file explicitly (don't use <code>git add .</code>) so nothing else slips in.</span></div>
+    <div class="head"><span class="badge">Step 3</span><span class="instr">Add <strong>only</strong> <code>tictactoe.py</code> to the staging area: name the file explicitly (don't use <code>git add .</code>) so nothing else slips in.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
@@ -685,7 +644,7 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   </div>
 
   <div class="step">
-    <div class="head"><span class="badge">Step 5</span><span class="instr">Add <strong>only</strong> <code>tictactoe.cpp</code> to the staging area again, again naming the file explicitly, not <code>git add .</code>, so you stage just this one file.</span></div>
+    <div class="head"><span class="badge">Step 5</span><span class="instr">Add <strong>only</strong> <code>tictactoe.py</code> to the staging area again, again naming the file explicitly, not <code>git add .</code>, so you stage just this one file.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
@@ -699,21 +658,35 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   </div>
 
   <div class="step">
-    <div class="head"><span class="badge">Step 7</span><span class="instr">Undo the commit, keeping the change staged.</span></div>
+    <div class="head"><span class="badge">Step 7</span><span class="instr">Add or delete a blank line in <code>tictactoe.py</code>, save the file, and stage the change. (This second commit gives Step 9 a previous commit to undo.)</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
 
   <div class="step">
-    <div class="head"><span class="badge">Step 8</span><span class="instr">Commit the file to the local repository again.</span></div>
+    <div class="head"><span class="badge">Step 8</span><span class="instr">Commit the change to the local repository.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
 
   <div class="step">
-    <div class="head"><span class="badge">Step 9</span><span class="instr">Push the file to the remote repository.</span></div>
+    <div class="head"><span class="badge">Step 9</span><span class="instr">Undo the commit, keeping the change staged.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 10</span><span class="instr">Commit the file to the local repository again.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 11</span><span class="instr">Push the file to the remote repository.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
@@ -721,25 +694,25 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
 
   <h4>Part II: modifying a tracked file</h4>
   <div class="step">
-    <div class="head"><span class="badge">Step 10</span><span class="instr">Change the code in your workspace (e.g. edit the prompt text).</span></div>
+    <div class="head"><span class="badge">Step 12</span><span class="instr">Change the code in your workspace (e.g. edit the prompt text).</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)">N/A</span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
   <div class="step">
-    <div class="head"><span class="badge">Step 11</span><span class="instr">Add the changed file to the staging area.</span></div>
+    <div class="head"><span class="badge">Step 13</span><span class="instr">Add the changed file to the staging area.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
   <div class="step">
-    <div class="head"><span class="badge">Step 12</span><span class="instr">Commit the change to the local repository.</span></div>
+    <div class="head"><span class="badge">Step 14</span><span class="instr">Commit the change to the local repository.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
   <div class="step">
-    <div class="head"><span class="badge">Step 13</span><span class="instr">Push the change to the remote repository.</span></div>
+    <div class="head"><span class="badge">Step 15</span><span class="instr">Push the change to the remote repository.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
@@ -762,38 +735,38 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
   <h3>Why ignore files at all?</h3>
   <p>A repository should hold <strong>source</strong>, the files a human writes, and nothing that can be <em>regenerated</em> from that source or that only makes sense on one person's machine. Committing everything else causes four concrete problems:</p>
   <ul>
-    <li><strong>Bloat.</strong> Compiled binaries and build folders are large and change on every build, inflating the repository and slowing down every clone.</li>
+    <li><strong>Bloat.</strong> Generated caches and dependency folders are large or numerous and change constantly, inflating the repository and slowing down every clone.</li>
     <li><strong>Noise.</strong> Generated files flood <code>git status</code> and <code>git diff</code>, burying the real source changes you actually want to review.</li>
-    <li><strong>Non-portability.</strong> A binary you compiled won't run on a teammate's different OS, it is useless to them, yet still downloaded on every pull.</li>
+    <li><strong>Non-portability.</strong> A <code>.pyc</code> bytecode file is tied to your exact Python version, so it is useless to a teammate on a different setup, yet still downloaded on every pull.</li>
     <li><strong>Needless conflicts.</strong> Files that differ <em>per machine</em> (editor settings, build output) get rewritten by everyone, so they collide constantly, even though nobody meaningfully changed the project.</li>
   </ul>
-  <p>The fix is a <code>.gitignore</code> file: a list of patterns telling Git which paths to leave untracked. Crucially, <code>.gitignore</code> itself <em>is</em> committed, so the whole team automatically shares the same rules. A typical one for this course's C++ project:</p>
-  <pre><code><span class="c"># .gitignore for a C++ project</span>
-*.o             <span class="c"># object files</span>
-*.exe           <span class="c"># Windows executables</span>
-*.out           <span class="c"># a.out-style binaries</span>
-ttt             <span class="c"># our compiled game binary</span>
+  <p>The fix is a <code>.gitignore</code> file: a list of patterns telling Git which paths to leave untracked. Crucially, <code>.gitignore</code> itself <em>is</em> committed, so the whole team automatically shares the same rules. A typical one for this course's Python project:</p>
+  <pre><code><span class="c"># .gitignore for a Python project</span>
+__pycache__/    <span class="c"># compiled-bytecode cache folders</span>
+*.pyc           <span class="c"># individual bytecode files</span>
+.pytest_cache/  <span class="c"># pytest's cache</span>
+.venv/          <span class="c"># virtual environment</span>
 .vscode/        <span class="c"># per-developer editor settings</span></code></pre>
 
   <h3>What should you ignore?</h3>
   <p>A good rule of thumb: <strong>if a file can be regenerated, is specific to one machine, or should stay secret, ignore it.</strong> In practice the things you exclude fall into a few categories:</p>
   <ul>
-    <li><strong>Build output and compiled artifacts.</strong> Anything your compiler or build tool produces from the source: executables and object files: <code>*.o</code>, <code>*.exe</code>, <code>*.out</code>, <code>a.out</code>, and our game binary <code>ttt</code>.</li>
+    <li><strong>Generated and cached files.</strong> Anything Python or your tools produce from the source: the <code>__pycache__/</code> bytecode-cache folders, <code>*.pyc</code> files, and <code>.pytest_cache/</code>.</li>
     <li><strong>Editor and IDE settings.</strong> Per-developer configuration that differs from machine to machine: <code>.vscode/</code>, JetBrains' <code>.idea/</code>, Vim swap files (<code>*.swp</code>).</li>
     <li><strong>Operating-system junk.</strong> Files the OS sprinkles into folders: <code>.DS_Store</code> on macOS, <code>Thumbs.db</code> on Windows.</li>
-    <li><strong>Downloaded dependencies.</strong> Packages a tool can fetch again on demand, so there is no need to store them: e.g. <code>vcpkg_installed/</code>, or <code>node_modules/</code> in a JavaScript project.</li>
+    <li><strong>Downloaded dependencies.</strong> Packages a tool can fetch again on demand, so there is no need to store them: e.g. a Python virtual environment <code>.venv/</code>, or <code>node_modules/</code> in a JavaScript project.</li>
     <li><strong>Logs and temporary files.</strong> Throwaway output such as <code>*.log</code> and <code>*.tmp</code>.</li>
     <li><strong>Secrets and local-only config.</strong> Anything with passwords, API keys, or tokens: <code>.env</code> files, credential files. <em>Never</em> commit these, even by accident.</li>
   </ul>
-  <p>By contrast, you should <strong>always commit</strong> the things a teammate genuinely needs: your source files (<code>*.cpp</code>, <code>*.h</code>), the build <em>instructions</em> (<code>Makefile</code>), tests, the <code>README.md</code>, and <code>.gitignore</code> itself. The test is simple: <em>could a teammate rebuild this from what's committed?</em> If yes, the generated result doesn't belong in the repo.</p>
+  <p>By contrast, you should <strong>always commit</strong> the things a teammate genuinely needs: your source files (<code>*.py</code>), the tests, the dependency list (<code>requirements.txt</code>), the <code>README.md</code>, and <code>.gitignore</code> itself. The test is simple: <em>could a teammate re-create everything else from what's committed?</em> If yes, the generated result doesn't belong in the repo.</p>
 
   <h3>A cautionary tale: committing <code>.vscode/</code></h3>
-  <p>It is tempting to <code>git add .</code> and commit <em>everything</em>, including the <code>.vscode/</code> folder VS Code creates. Here is why that bites you. The folder holds <strong>machine-specific</strong> settings: for example each developer's <code>.vscode/settings.json</code> records the absolute path to <em>their</em> compiler:</p>
+  <p>It is tempting to <code>git add .</code> and commit <em>everything</em>, including the <code>.vscode/</code> folder VS Code creates. Here is why that bites you. The folder holds <strong>machine-specific</strong> settings: for example each developer's <code>.vscode/settings.json</code> records the absolute path to <em>their</em> Python interpreter:</p>
   <pre><code><span class="c">// Alice's .vscode/settings.json</span>
-{ <span class="s">"C_Cpp.default.compilerPath"</span>: <span class="s">"C:/msys64/ucrt64/bin/g++.exe"</span> }
+{ <span class="s">"python.defaultInterpreterPath"</span>: <span class="s">"C:/Users/Alice/AppData/Local/Programs/Python/Python312/python.exe"</span> }
 
 <span class="c">// Bob's .vscode/settings.json (different machine!)</span>
-{ <span class="s">"C_Cpp.default.compilerPath"</span>: <span class="s">"/usr/local/bin/g++"</span> }</code></pre>
+{ <span class="s">"python.defaultInterpreterPath"</span>: <span class="s">"/usr/local/bin/python3"</span> }</code></pre>
   <p>Now watch what happens once that file is tracked:</p>
   <ol>
     <li>Alice opens the project; VS Code rewrites <code>settings.json</code> with <em>her</em> path. She commits and pushes it.</li>
@@ -815,9 +788,9 @@ ttt             <span class="c"># our compiled game binary</span>
     <thead><tr><th>Pattern</th><th>Meaning</th><th>Example match</th></tr></thead>
     <tbody>
       <tr><td><code># text</code></td><td>A <strong>comment</strong>. Blank lines are ignored too, so you can group rules.</td><td class="desc">n/a</td></tr>
-      <tr><td><code>ttt</code></td><td>Matches a file <em>or</em> folder named <code>ttt</code> anywhere in the tree.</td><td class="desc"><code>ttt</code>, <code>src/ttt</code></td></tr>
-      <tr><td><code>build/</code></td><td>Trailing <code>/</code> matches <strong>directories only</strong> (and everything inside).</td><td class="desc"><code>build/</code>, not a file named <code>build</code></td></tr>
-      <tr><td><code>*.o</code></td><td><code>*</code> matches any run of characters <em>except</em> <code>/</code>. Great for extensions.</td><td class="desc"><code>main.o</code>, <code>board.o</code></td></tr>
+      <tr><td><code>notes.txt</code></td><td>Matches a file <em>or</em> folder named <code>notes.txt</code> anywhere in the tree.</td><td class="desc"><code>notes.txt</code>, <code>src/notes.txt</code></td></tr>
+      <tr><td><code>__pycache__/</code></td><td>Trailing <code>/</code> matches <strong>directories only</strong> (and everything inside).</td><td class="desc"><code>__pycache__/</code>, not a file of that name</td></tr>
+      <tr><td><code>*.pyc</code></td><td><code>*</code> matches any run of characters <em>except</em> <code>/</code>. Great for extensions.</td><td class="desc"><code>board.pyc</code>, <code>game.pyc</code></td></tr>
       <tr><td><code>/secret.txt</code></td><td>A leading <code>/</code> <strong>anchors</strong> the pattern to the folder of the <code>.gitignore</code>, so only the root one matches.</td><td class="desc"><code>secret.txt</code> at root, not <code>sub/secret.txt</code></td></tr>
       <tr><td><code>logs/**/*.log</code></td><td><code>**</code> matches across <strong>nested directories</strong>.</td><td class="desc"><code>logs/a/b/run.log</code></td></tr>
       <tr><td><code>file?.txt</code></td><td><code>?</code> matches exactly <strong>one</strong> character.</td><td class="desc"><code>file1.txt</code>, not <code>file10.txt</code></td></tr>
@@ -840,8 +813,8 @@ ttt             <span class="c"># our compiled game binary</span>
 
   <h3>How a conflict arises</h3>
   <p>Git merges most parallel work automatically. A conflict happens only in one specific situation: <strong>two people change the same lines of the same file</strong>, based on the same starting point, and both try to share their version. Git cannot know which one is "right", so it stops and asks a human to decide.</p>
-  <p>Let's walk through it concretely with two teammates, <strong>Alice</strong> and <strong>Bob</strong>, who each cloned the same <code>hello</code> repository. Both start from the same commit, in which <code>hello.cpp</code>'s greeting line reads:</p>
-  <pre><code>std::cout &lt;&lt; <span class="s">"toolchain OK\n"</span>;</code></pre>
+  <p>Let's walk through it concretely with two teammates, <strong>Alice</strong> and <strong>Bob</strong>, who each cloned the same <code>hello</code> repository. Both start from the same commit, in which <code>hello.py</code>'s greeting line reads:</p>
+  <pre><code>print(<span class="s">"toolchain OK"</span>)</code></pre>
 
   <h3>Setup: add your teammate to the repository</h3>
   <p>For two people to push to the <em>same</em> repository, the owner must first grant the other access. A freshly created Gitee repo is private to its owner, so Bob couldn't push to Alice's <code>hello</code> repo until she adds him as a member. Here is how Alice (the owner) does it:</p>
@@ -865,23 +838,23 @@ ttt             <span class="c"># our compiled game binary</span>
 
   <ol class="conflict-steps">
     <li><strong>Both edit the same line.</strong> Independently, each rewrites the greeting to their own taste:
-      <pre style="margin:8px 0"><code><span class="c">// Alice changes it to:</span>
-std::cout &lt;&lt; <span class="s">"Hello, world!\n"</span>;
+      <pre style="margin:8px 0"><code><span class="c"># Alice changes it to:</span>
+print(<span class="s">"Hello, world!"</span>)
 
-<span class="c">// Bob changes it to:</span>
-std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
+<span class="c"># Bob changes it to:</span>
+print(<span class="s">"Hi there!"</span>)</code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill chg">"Hello, world!"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill chg">"Hi there!"</div></td></tr></tbody></table></li>
     <li><strong>Alice ships first.</strong> Her push succeeds because nobody else has pushed since she cloned:
       <pre style="margin:8px 0"><code><span class="c"># Alice (Repo1)</span>
-<span class="k">git</span> add hello.cpp
+<span class="k">git</span> add hello.py
 <span class="k">git</span> commit -m <span class="s">"reword the greeting"</span>
 <span class="k">git</span> push                     <span class="c"># ✓ remote now has Alice's line</span></code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill chg">"Hello, world!"</div></td><td><div class="fill chg">"Hello, world!"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill given">"Hi there!"</div></td></tr></tbody></table></li>
     <li><strong>Bob's push is rejected.</strong> Bob committed locally too, but the remote moved ahead of him, so Git refuses the push:
       <pre style="margin:8px 0"><code><span class="c"># Bob (Repo2)</span>
-<span class="k">git</span> add hello.cpp
+<span class="k">git</span> add hello.py
 <span class="k">git</span> commit -m <span class="s">"shorten the greeting"</span>
 <span class="k">git</span> push
 <span class="c"># ! [rejected]  (non-fast-forward)</span>
@@ -892,24 +865,24 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
       <p style="margin:6px 0 0;font-size:13px;color:var(--ink-2,#555)">The push changed nothing on the remote (it was rejected), so Bob's commit lives only in his local repository, one step behind the remote.</p></li>
     <li><strong>Bob pulls, and the conflict surfaces.</strong> The pull downloads Alice's commit and tries to merge it with Bob's. Because they touched the same line, Git can't auto-merge:
       <pre style="margin:8px 0"><code><span class="k">git</span> pull
-<span class="c"># Auto-merging hello.cpp</span>
-<span class="c"># CONFLICT (content): Merge conflict in hello.cpp</span>
+<span class="c"># Auto-merging hello.py</span>
+<span class="c"># CONFLICT (content): Merge conflict in hello.py</span>
 <span class="c"># Automatic merge failed; fix conflicts and then commit the result.</span>
 
 <span class="k">git</span> status
 <span class="c"># Unmerged paths:</span>
-<span class="c">#   both modified:   hello.cpp</span></code></pre>
+<span class="c">#   both modified:   hello.py</span></code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hi there!"</div></td><td><div class="fill cflct">⚠ conflict (both)</div></td></tr></tbody></table>
       <p style="margin:6px 0 0;font-size:13px;color:var(--ink-2,#555)">The merge isn't committed yet, so Bob's local repository still holds his own commit; only his <em>workspace</em> file now carries the conflict markers.</p></li>
   </ol>
 
   <h3>Reading the conflict markers</h3>
-  <p>Git rewrites the conflicting region of <code>hello.cpp</code> in place, wrapping <em>both</em> versions in markers. Bob opens the file and sees:</p>
+  <p>Git rewrites the conflicting region of <code>hello.py</code> in place, wrapping <em>both</em> versions in markers. Bob opens the file and sees:</p>
   <pre><code><span class="k">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> HEAD
-  std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;        <span class="c">// Bob's version (his local HEAD)</span>
+  print(<span class="s">"Hi there!"</span>)             <span class="c"># Bob's version (his local HEAD)</span>
 <span class="k">=======</span>
-  std::cout &lt;&lt; <span class="s">"Hello, world!\n"</span>;     <span class="c">// Alice's version (from the remote)</span>
+  print(<span class="s">"Hello, world!"</span>)         <span class="c"># Alice's version (from the remote)</span>
 <span class="k">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> origin/master</code></pre>
   <ul>
     <li><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> begins <em>your</em> side (Bob's current commit).</li>
@@ -920,12 +893,12 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   <h3>Resolving it</h3>
   <ol class="conflict-steps">
     <li><strong>Edit the file to the single correct result</strong>, deleting all three marker lines. Bob talks to Alice and they agree on one wording:
-      <pre style="margin:8px 0"><code>  std::cout &lt;&lt; <span class="s">"Hello there!\n"</span>;</code></pre>
+      <pre style="margin:8px 0"><code>  print(<span class="s">"Hello there!"</span>)</code></pre>
       <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">In VS Code, the merge editor shows <em>Accept Current</em> / <em>Accept Incoming</em> / <em>Accept Both</em> buttons above the conflict, but you can always just type the final line by hand, which is often clearest.</p>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hi there!"</div></td><td><div class="fill chg">"Hello there!"</div></td></tr></tbody></table></li>
     <li><strong>Mark it resolved</strong> by staging the file:
-      <pre style="margin:8px 0"><code><span class="k">git</span> add hello.cpp</code></pre>
+      <pre style="margin:8px 0"><code><span class="k">git</span> add hello.py</code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hi there!"</div></td><td><div class="fill given">"Hello there!"</div></td></tr></tbody></table>
       <p style="margin:6px 0 0;font-size:13px;color:var(--ink-2,#555)">Staging records the resolved file in the index. None of these five locations change yet, that happens at the commit.</p></li>
@@ -955,7 +928,7 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
 <section class="page" id="m3-lab">
   <div class="eyebrow">Module 3 · Lab 2 · Class 6</div>
   <h2 class="page-title">Lab 2: .gitignore &amp; Conflict Resolution</h2>
-  <p class="sub-meta">Two activities on one repository: clean up an accidentally-committed build artifact, then resolve a merge conflict.</p>
+  <p class="sub-meta">Two activities on one repository: clean up an accidentally-committed generated artifact, then resolve a merge conflict.</p>
 
   <div class="callout warn">
     <span class="tag">Open this lab in a new tab first</span>
@@ -971,17 +944,17 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   </ol>
 
   <!-- Activity A: gitignore -->
-  <h3>Activity A: The accidentally-committed build artifact</h3>
+  <h3>Activity A: The accidentally-committed generated artifact</h3>
   <div class="callout">
     <span class="tag">Scenario</span>
-    <p>You are working with a teammate. While building the game you produced a compiled artifact, <code>ttt.exe</code>, in your workspace that should never be committed (an anonymous professor deducts 2.5 points for committed build artifacts). You have <em>already pushed it</em> to the remote, and only then created a <code>.gitignore</code>. You push everything, but the artifact is still on the remote, and your teammate has already pulled it. Now you must both fix your repositories.</p>
+    <p>You are working with a teammate. While running the game, Python produced a generated <code>__pycache__/</code> folder (its bytecode cache) in your workspace that should never be committed (an anonymous professor deducts 2.5 points for committed generated files). You have <em>already pushed it</em> to the remote, and only then created a <code>.gitignore</code>. You push everything, but the artifact is still on the remote, and your teammate has already pulled it. Now you must both fix your repositories.</p>
   </div>
 
   <h4>Steps to reproduce the problem</h4>
   <ol>
-    <li>In Repo1, create a file <code>ttt.exe</code> (a stand-in for a compiled binary: just make a small file with this exact name).</li>
-    <li>In Repo1, add, commit, and push <code>ttt.exe</code>.</li>
-    <li>In Repo1, create a <code>.gitignore</code> file with an entry that ignores <code>ttt.exe</code>. (Ensure the file's extension really is <code>.gitignore</code>, not <code>.txt</code>: enable "show file extensions.")</li>
+    <li>In Repo1, create a <code>__pycache__</code> folder with a file inside (a stand-in for Python's bytecode cache: just make a <code>__pycache__/tictactoe.pyc</code> file with any content).</li>
+    <li>In Repo1, add, commit, and push the <code>__pycache__</code> folder.</li>
+    <li>In Repo1, create a <code>.gitignore</code> file with an entry that ignores <code>__pycache__/</code>. (Ensure the file's extension really is <code>.gitignore</code>, not <code>.txt</code>: enable "show file extensions.")</li>
     <li>In Repo1, add, commit, and push the <code>.gitignore</code>.</li>
     <li>In Repo2, pull from the remote. (Repo2 now also has the unwanted artifact.)</li>
   </ol>
@@ -989,9 +962,9 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   <div class="callout tip">
     <span class="tag">Desired end state</span>
     <ul style="margin:0">
-      <li>Both workspaces still <em>have</em> <code>ttt.exe</code> on disk.</li>
+      <li>Both workspaces still <em>have</em> <code>__pycache__/</code> on disk.</li>
       <li>Both workspaces have a <code>.gitignore</code> ignoring it.</li>
-      <li>The remote has the <code>.gitignore</code> (with the entry) but contains <strong>no</strong> build artifact.</li>
+      <li>The remote has the <code>.gitignore</code> (with the entry) but contains <strong>no</strong> <code>__pycache__</code>.</li>
     </ul>
   </div>
 
@@ -1346,53 +1319,51 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
     <p>Your worksheet answers are typed directly into this page and are <strong>not saved</strong>: navigating away (for example, back to the lecture notes) will <strong>erase everything you've entered</strong>. Before you start, right-click this page and choose <em>"Open in new tab/window"</em> (or <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + click a nav link) so you can read the lecture in one tab and keep your log safe in another. When you're done, use the print button to save a PDF.</p>
   </div>
 
-  <p>Two developers, <strong>Alice</strong> and <strong>Ben</strong>, continue the Tic-Tac-Toe project from Lab 1. Its <code>master</code> branch already holds the <code>tictactoe.cpp</code> seed (hot-seat board, no win detection). On a shared <code>dev</code> branch each developer adds <strong>one real function</strong> to the game:</p>
+  <p>Two developers, <strong>Alice</strong> and <strong>Ben</strong>, continue the Tic-Tac-Toe project from Lab 1. Its <code>master</code> branch already holds the <code>tictactoe.py</code> seed (hot-seat board, no win detection). On a shared <code>dev</code> branch each developer adds <strong>one real function</strong> to the game:</p>
   <ul>
-    <li><strong>Alice</strong> adds <code>checkWin()</code> for win detection. <em>It ships with an intentional bug.</em></li>
-    <li><strong>Ben</strong> adds <code>boardFull()</code> for draw detection.</li>
+    <li><strong>Alice</strong> adds <code>check_win()</code> for win detection. <em>It ships with an intentional bug.</em></li>
+    <li><strong>Ben</strong> adds <code>board_full()</code> for draw detection.</li>
   </ul>
   <p>During play-testing the bug surfaces, so a short-lived <code>bugfix/anti-diagonal</code> branch is created off <code>dev</code> to fix it. When development is done, <code>dev</code> is merged into <code>master</code> so that <strong><code>master</code> ends up fully synced with <code>dev</code></strong>. Work through the scenario on your own machine using two clones (Repo1 = Alice, Repo2 = Ben), and <strong>fill in the Git command(s) and non-Git operations for every step.</strong></p>
 
   <div class="callout tip">
     <span class="tag">The two functions you'll add</span>
-    <p>Add these <em>above</em> <code>main()</code> in <code>tictactoe.cpp</code> and call them from the game loop (after placing a mark: if <code>checkWin</code> is true announce the winner and stop; else if <code>boardFull</code> is true announce a draw and stop). Paste them exactly as shown, including Alice's bug, which you'll hunt down later.</p>
+    <p>Add these at the top of <code>tictactoe.py</code> and call them from the game loop (after placing a mark: if <code>check_win</code> is true announce the winner and stop; else if <code>board_full</code> is true announce a draw and stop). Paste them exactly as shown, including Alice's bug, which you'll hunt down later.</p>
   </div>
 
   <div class="code-block">
     <button class="btn-copy" data-copy>⧉ Copy</button>
-    <pre><code><span class="c">// Alice's feature: true if player p holds a full row, column, or diagonal.</span>
-<span class="k">bool</span> checkWin(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b, <span class="k">char</span> p) {
-    <span class="k">const</span> <span class="k">int</span> lines[8][3] = {
-        {0,1,2}, {3,4,5}, {6,7,8},   <span class="c">// rows</span>
-        {0,3,6}, {1,4,7}, {2,5,8},   <span class="c">// columns</span>
-        {0,4,8}, {2,4,8}             <span class="c">// diagonals</span>
-    };
-    <span class="k">for</span> (<span class="k">auto</span>&amp; line : lines)
-        <span class="k">if</span> (b[line[0]] == p &amp;&amp; b[line[1]] == p &amp;&amp; b[line[2]] == p)
-            <span class="k">return</span> <span class="k">true</span>;
-    <span class="k">return</span> <span class="k">false</span>;
-}</code></pre>
+    <pre><code><span class="c"># Alice's feature: True if player p holds a full row, column, or diagonal.</span>
+<span class="k">def</span> check_win(b, p):
+    lines = [
+        (0,1,2), (3,4,5), (6,7,8),   <span class="c"># rows</span>
+        (0,3,6), (1,4,7), (2,5,8),   <span class="c"># columns</span>
+        (0,4,8), (2,4,8),            <span class="c"># diagonals</span>
+    ]
+    <span class="k">for</span> line <span class="k">in</span> lines:
+        <span class="k">if</span> b[line[0]] == p <span class="k">and</span> b[line[1]] == p <span class="k">and</span> b[line[2]] == p:
+            <span class="k">return</span> <span class="k">True</span>
+    <span class="k">return</span> <span class="k">False</span></code></pre>
   </div>
 
   <div class="code-block">
     <button class="btn-copy" data-copy>⧉ Copy</button>
-    <pre><code><span class="c">// Ben's feature: true once every cell holds a mark (no '1'..'9' left).</span>
-<span class="k">bool</span> boardFull(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b) {
-    <span class="k">for</span> (<span class="k">char</span> c : b)
-        <span class="k">if</span> (c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>)
-            <span class="k">return</span> <span class="k">false</span>;
-    <span class="k">return</span> <span class="k">true</span>;
-}</code></pre>
+    <pre><code><span class="c"># Ben's feature: True once every cell holds a mark (no '1'..'9' left).</span>
+<span class="k">def</span> board_full(b):
+    <span class="k">for</span> c <span class="k">in</span> b:
+        <span class="k">if</span> c != <span class="s">'X'</span> <span class="k">and</span> c != <span class="s">'O'</span>:
+            <span class="k">return</span> <span class="k">False</span>
+    <span class="k">return</span> <span class="k">True</span></code></pre>
   </div>
 
   <div class="ws-bar"><span class="label">// Lab 3 branching log: fillable &amp; printable</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
-  <p><strong>Step 1 is given as an example.</strong> For each remaining step, fill in the Git command(s) and the non-Git operations (file edits, website actions, builds, etc.). <strong>If a step has no Git command or no non-Git operation, write <code>N/A</code> in that field. If a step uses several Git commands, put them on one line separated by <code>|</code></strong> (for example, <code>git add tictactoe.cpp | git commit -m "add checkWin"</code>).</p>
+  <p><strong>Step 1 is given as an example.</strong> For each remaining step, fill in the Git command(s) and the non-Git operations (file edits, website actions, builds, etc.). <strong>If a step has no Git command or no non-Git operation, write <code>N/A</code> in that field. If a step uses several Git commands, put them on one line separated by <code>|</code></strong> (for example, <code>git add tictactoe.py | git commit -m "add check_win"</code>).</p>
 
   <div id="lab3-steps">
     <div class="step">
-      <div class="head"><span class="badge">Step 1</span><span class="instr">Alice created the project on <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a> and cloned it into a folder "Repo1". The remote's <code>master</code> branch already contains the <code>tictactoe.cpp</code> seed from Lab 1.</span></div>
+      <div class="head"><span class="badge">Step 1</span><span class="instr">Alice created the project on <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a> and cloned it into a folder "Repo1". The remote's <code>master</code> branch already contains the <code>tictactoe.py</code> seed from Lab 1.</span></div>
       <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">git clone git@gitee.com:&lt;user&gt;/tictactoe.git</span></p>
-      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">Create the folder "Repo1"; confirm <code>tictactoe.cpp</code> (seed) is present on <code>master</code>.</span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">Create the folder "Repo1"; confirm <code>tictactoe.py</code> (seed) is present on <code>master</code>.</span></p>
     </div>
 
     <div class="step">
@@ -1402,7 +1373,7 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
     </div>
 
     <div class="step">
-      <div class="head"><span class="badge">Step 3</span><span class="instr">On <code>dev</code>, Alice added the <code>checkWin()</code> function (above) to <code>tictactoe.cpp</code> and called it after each move so the game announces a winner. She saved, staged, and committed to her local <code>dev</code>.</span></div>
+      <div class="head"><span class="badge">Step 3</span><span class="instr">On <code>dev</code>, Alice added the <code>check_win()</code> function (above) to <code>tictactoe.py</code> and called it after each move so the game announces a winner. She saved, staged, and committed to her local <code>dev</code>.</span></div>
       <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
     </div>
@@ -1414,13 +1385,13 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
     </div>
 
     <div class="step">
-      <div class="head"><span class="badge">Step 5</span><span class="instr">Ben cloned the remote into a folder "Repo2" and switched to the <code>dev</code> branch (so his workspace now has Alice's <code>checkWin</code>).</span></div>
+      <div class="head"><span class="badge">Step 5</span><span class="instr">Ben cloned the remote into a folder "Repo2" and switched to the <code>dev</code> branch (so his workspace now has Alice's <code>check_win</code>).</span></div>
       <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
     </div>
 
     <div class="step">
-      <div class="head"><span class="badge">Step 6</span><span class="instr">On <code>dev</code>, Ben added the <code>boardFull()</code> function (above) and used it to detect a draw. He saved, staged, and committed to his local <code>dev</code>.</span></div>
+      <div class="head"><span class="badge">Step 6</span><span class="instr">On <code>dev</code>, Ben added the <code>board_full()</code> function (above) and used it to detect a draw. He saved, staged, and committed to his local <code>dev</code>.</span></div>
       <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
     </div>
@@ -1438,7 +1409,7 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
     </div>
 
     <div class="step">
-      <div class="head"><span class="badge">Step 9</span><span class="instr">Ben fixed <code>checkWin</code>: in the lookup table the anti-diagonal was written <code>{2,4,8}</code> but should be <code>{2,4,6}</code>. He corrected that one entry, saved, staged, and committed to <code>bugfix/anti-diagonal</code>.</span></div>
+      <div class="head"><span class="badge">Step 9</span><span class="instr">Ben fixed <code>check_win</code>: in the lookup table the anti-diagonal was written <code>(2,4,8)</code> but should be <code>(2,4,6)</code>. He corrected that one entry, saved, staged, and committed to <code>bugfix/anti-diagonal</code>.</span></div>
       <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
     </div>
@@ -1450,13 +1421,13 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
     </div>
 
     <div class="step">
-      <div class="head"><span class="badge">Step 11</span><span class="instr">Ben pushed <code>dev</code> to the remote, so the remote <code>dev</code> now has the corrected <code>checkWin</code>.</span></div>
+      <div class="head"><span class="badge">Step 11</span><span class="instr">Ben pushed <code>dev</code> to the remote, so the remote <code>dev</code> now has the corrected <code>check_win</code>.</span></div>
       <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
     </div>
 
     <div class="step">
-      <div class="head"><span class="badge">Step 12</span><span class="instr">In Repo1, Alice switched to <code>dev</code> and pulled to get Ben's <code>boardFull</code> and the fix. She rebuilt and confirmed the anti-diagonal win is now detected.</span></div>
+      <div class="head"><span class="badge">Step 12</span><span class="instr">In Repo1, Alice switched to <code>dev</code> and pulled to get Ben's <code>board_full</code> and the fix. She re-ran the game and confirmed the anti-diagonal win is now detected.</span></div>
       <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill" contenteditable="true" style="display:block;min-width:240px;border-bottom:1px solid var(--line)"></span></p>
       <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill" contenteditable="true" style="display:block;min-height:30px"></span></p>
     </div>
@@ -1479,60 +1450,57 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   </template>
 
   <div class="step" style="border-color:var(--green);margin-top:28px">
-    <div class="head"><span class="badge" style="background:var(--green)">End State</span><span class="instr"><strong>The lab is complete when:</strong><br>1. On Gitee.com, there is only one <code>master</code> branch with the finished Tic-Tac-Toe game source code.<br>2. Both Alice's and Ben's local workspaces have only one <code>master</code> branch with the finished code.<br><br>Below is what <code>tictactoe.cpp</code> looks like in that final <code>master</code>; use it to verify your game compiles and detects every win, including cells 3-5-7.</span></div>
+    <div class="head"><span class="badge" style="background:var(--green)">End State</span><span class="instr"><strong>The lab is complete when:</strong><br>1. On Gitee.com, there is only one <code>master</code> branch with the finished Tic-Tac-Toe game source code.<br>2. Both Alice's and Ben's local workspaces have only one <code>master</code> branch with the finished code.<br><br>Below is what <code>tictactoe.py</code> looks like in that final <code>master</code>; use it to verify your game runs and detects every win, including cells 3-5-7.</span></div>
   </div>
 
   <div class="code-block">
     <button class="btn-copy" data-copy>⧉ Copy</button>
-    <pre><code><span class="c">// tictactoe.cpp: end state (win + draw detection, bug fixed)</span>
-<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
-<span class="k">#include</span> <span class="s">&lt;array&gt;</span>
+    <pre><code><span class="c"># tictactoe.py: end state (win + draw detection, bug fixed)</span>
 
-<span class="k">bool</span> checkWin(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b, <span class="k">char</span> p) {
-    <span class="k">const</span> <span class="k">int</span> lines[8][3] = {
-        {0,1,2}, {3,4,5}, {6,7,8},
-        {0,3,6}, {1,4,7}, {2,5,8},
-        {0,4,8}, {2,4,6}             <span class="c">// anti-diagonal fixed</span>
-    };
-    <span class="k">for</span> (<span class="k">auto</span>&amp; line : lines)
-        <span class="k">if</span> (b[line[0]] == p &amp;&amp; b[line[1]] == p &amp;&amp; b[line[2]] == p)
-            <span class="k">return</span> <span class="k">true</span>;
-    <span class="k">return</span> <span class="k">false</span>;
-}
+<span class="k">def</span> check_win(b, p):
+    lines = [
+        (0,1,2), (3,4,5), (6,7,8),
+        (0,3,6), (1,4,7), (2,5,8),
+        (0,4,8), (2,4,6),            <span class="c"># anti-diagonal fixed</span>
+    ]
+    <span class="k">for</span> line <span class="k">in</span> lines:
+        <span class="k">if</span> b[line[0]] == p <span class="k">and</span> b[line[1]] == p <span class="k">and</span> b[line[2]] == p:
+            <span class="k">return</span> <span class="k">True</span>
+    <span class="k">return</span> <span class="k">False</span>
 
-<span class="k">bool</span> boardFull(<span class="k">const</span> std::array&lt;<span class="k">char</span>, 9&gt;&amp; b) {
-    <span class="k">for</span> (<span class="k">char</span> c : b)
-        <span class="k">if</span> (c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>)
-            <span class="k">return</span> <span class="k">false</span>;
-    <span class="k">return</span> <span class="k">true</span>;
-}
 
-<span class="k">int</span> main() {
-    std::array&lt;<span class="k">char</span>, 9&gt; board = {<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>};
-    <span class="k">char</span> player = <span class="s">'X'</span>;
+<span class="k">def</span> board_full(b):
+    <span class="k">for</span> c <span class="k">in</span> b:
+        <span class="k">if</span> c != <span class="s">'X'</span> <span class="k">and</span> c != <span class="s">'O'</span>:
+            <span class="k">return</span> <span class="k">False</span>
+    <span class="k">return</span> <span class="k">True</span>
 
-    <span class="k">auto</span> draw = [&amp;] {
-        <span class="k">for</span> (<span class="k">int</span> r = 0; r &lt; 3; ++r)
-            std::cout &lt;&lt; <span class="s">' '</span> &lt;&lt; board[r*3] &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r*3+1] &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r*3+2] &lt;&lt; <span class="s">'\n'</span>;
-    };
 
-    <span class="k">while</span> (<span class="k">true</span>) {
-        draw();
-        std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">", cell 1-9: "</span>;
+board = [<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>]
+player = <span class="s">'X'</span>
 
-        <span class="k">int</span> cell;
-        std::cin &gt;&gt; cell;
-        <span class="k">if</span> (cell &lt; 1 || cell &gt; 9 || board[cell-1] == <span class="s">'X'</span> || board[cell-1] == <span class="s">'O'</span>) {
-            std::cout &lt;&lt; <span class="s">"invalid\n"</span>;
-            <span class="k">continue</span>;
-        }
 
-        board[cell-1] = player;
-        <span class="k">if</span> (checkWin(board, player)) { draw(); std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">" wins!\n"</span>; <span class="k">break</span>; }
-        <span class="k">if</span> (boardFull(board))        { draw(); std::cout &lt;&lt; <span class="s">"Draw\n"</span>; <span class="k">break</span>; }
-        player = (player == <span class="s">'X'</span>) ? <span class="s">'O'</span> : <span class="s">'X'</span>;
-    }
-}</code></pre>
+<span class="k">def</span> draw():
+    <span class="k">for</span> r <span class="k">in</span> range(3):
+        print(<span class="s">f" {board[r*3]}|{board[r*3+1]}|{board[r*3+2]}"</span>)
+
+
+<span class="k">while</span> <span class="k">True</span>:
+    draw()
+    cell = input(<span class="s">f"Player {player}, cell 1-9: "</span>)
+    <span class="k">if</span> <span class="k">not</span> cell.isdigit() <span class="k">or</span> <span class="k">not</span> (1 &lt;= int(cell) &lt;= 9) <span class="k">or</span> board[int(cell)-1] <span class="k">in</span> (<span class="s">'X'</span>, <span class="s">'O'</span>):
+        print(<span class="s">"invalid"</span>)
+        <span class="k">continue</span>
+    board[int(cell) - 1] = player
+    <span class="k">if</span> check_win(board, player):
+        draw()
+        print(<span class="s">f"Player {player} wins!"</span>)
+        <span class="k">break</span>
+    <span class="k">if</span> board_full(board):
+        draw()
+        print(<span class="s">"Draw"</span>)
+        <span class="k">break</span>
+    player = <span class="s">'O'</span> <span class="k">if</span> player == <span class="s">'X'</span> <span class="k">else</span> <span class="s">'X'</span></code></pre>
   </div>
 
   <div class="callout"><span class="tag">Submit</span><p>Submit (1) this completed worksheet as a PDF, and (2) a screenshot of your commit graph: run <code>git log --graph --oneline --all</code> (or open the commit graph on Gitee). It should show the <code>bugfix/anti-diagonal</code> branch merging into <code>dev</code>, and <code>dev</code> merging into <code>master</code>.</p></div>
@@ -1546,241 +1514,97 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
 <!-- ============================== M5 LECTURE ============================== -->
 <section class="page" id="m5-lecture">
   <div class="eyebrow">Module 5 · Lecture · Class 9</div>
-  <h2 class="page-title">Make</h2>
-  <p class="sub-meta">Why manual <code>g++</code> doesn't scale, and how to describe a build once and repeat it with a single command.</p>
+  <h2 class="page-title">Testing with pytest</h2>
+  <p class="sub-meta">Write small checks that prove your code behaves, and run them all with one command.</p>
 
-  <p class="lead">As soon as a project has more than one source file, typing <code>g++</code> commands by hand becomes error-prone and unrepeatable. <strong>Make</strong> lets you record your build in one file, the <strong>Makefile</strong>. You then type <code>make</code>, and it runs the right compiler commands for you, rebuilding only what actually changed.</p>
+  <p class="lead">Until now you've tested by hand: run the program, type some moves, eyeball the output. That doesn't scale — it's slow, easy to skip, and a fix in one place can silently break another. <strong>Automated tests</strong> are small programs that check your code for you, in seconds, every time. <strong>pytest</strong> is the tool that finds and runs them.</p>
 
-  <h3>1 · The simplest Makefile</h3>
-  <p>Recall the <code>hello</code> project from the Setup Lab: a single <code>hello.cpp</code> you compiled by hand with <code>g++ hello.cpp -o hello</code>. A Makefile records that command as a <strong>rule</strong>. Create a file named <code>Makefile</code> (no extension) next to <code>hello.cpp</code>:</p>
-  <pre><code>hello: hello.cpp
-	g++ hello.cpp -o hello</code></pre>
-  <p>That single rule has three parts:</p>
+  <h3>1 · Why automated tests</h3>
+  <p>Manual testing has three problems: it's <em>slow</em>, it gets <em>skipped</em> when you're in a hurry, and it misses <strong>regressions</strong> — a change that quietly breaks something that used to work. An automated test pins down one expected behaviour once; from then on, every time you change the code, the test tells you in seconds whether you broke it.</p>
   <ul>
-    <li><strong>Target</strong>: <code>hello</code>, the file we want to produce (left of the colon).</li>
-    <li><strong>Prerequisites</strong>: <code>hello.cpp</code>, what the target is built from (right of the colon).</li>
-    <li><strong>Recipe</strong>: the indented <code>g++ …</code> line, the shell command that builds the target.</li>
+    <li>The anti-diagonal bug from Lab 3 (cells 3-5-7 not detected) is exactly the kind of thing a single test would have caught the moment it was introduced.</li>
+    <li>Tests double as <strong>documentation</strong> — they show, in code, how a function is meant to be used.</li>
+    <li>They are a <strong>safety net for refactoring</strong>: change the insides freely, and if the tests still pass, the behaviour is intact.</li>
+    <li>The payoff compounds in Module 6, where the CI pipeline runs your tests automatically on every push.</li>
   </ul>
-  <p>Now just type <code>make</code>:</p>
-  <pre><code><span class="k">make</span>
-<span class="c"># g++ hello.cpp -o hello</span>
-./hello
-<span class="c"># Hello, world!</span></code></pre>
-  <div class="callout warn"><span class="tag">Tabs, not spaces</span><p>Every recipe line <strong>must</strong> begin with a real <kbd>Tab</kbd> character, never spaces; this is Make's most infamous gotcha. If you see <code>Makefile:2: *** missing separator. Stop.</code>, your editor turned the Tab into spaces; switch that line's indentation back to a Tab. (In VS Code, the Makefile Tools extension handles this for you.)</p></div>
 
-  <h3>2 · The default goal &amp; "up to date"</h3>
-  <p>Running <code>make</code> with no arguments builds the <strong>first</strong> target in the file, the <em>default goal</em>. You can also name one explicitly: <code>make hello</code>. Run <code>make</code> a second time without changing anything:</p>
-  <pre><code><span class="k">make</span>
-<span class="c"># make: 'hello' is up to date.</span></code></pre>
-  <p>Make compares <strong>timestamps</strong>: it rebuilds a target only when a prerequisite is <em>newer</em> than the target. Edit <code>hello.cpp</code> (or <code>touch hello.cpp</code>) and <code>make</code> recompiles; otherwise it does nothing. On one file that hardly matters; on a big project it turns a minutes-long rebuild into a seconds-long one. That is the whole point of a build system.</p>
+  <h3>2 · Make code testable: separate logic from I/O</h3>
+  <p>A test calls your code and checks what comes back. It can't easily "type into" an <code>input()</code> prompt or read what <code>print()</code> put on screen. The fix is to keep the <strong>decisions and rules</strong> (pure logic) in functions that take arguments and <em>return</em> values, separate from the <code>input()</code>/<code>print()</code> that talk to the user.</p>
+  <p>Take the <code>hello</code> project. Instead of one script that prints directly, move the logic into a function that <em>returns</em> a string:</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># greeter.py — pure logic, no I/O</span>
+<span class="k">def</span> greet(name):
+    <span class="k">return</span> <span class="s">f"Hello, {name}!"</span></code></pre>
+  </div>
+  <p>The I/O (asking for a name, printing the result) lives elsewhere. Now <code>greet()</code> is trivially testable: hand it a name, check the string it returns. <strong>A function that returns a value is easy to test; a function that only prints is not.</strong></p>
 
-  <h3>3 · More than one file</h3>
-  <p>Real programs span several files. Let's grow <code>hello</code> by moving the greeting into its own unit, giving three files:</p>
-  <pre><code><span class="c">// greeter.h</span>
-<span class="k">#ifndef</span> GREETER_H
-<span class="k">#define</span> GREETER_H
-<span class="k">#include</span> <span class="s">&lt;string&gt;</span>
-std::string greet(<span class="k">const</span> std::string&amp; name);
-<span class="k">#endif</span></code></pre>
-  <pre><code><span class="c">// greeter.cpp</span>
-<span class="k">#include</span> <span class="s">"greeter.h"</span>
-std::string greet(<span class="k">const</span> std::string&amp; name) {
-    <span class="k">return</span> <span class="s">"Hello, "</span> + name + <span class="s">"!"</span>;
-}</code></pre>
-  <pre><code><span class="c">// main.cpp</span>
-<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
-<span class="k">#include</span> <span class="s">"greeter.h"</span>
-<span class="k">int</span> main() {
-    std::cout &lt;&lt; greet(<span class="s">"world"</span>) &lt;&lt; <span class="s">"\n"</span>;
-}</code></pre>
-  <p>The naive Makefile compiles them all in one command:</p>
-  <pre><code>hello: main.cpp greeter.cpp greeter.h
-	g++ main.cpp greeter.cpp -o hello</code></pre>
-  <p>It works, but it recompiles <em>both</em> sources whenever you touch <em>either</em> one. We can do better.</p>
-
-  <h3>4 · Separate compilation &amp; incremental builds</h3>
-  <p>Building is really two steps: turn each <code>.cpp</code> into an <strong>object file</strong> (<code>.o</code>), then <strong>link</strong> the objects into one executable. Giving each step its own rule lets Make rebuild only what changed:</p>
-  <pre><code>hello: main.o greeter.o
-	g++ main.o greeter.o -o hello
-
-main.o: main.cpp greeter.h
-	g++ -c main.cpp
-
-greeter.o: greeter.cpp greeter.h
-	g++ -c greeter.cpp</code></pre>
-  <p><code>g++ -c main.cpp</code> compiles <em>without</em> linking, producing <code>main.o</code>. Make now understands a small <strong>dependency graph</strong>:</p>
-  <pre><code>hello
-├── main.o      ← main.cpp + greeter.h
-└── greeter.o   ← greeter.cpp + greeter.h</code></pre>
-  <p>Edit only <code>greeter.cpp</code> and run <code>make</code>: it rebuilds <code>greeter.o</code> and relinks <code>hello</code>, but <strong>skips</strong> <code>main.o</code> because <code>main.cpp</code> didn't change. Both objects list <code>greeter.h</code> as a prerequisite, so editing the header correctly rebuilds both.</p>
-
-  <h3>5 · Variables</h3>
-  <p>The compiler name and flags repeat on every line. Pull them into <strong>variables</strong> and reference them with <code>$(…)</code>:</p>
-  <pre><code>CXX = g++
-CXXFLAGS = -std=c++17 -Wall
-
-hello: main.o greeter.o
-	$(CXX) $(CXXFLAGS) main.o greeter.o -o hello
-
-main.o: main.cpp greeter.h
-	$(CXX) $(CXXFLAGS) -c main.cpp
-
-greeter.o: greeter.cpp greeter.h
-	$(CXX) $(CXXFLAGS) -c greeter.cpp</code></pre>
-  <p>Now adding a flag or switching compilers is a one-line change applied everywhere. <code>CXX</code> and <code>CXXFLAGS</code> are conventional names, but any name works. The two flags we pass are worth knowing:</p>
-  <ul>
-    <li><code>-std=c++17</code>: compile against the <strong>C++17</strong> language standard. Without it, g++ may default to an older standard and reject modern syntax; pinning the version makes the build behave the same on every machine.</li>
-    <li><code>-Wall</code>: turn on the common <strong>warnings</strong> ("<em>all</em>" the usual ones). Warnings flag suspicious code (an unused variable, a function that forgets to return) that still compiles but is often a bug. Treat them as a free code review.</li>
-  </ul>
-  <p>Other flags you'll meet: <code>-Iinclude</code> (also written <code>-I include</code>) adds a folder to the compiler's <strong>header search path</strong>, so <code>#include "board.h"</code> is found when the header lives in an <code>include/</code> subfolder; <code>-g</code> adds debug information; <code>-O2</code> turns on optimisation.</p>
-
-  <h3>6 · Automatic variables</h3>
-  <p>The recipes still repeat file names. Make fills in three <strong>automatic variables</strong> per rule:</p>
-  <ul>
-    <li><code>$@</code>: the <strong>target</strong>.</li>
-    <li><code>$^</code>: <strong>all</strong> prerequisites.</li>
-    <li><code>$&lt;</code>: the <strong>first</strong> prerequisite.</li>
-  </ul>
-  <pre><code>hello: main.o greeter.o
-	$(CXX) $(CXXFLAGS) $^ -o $@
-
-main.o: main.cpp greeter.h
-	$(CXX) $(CXXFLAGS) -c $&lt;
-
-greeter.o: greeter.cpp greeter.h
-	$(CXX) $(CXXFLAGS) -c $&lt;</code></pre>
-  <p>For <code>hello</code>, <code>$^</code> expands to <code>main.o greeter.o</code> and <code>$@</code> to <code>hello</code>. In the object rules we use <code>$&lt;</code> (the <code>.cpp</code>), not <code>$^</code>, so the header isn't handed to the compiler as a source file.</p>
-
-  <h3>7 · Pattern rules</h3>
-  <p>The two object rules are now identical except for the names. A <strong>pattern rule</strong> using <code>%</code> as a wildcard collapses them into one rule that builds <em>any</em> <code>.o</code> from the matching <code>.cpp</code>:</p>
-  <pre><code>%.o: %.cpp greeter.h
-	$(CXX) $(CXXFLAGS) -c $&lt; -o $@</code></pre>
-  <p>The <code>%</code> matches the stem: for <code>greeter.o</code> it is <code>greeter</code>, so the prerequisite becomes <code>greeter.cpp</code>. One rule now covers every source file you add.</p>
-
-  <h3>8 · Phony targets: <code>clean</code> and <code>run</code></h3>
-  <p>Not every target is a file. <code>clean</code> deletes build output; <code>run</code> builds then launches the program. Since no file named <code>clean</code> exists, <code>make clean</code> normally runs, but if someone ever created a file called <code>clean</code>, Make would think it was "up to date" and skip it. Declaring these targets <code>.PHONY</code> tells Make they are commands, not files:</p>
-  <pre><code>.PHONY: clean run
-
-clean:
-	rm -f hello *.o
-
-run: hello
-	./hello</code></pre>
-  <p><code>make run</code> depends on <code>hello</code>, so Make builds the program first (if needed), then runs it.</p>
-  <p><strong>But these two recipes are environment-specific.</strong> <code>rm -f</code> and <code>./hello</code> are Unix conventions (macOS, Linux, and Git Bash). In a native Windows shell (PowerShell or Command Prompt) the delete command is <code>del</code>, and the executable is <code>hello.exe</code>, launched <em>without</em> the <code>./</code> prefix. So <code>clean</code> and <code>run</code> have to adapt: the complete Makefile below detects <strong>which shell you are running in</strong> and picks the right commands automatically.</p>
-
-  <h3>9 · The complete Makefile</h3>
-  <p>Putting every idea together, and making <code>clean</code> and <code>run</code> work in any shell, gives this complete, portable Makefile for the multi-file <code>hello</code> project:</p>
-  <pre><code>CXX = g++
-CXXFLAGS = -std=c++17 -Wall
-
-<span class="c"># Ask the shell what it is: a POSIX shell (Linux, macOS, Git Bash) has</span>
-<span class="c"># `uname`; a native Windows shell (cmd / PowerShell) does not.</span>
-UNAME := $(shell uname 2&gt;/dev/null)
-
-<span class="k">ifeq</span> ($(UNAME),)
-    EXE = hello.exe
-    RM  = del /Q /F
-    RUN = $(EXE)
-<span class="k">else</span>
-    EXE = hello
-    RM  = rm -f
-    RUN = ./$(EXE)
-<span class="k">endif</span>
-
-$(EXE): main.o greeter.o
-	$(CXX) $(CXXFLAGS) $^ -o $@
-
-%.o: %.cpp greeter.h
-	$(CXX) $(CXXFLAGS) -c $&lt; -o $@
-
-.PHONY: clean run
-
-clean:
-	-$(RM) $(EXE) *.o
-
-run: $(EXE)
-	$(RUN)</code></pre>
-  <p>Instead of keying off the operating system, this version asks the <strong>shell</strong> what it is. The detection line repays reading token by token:</p>
-  <pre><code>UNAME := $(shell uname 2&gt;/dev/null)</code></pre>
-  <ul>
-    <li><code>UNAME</code>: the variable we are defining (any name works; this one is conventional).</li>
-    <li><code>:=</code>: a <strong>simply-expanded</strong> assignment: the right-hand side is evaluated <em>once, right now</em>, and the result is stored. With a plain <code>=</code> the value would be <em>recursively</em> expanded, re-evaluated every time <code>UNAME</code> is used, which would re-run the command on each reference. <code>:=</code> runs <code>uname</code> exactly once.</li>
-    <li><code>$(shell …)</code>: Make's <strong>shell function</strong>: it runs the command inside a subshell and substitutes the command's <strong>standard output</strong> back into the Makefile (with the trailing newline stripped). So <code>UNAME</code> becomes whatever <code>uname</code> printed.</li>
-    <li><code>uname</code>: the Unix command that prints the kernel/OS name: <code>Linux</code>, <code>Darwin</code> (macOS), or <code>MINGW64_NT-…</code> (Git Bash). A native Windows shell has no such command.</li>
-    <li><code>2&gt;/dev/null</code>: shell redirection: send file descriptor <strong>2</strong> (standard error) to the <strong>null device</strong>, i.e. discard it. When <code>uname</code> is missing, Windows prints a "command not found" message to stderr; this throws that message away so it doesn't clutter the output, leaving <code>UNAME</code> simply <em>empty</em>.</li>
-  </ul>
-  <p>So <code>UNAME</code> ends up as either the shell's name or an empty string, and two cases follow:</p>
-  <ul>
-    <li><strong>Empty</strong> (no <code>uname</code>) → Command Prompt or PowerShell: delete with <code>del</code>, run the bare <code>hello.exe</code>.</li>
-    <li><strong>Anything else</strong> (a POSIX shell: <code>Linux</code>, <code>Darwin</code>, or Git Bash) → use <code>rm</code> and <code>./hello</code>.</li>
-  </ul>
-  <p>The rules use <code>$(EXE)</code>, <code>$(RM)</code>, and <code>$(RUN)</code> instead of hard-coded names, so one file works for everyone. The leading <code>-</code> in <code>-$(RM) …</code> tells Make to <strong>ignore errors</strong> from that line, so <code>make clean</code> still succeeds even when there is nothing to delete.</p>
-  <div class="callout tip"><span class="tag">Works in any shell</span><p>Because the choice is driven by <code>uname</code> rather than the OS, the <code>clean</code> and <code>run</code> targets behave correctly whether you run <code>make</code> from <strong>Git Bash</strong>, <strong>PowerShell</strong>, or <strong>Command Prompt</strong>, with no need to remember which one.</p></div>
-  <p><code>make</code> builds it, <code>make run</code> builds-and-runs, <code>make clean</code> resets. For a deeper reference, the community favourite is <a class="inline" href="https://makefiletutorial.com/" target="_blank" rel="noopener">makefiletutorial.com</a>.</p>
-
-  <h3>10 · Organising files into folders</h3>
-  <p>So far every file (headers, sources, the Makefile, and the compiled output) has sat in one folder. That is fine for three files, but it stops scaling the moment a project grows: headers get tangled up with implementation, and, crucially, there is nowhere clean to put <strong>tests</strong>. The conventional layout separates code by its role:</p>
+  <h3>3 · Organise the project: <code>src/</code> and <code>tests/</code></h3>
+  <p>So far everything has lived in one folder. As a project grows, that gets crowded — source files, test files, and generated junk all jumbled together. The common convention is to give each a home: application code in a <code>src/</code> folder, tests in a <code>tests/</code> folder.</p>
   <pre><code>hello/
-├── include/
-│   └── greeter.h        <span class="c"># public headers (the interface)</span>
 ├── src/
-│   ├── greeter.cpp      <span class="c"># implementation (the logic)</span>
-│   └── main.cpp         <span class="c"># entry point / I/O</span>
+│   └── greeter.py       <span class="c"># the code under test</span>
 ├── tests/
-│   └── test_greeter.cpp <span class="c"># tests for the logic (added in Module 6)</span>
-├── build/               <span class="c"># compiled output: objects + executable (generated; gitignored)</span>
-└── Makefile</code></pre>
-  <ul>
-    <li><code>include/</code> holds the <strong>headers</strong>: the declarations other files <code>#include</code>.</li>
-    <li><code>src/</code> holds the <strong>implementation</strong>, split so the <em>logic</em> (<code>greeter.cpp</code>) is separate from the <em>entry point / I/O</em> (<code>main.cpp</code>).</li>
-    <li><code>tests/</code> holds <strong>test programs</strong> that exercise the logic.</li>
-  </ul>
-  <p><strong>Why this matters for testing.</strong> A test needs to call your logic (<code>greet()</code>) but must <em>not</em> drag in <code>main()</code>: a program can have only one <code>main</code>, and the test supplies its own. Because the logic lives in its own <code>src/greeter.cpp</code>, separate from <code>src/main.cpp</code>, a test in <code>tests/</code> can compile against <code>greeter.cpp</code> alone, with no keyboard and no clashing <code>main()</code>. In Module 6 you will do exactly that. Organising the files now is what makes automated testing possible later.</p>
-  <p>Build output should be kept out of the source folders too. This Makefile writes every object file <em>and</em> the executable into a generated <code>build/</code> folder, so <code>src/</code>, <code>include/</code>, and the project root only ever hold things you actually wrote (add <code>build/</code> to <code>.gitignore</code>). That takes a few coordinated changes: point the compiler at the headers with <code>-Iinclude</code>, read sources from <code>src/</code>, write outputs under <code>build/</code>, and create that folder before compiling.</p>
-  <pre><code>CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Iinclude
-BUILD = build
+│   └── test_greeter.py  <span class="c"># the tests</span>
+└── pyproject.toml       <span class="c"># tells pytest where the code lives</span></code></pre>
+  <p>There's one catch: once <code>greeter.py</code> moves into <code>src/</code>, the line <code>from greeter import greet</code> can no longer find it — <code>src/</code> isn't on Python's import path. Rather than set <code>PYTHONPATH</code> by hand every time, add a small <code>pyproject.toml</code> at the project root and let pytest handle it:</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># pyproject.toml</span>
+[tool.pytest.ini_options]
+pythonpath = [<span class="s">"src"</span>]</code></pre>
+  </div>
+  <p>That one setting tells pytest to add <code>src/</code> to the import path before it runs, so your tests keep writing <code>from greeter import greet</code> unchanged. The file also marks the project root, so pytest discovers the same <code>tests/</code> no matter which sub-folder you launch it from.</p>
 
-UNAME := $(shell uname 2&gt;/dev/null)
+  <h3>4 · Writing and running a test</h3>
+  <p>pytest <strong>discovers</strong> tests by name: files called <code>test_*.py</code> and functions called <code>test_*</code>. A test calls the function and <code>assert</code>s the result is what you expect:</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># test_greeter.py</span>
+<span class="k">from</span> greeter <span class="k">import</span> greet
 
-<span class="k">ifeq</span> ($(UNAME),)
-    EXE   = $(BUILD)/hello.exe
-    MKDIR = if not exist $(BUILD) mkdir $(BUILD)
-    RMDIR = if exist $(BUILD) rmdir /S /Q $(BUILD)
-    RUN   = $(subst /,\,$(EXE))
-<span class="k">else</span>
-    EXE   = $(BUILD)/hello
-    MKDIR = mkdir -p $(BUILD)
-    RMDIR = rm -rf $(BUILD)
-    RUN   = ./$(EXE)
-<span class="k">endif</span>
+<span class="k">def</span> test_greet_uses_the_name():
+    result = greet(<span class="s">"world"</span>)            <span class="c"># Act</span>
+    <span class="k">assert</span> result == <span class="s">"Hello, world!"</span>    <span class="c"># Assert</span></code></pre>
+  </div>
+  <p>Every test follows the same three beats — <strong>Arrange</strong> a situation, <strong>Act</strong> by calling the code, <strong>Assert</strong> the result. The <code>assert</code> is plain Python: if its expression is false, the test fails. To run every test in the project, go to the <strong>project root</strong> (the folder with <code>pyproject.toml</code>) and just type:</p>
+  <pre><code><span class="k">pytest</span></code></pre>
+  <p>pytest reads <code>pyproject.toml</code>, puts <code>src/</code> on the import path, then finds and runs every <code>test_*.py</code> under <code>tests/</code> — you never name the files yourself. A passing run is <span style="color:var(--green);font-weight:700">green</span>; each dot is one passing test:</p>
+  <pre><code>tests/test_greeter.py .                              [100%]
 
-$(EXE): $(BUILD)/main.o $(BUILD)/greeter.o
-	$(CXX) $(CXXFLAGS) $^ -o $@
+1 passed in 0.01s</code></pre>
+  <p>If you break it (say <code>greet</code> returns <code>"Hi, {name}"</code>), pytest shows an <strong>F</strong> and — because it rewrites <code>assert</code> statements — the actual vs. expected values, so you see <em>why</em> it failed:</p>
+  <pre><code>tests/test_greeter.py F                              [100%]
 
-$(BUILD)/%.o: src/%.cpp include/greeter.h | $(BUILD)
-	$(CXX) $(CXXFLAGS) -c $&lt; -o $@
+    <span class="k">def</span> test_greet_uses_the_name():
+        result = greet("world")
+&gt;       <span class="k">assert</span> result == "Hello, world!"
+E       AssertionError: assert 'Hi, world' == 'Hello, world!'
 
-$(BUILD):
-	$(MKDIR)
+1 failed in 0.02s</code></pre>
+  <p>Add <code>pytest -v</code> for a verbose list of each test by name.</p>
 
-.PHONY: clean run
+  <h3>5 · Cover the cases</h3>
+  <p>Good tests check the <strong>happy path</strong> <em>and</em> the <strong>edges</strong>. Give each behaviour its own <code>test_</code> function and name it so a failure reads like a sentence (<code>test_greet_handles_empty_name</code>). When several cases differ only in their inputs, don't copy-paste — <strong>parametrize</strong> one test to run once per row:</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="k">import</span> pytest
+<span class="k">from</span> greeter <span class="k">import</span> greet
 
-clean:
-	$(RMDIR)
+@pytest.mark.parametrize(<span class="s">"name, expected"</span>, [
+    (<span class="s">"world"</span>, <span class="s">"Hello, world!"</span>),
+    (<span class="s">"Sam"</span>,   <span class="s">"Hello, Sam!"</span>),
+    (<span class="s">""</span>,      <span class="s">"Hello, !"</span>),
+])
+<span class="k">def</span> test_greet(name, expected):
+    <span class="k">assert</span> greet(name) == expected</code></pre>
+  </div>
+  <p>pytest runs this test three times, reporting each row separately, so one failing case doesn't hide the others.</p>
 
-run: $(EXE)
-	$(RUN)</code></pre>
-  <ul>
-    <li><code>BUILD = build</code> names the output folder once, so every other line refers to it by variable.</li>
-    <li><code>-Iinclude</code> adds the <code>include/</code> folder to the compiler's header search path, so <code>#include "greeter.h"</code> resolves even though the header is not beside the source. The name <code>include</code> is only a <strong>convention</strong>: the flag is <code>-I</code> followed by whatever your folder is called (headers in <code>headers/</code> would use <code>-Iheaders</code>, with the prerequisite path updated to match). You can list several folders with several <code>-I</code> flags.</li>
-    <li>The pattern rule <code>$(BUILD)/%.o: src/%.cpp</code> reads each source from <code>src/</code> and writes its object into <code>build/</code> (so <code>build/greeter.o</code> is built from <code>src/greeter.cpp</code>); <code>include/greeter.h</code> is a prerequisite so editing the header rebuilds the objects.</li>
-    <li>The <code>$(BUILD):</code> rule creates the output folder before anything is compiled into it. Because creating and deleting a folder is shell-specific, the same <code>uname</code> check also sets <code>MKDIR</code> (<code>mkdir -p</code> on Unix vs <code>if not exist … mkdir</code> on Windows) and <code>RMDIR</code> (<code>rm -rf</code> vs <code>rmdir /S /Q</code>). <code>make clean</code> now just removes the whole <code>build/</code> folder.</li>
-    <li><code>RUN</code> on Windows wraps the path in <code>$(subst /,\,$(EXE))</code> because the <code>cmd</code> shell needs back-slashes (<code>build\hello.exe</code>) to launch a program, while g++ and Make accept forward slashes everywhere else.</li>
-  </ul>
+  <h3>6 · The exit code (why CI cares)</h3>
+  <p>When it finishes, <code>pytest</code> returns an <strong>exit code</strong>: <code>0</code> if every test passed, non-zero if any failed. That single number is the signal the CI pipeline watches in Module 6 — <span style="color:var(--green);font-weight:700">green</span> when it's 0, <span style="color:var(--coral);font-weight:700">red</span> otherwise. The pipeline runs the very same <code>pytest</code> command you run locally, on a clean machine.</p>
 
-  <div class="callout tip"><span class="tag">On to the lab</span><p>In <strong>Lab 4</strong> you'll write a Makefile just like this for the Tic-Tac-Toe game, splitting its logic into <code>board.cpp</code> (so it can be tested without a keyboard) and its I/O into <code>main.cpp</code>. In <strong>Module 6</strong> you'll add a <code>test</code> target, and CI will run <code>make</code> and <code>make test</code> on every push.</p></div>
+  <div class="callout tip"><span class="tag">On to the lab</span><p>In <strong>Lab 4</strong> you'll make the Tic-Tac-Toe rules testable by moving them into a <code>Board</code> class, then write pytest tests for it — including a <strong>regression test</strong> for the Lab 3 anti-diagonal bug. In <strong>Module 6</strong>, Gitee Go runs <code>pytest</code> automatically on every push.</p></div>
 
   <div class="next-prev">
     <a href="#m4-lab">← Lab 3</a>
@@ -1791,173 +1615,135 @@ run: $(EXE)
 <!-- ============================== M5 LAB (LAB 4) ============================== -->
 <section class="page" id="m5-lab">
   <div class="eyebrow">Module 5 · Lab 4 · Class 10</div>
-  <h2 class="page-title">Lab 4: Build the Game with a Makefile</h2>
-  <p class="sub-meta">Split the game into logic, I/O, and an entry point, then write your own Makefile that builds it into a <code>build/</code> folder.</p>
+  <h2 class="page-title">Lab 4: Test the Game</h2>
+  <p class="sub-meta">Make the game's rules testable, then write a pytest suite that proves they work.</p>
 
-  <h3>1 · Split the game into source files</h3>
-  <p>The whole point of this lab is to write the <strong>Makefile</strong>, so all the C++ is given. Split the seed game into three layers, with headers in <code>include/</code> and sources in <code>src/</code>:</p>
+  <h3>1 · Make the logic testable</h3>
+  <p>To test the rules, they must be callable without running the input loop. Split the single <code>tictactoe.py</code> into two files: the <strong>logic</strong> in a <code>Board</code> class (no I/O), and the <strong>game loop</strong> that uses it. Then organise the project into <code>src/</code> and <code>tests/</code> as you saw in the lecture:</p>
   <pre><code>tictactoe/
-├── include/
-│   ├── Board.h     <span class="c"># pure logic: board state + rules + win detection</span>
-│   └── Game.h      <span class="c"># I/O: drawing the board, reading moves, the loop</span>
 ├── src/
-│   ├── Board.cpp
-│   ├── Game.cpp
-│   └── main.cpp    <span class="c"># entry point</span>
-└── Makefile        <span class="c"># you write this in Section 2</span></code></pre>
-  <p>Create each file at the path shown and paste in the code below.</p>
+│   ├── board.py        <span class="c"># the rules: a Board class, no input/print (given)</span>
+│   └── tictactoe.py    <span class="c"># the game loop, imports Board (given)</span>
+├── tests/
+│   └── test_board.py   <span class="c"># YOUR pytest tests (Section 2)</span>
+└── pyproject.toml      <span class="c"># tells pytest where the code lives</span></code></pre>
+  <p>The <code>pyproject.toml</code> at the root puts <code>src/</code> on the import path, so the imports below stay simple (<code>from board import Board</code>) even though the code now lives in a sub-folder:</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># pyproject.toml</span>
+[tool.pytest.ini_options]
+pythonpath = [<span class="s">"src"</span>]</code></pre>
+  </div>
 
-  <p><strong><code>include/Board.h</code></strong> — the pure logic (no I/O, so it can be tested without a keyboard later):</p>
-  <pre><code><span class="c">// include/Board.h</span>
-<span class="k">#ifndef</span> BOARD_H
-<span class="k">#define</span> BOARD_H
-<span class="k">#include</span> <span class="s">&lt;array&gt;</span>
+  <p><strong><code>board.py</code></strong> holds the pure logic, with the anti-diagonal bug already fixed:</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># board.py - pure game logic, no I/O</span>
+<span class="k">class</span> Board:
+    <span class="k">def</span> __init__(self):
+        self.cells = [<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>]
 
-<span class="k">class</span> Board {
-<span class="k">public</span>:
-    Board();                                <span class="c">// empty board, cells labelled '1'..'9'</span>
-    <span class="k">bool</span> isValidMove(<span class="k">int</span> cell) <span class="k">const</span>;       <span class="c">// cell in 1..9 and not already taken</span>
-    <span class="k">void</span> applyMove(<span class="k">int</span> cell, <span class="k">char</span> player);  <span class="c">// place 'X' or 'O' at cell</span>
-    <span class="k">bool</span> isFull() <span class="k">const</span>;                    <span class="c">// all nine cells taken</span>
-    <span class="k">char</span> winner() <span class="k">const</span>;                    <span class="c">// 'X', 'O', or ' ' if none yet</span>
-    <span class="k">char</span> cellMark(<span class="k">int</span> cell) <span class="k">const</span>;          <span class="c">// what to display for cell 1..9</span>
-<span class="k">private</span>:
-    std::array&lt;<span class="k">char</span>, 9&gt; cells;
-};
-<span class="k">#endif</span></code></pre>
+    <span class="k">def</span> is_valid_move(self, cell):
+        <span class="k">return</span> 1 &lt;= cell &lt;= 9 <span class="k">and</span> self.cells[cell - 1] <span class="k">not in</span> (<span class="s">'X'</span>, <span class="s">'O'</span>)
 
-  <p><strong><code>src/Board.cpp</code></strong> — the implementation of that logic:</p>
-  <pre><code><span class="c">// src/Board.cpp</span>
-<span class="k">#include</span> <span class="s">"Board.h"</span>
+    <span class="k">def</span> apply_move(self, cell, player):
+        self.cells[cell - 1] = player
 
-Board::Board() {
-    cells = {<span class="s">'1'</span>,<span class="s">'2'</span>,<span class="s">'3'</span>,<span class="s">'4'</span>,<span class="s">'5'</span>,<span class="s">'6'</span>,<span class="s">'7'</span>,<span class="s">'8'</span>,<span class="s">'9'</span>};
-}
+    <span class="k">def</span> is_full(self):
+        <span class="k">return</span> all(c <span class="k">in</span> (<span class="s">'X'</span>, <span class="s">'O'</span>) <span class="k">for</span> c <span class="k">in</span> self.cells)
 
-<span class="k">bool</span> Board::isValidMove(<span class="k">int</span> cell) <span class="k">const</span> {
-    <span class="k">if</span> (cell &lt; 1 || cell &gt; 9) <span class="k">return</span> <span class="k">false</span>;
-    <span class="k">char</span> c = cells[cell - 1];
-    <span class="k">return</span> c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>;
-}
+    <span class="k">def</span> winner(self):
+        lines = [
+            (0, 1, 2), (3, 4, 5), (6, 7, 8),
+            (0, 3, 6), (1, 4, 7), (2, 5, 8),
+            (0, 4, 8), (2, 4, 6),
+        ]
+        <span class="k">for</span> a, b, c <span class="k">in</span> lines:
+            <span class="k">if</span> self.cells[a] <span class="k">in</span> (<span class="s">'X'</span>, <span class="s">'O'</span>) <span class="k">and</span> self.cells[a] == self.cells[b] == self.cells[c]:
+                <span class="k">return</span> self.cells[a]
+        <span class="k">return</span> <span class="s">' '</span>
 
-<span class="k">void</span> Board::applyMove(<span class="k">int</span> cell, <span class="k">char</span> player) {
-    cells[cell - 1] = player;
-}
+    <span class="k">def</span> cell_mark(self, cell):
+        <span class="k">return</span> self.cells[cell - 1]</code></pre>
+  </div>
 
-<span class="k">bool</span> Board::isFull() <span class="k">const</span> {
-    <span class="k">for</span> (<span class="k">char</span> c : cells)
-        <span class="k">if</span> (c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>) <span class="k">return</span> <span class="k">false</span>;
-    <span class="k">return</span> <span class="k">true</span>;
-}
+  <p><strong><code>tictactoe.py</code></strong> is the input/output, importing <code>Board</code>. The <code>if __name__ == "__main__"</code> guard means importing this file does <em>not</em> start the game (so it never blocks a test):</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># tictactoe.py - the game's input/output, using the Board logic</span>
+<span class="k">from</span> board <span class="k">import</span> Board
 
-<span class="k">char</span> Board::winner() <span class="k">const</span> {
-    <span class="k">const</span> <span class="k">int</span> lines[8][3] = {
-        {0,1,2}, {3,4,5}, {6,7,8},
-        {0,3,6}, {1,4,7}, {2,5,8},
-        {0,4,8}, {2,4,6}
-    };
-    <span class="k">for</span> (<span class="k">auto</span>&amp; l : lines) {
-        <span class="k">char</span> a = cells[l[0]];
-        <span class="k">if</span> ((a == <span class="s">'X'</span> || a == <span class="s">'O'</span>) &amp;&amp; a == cells[l[1]] &amp;&amp; a == cells[l[2]])
-            <span class="k">return</span> a;
-    }
-    <span class="k">return</span> <span class="s">' '</span>;
-}
 
-<span class="k">char</span> Board::cellMark(<span class="k">int</span> cell) <span class="k">const</span> {
-    <span class="k">return</span> cells[cell - 1];
-}</code></pre>
+<span class="k">def</span> draw(board):
+    <span class="k">for</span> r <span class="k">in</span> range(3):
+        print(<span class="s">f" {board.cell_mark(r*3+1)}|{board.cell_mark(r*3+2)}|{board.cell_mark(r*3+3)}"</span>)
 
-  <p><strong><code>include/Game.h</code></strong> — the I/O layer, which owns a <code>Board</code>:</p>
-  <pre><code><span class="c">// include/Game.h</span>
-<span class="k">#ifndef</span> GAME_H
-<span class="k">#define</span> GAME_H
-<span class="k">#include</span> <span class="s">"Board.h"</span>
 
-<span class="k">class</span> Game {
-<span class="k">public</span>:
-    <span class="k">void</span> run();          <span class="c">// play one game to the end</span>
-<span class="k">private</span>:
-    <span class="k">void</span> draw() <span class="k">const</span>;   <span class="c">// print the board</span>
-    Board board;
-    <span class="k">char</span> player = <span class="s">'X'</span>;
-};
-<span class="k">#endif</span></code></pre>
+<span class="k">def</span> main():
+    board = Board()
+    player = <span class="s">'X'</span>
+    <span class="k">while</span> <span class="k">True</span>:
+        draw(board)
+        cell = input(<span class="s">f"Player {player}, cell 1-9: "</span>)
+        <span class="k">if</span> <span class="k">not</span> cell.isdigit() <span class="k">or</span> <span class="k">not</span> board.is_valid_move(int(cell)):
+            print(<span class="s">"invalid"</span>)
+            <span class="k">continue</span>
+        board.apply_move(int(cell), player)
+        <span class="k">if</span> board.winner() != <span class="s">' '</span>:
+            draw(board)
+            print(<span class="s">f"Player {player} wins!"</span>)
+            <span class="k">break</span>
+        <span class="k">if</span> board.is_full():
+            draw(board)
+            print(<span class="s">"Draw"</span>)
+            <span class="k">break</span>
+        player = <span class="s">'O'</span> <span class="k">if</span> player == <span class="s">'X'</span> <span class="k">else</span> <span class="s">'X'</span>
 
-  <p><strong><code>src/Game.cpp</code></strong> — drawing the board and the game loop:</p>
-  <pre><code><span class="c">// src/Game.cpp</span>
-<span class="k">#include</span> <span class="s">"Game.h"</span>
-<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
 
-<span class="k">void</span> Game::draw() <span class="k">const</span> {
-    <span class="k">for</span> (<span class="k">int</span> r = 0; r &lt; 3; ++r) {
-        std::cout &lt;&lt; <span class="s">' '</span> &lt;&lt; board.cellMark(r * 3 + 1)
-                  &lt;&lt; <span class="s">'|'</span> &lt;&lt; board.cellMark(r * 3 + 2)
-                  &lt;&lt; <span class="s">'|'</span> &lt;&lt; board.cellMark(r * 3 + 3) &lt;&lt; <span class="s">'\n'</span>;
-    }
-}
+<span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
+    main()</code></pre>
+  </div>
 
-<span class="k">void</span> Game::run() {
-    <span class="k">while</span> (<span class="k">true</span>) {
-        draw();
-        std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">", cell 1-9: "</span>;
-        <span class="k">int</span> cell;
-        std::cin &gt;&gt; cell;
-        <span class="k">if</span> (!board.isValidMove(cell)) {
-            std::cout &lt;&lt; <span class="s">"invalid\n"</span>;
-            <span class="k">continue</span>;
-        }
-        board.applyMove(cell, player);
-        <span class="k">if</span> (board.winner() != <span class="s">' '</span>) {
-            draw();
-            std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">" wins!\n"</span>;
-            <span class="k">return</span>;
-        }
-        <span class="k">if</span> (board.isFull()) {
-            draw();
-            std::cout &lt;&lt; <span class="s">"Draw\n"</span>;
-            <span class="k">return</span>;
-        }
-        player = (player == <span class="s">'X'</span>) ? <span class="s">'O'</span> : <span class="s">'X'</span>;
-    }
-}</code></pre>
+  <h3>2 · Write your own tests</h3>
+  <p>Create <code>test_board.py</code> in <code>tests/</code> and write pytest tests for the <code>Board</code> class, modelled on the lecture (Class 9). Don't copy a finished file: build it from the requirements below. Two tests are given to show the shape: <em>arrange</em> a board with <code>apply_move</code>, then <em>assert</em> on <code>winner()</code> / <code>is_full()</code> / <code>is_valid_move()</code>:</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># test_board.py</span>
+<span class="k">from</span> board <span class="k">import</span> Board
 
-  <p><strong><code>src/main.cpp</code></strong> — the entry point, just three lines:</p>
-  <pre><code><span class="c">// src/main.cpp</span>
-<span class="k">#include</span> <span class="s">"Game.h"</span>
 
-<span class="k">int</span> main() {
-    Game game;
-    game.run();
-}</code></pre>
+<span class="k">def</span> test_row_win():
+    b = Board()
+    b.apply_move(1, <span class="s">'X'</span>); b.apply_move(2, <span class="s">'X'</span>); b.apply_move(3, <span class="s">'X'</span>)
+    <span class="k">assert</span> b.winner() == <span class="s">'X'</span>
 
-  <h3>2 · Write your own Makefile</h3>
-  <p>Now write the <code>Makefile</code> yourself, in the project root, modelled on the lecture (Class 9, Sections 9–10). Do not copy a finished file: build it from the requirements below. Remember that every recipe line must start with a real <kbd>Tab</kbd>.</p>
-  <div class="callout"><span class="tag">Your Makefile must</span>
+
+<span class="k">def</span> test_anti_diagonal_win():   <span class="c"># regression test for the Lab 3 bug</span>
+    b = Board()
+    b.apply_move(3, <span class="s">'X'</span>); b.apply_move(5, <span class="s">'X'</span>); b.apply_move(7, <span class="s">'X'</span>)
+    <span class="k">assert</span> b.winner() == <span class="s">'X'</span></code></pre>
+  </div>
+  <div class="callout"><span class="tag">Your suite must also test</span>
   <ol style="margin:0">
-    <li>Define variables: <code>CXX = g++</code>, <code>CXXFLAGS = -std=c++17 -Wall -Iinclude</code>, and <code>BUILD = build</code>.</li>
-    <li>Detect the shell with the <code>uname</code> check from the lecture, setting <code>EXE</code> (the program: <code>build/tictactoe</code>, or <code>build/tictactoe.exe</code> on Windows), <code>MKDIR</code>, <code>RMDIR</code>, and <code>RUN</code>.</li>
-    <li>Have a <strong>default target</strong> that links the three object files (<code>build/Board.o build/Game.o build/main.o</code>) into <code>$(EXE)</code>.</li>
-    <li>Have a <strong>pattern rule</strong> that compiles each <code>src/%.cpp</code> into <code>build/%.o</code>, listing the headers in <code>include/</code> as prerequisites so editing a header triggers a rebuild.</li>
-    <li>Have a rule that <strong>creates the <code>build/</code> folder</strong> before anything is compiled into it.</li>
-    <li>Declare <code>.PHONY</code> targets <code>run</code> (build, then run <code>$(EXE)</code>) and <code>clean</code> (delete the <code>build/</code> folder).</li>
+    <li>A <strong>column win</strong> (e.g. O on cells 1, 4, 7) is detected.</li>
+    <li><strong>No winner yet</strong>: a board with a couple of moves returns <code>' '</code> from <code>winner()</code>.</li>
+    <li>A <strong>full board</strong> makes <code>is_full()</code> return <code>True</code> (and an empty one returns <code>False</code>).</li>
+    <li><strong>Move validation</strong>: <code>is_valid_move</code> rejects a taken cell and an out-of-range cell (0 or 10), and accepts a free one.</li>
   </ol>
   </div>
-  <p>The only differences from the lecture's <code>hello</code> Makefile are the names: the program is <code>tictactoe</code>, and there are <em>three</em> source files instead of two.</p>
-
-  <p>Once your Makefile builds and runs the game, <strong>paste the finished file in the box below</strong> for submission:</p>
-  <div class="ws-bar"><span class="label">// paste your finished Makefile here</span></div>
+  <p>Once your tests pass, <strong>paste the finished <code>test_board.py</code> in the box below</strong> for submission:</p>
+  <div class="ws-bar"><span class="label">// paste your finished test_board.py here</span></div>
   <div class="fill" contenteditable="true" spellcheck="false" style="display:block;white-space:pre-wrap;min-height:260px;border:1px solid var(--line);border-radius:8px;padding:14px;font-size:12.5px;line-height:1.55"></div>
 
-  <h3>3 · Test your Makefile</h3>
-  <p>From the project root, run these three commands and check each behaves as described:</p>
-  <pre><code><span class="k">make</span>           <span class="c"># compiles src/*.cpp into build/*.o, links build/tictactoe</span>
-<span class="k">make</span> run       <span class="c"># builds if needed, then starts the game</span>
-<span class="k">make</span> clean     <span class="c"># deletes the whole build/ folder</span></code></pre>
+  <h3>3 · Run the tests</h3>
+  <p>From the project root:</p>
+  <pre><code><span class="k">python</span> src/tictactoe.py   <span class="c"># play the game (Ctrl+C to quit)</span>
+<span class="k">pytest</span>                  <span class="c"># discover &amp; run every test_*.py under tests/</span>
+<span class="k">pytest</span> -v               <span class="c"># the same, listing each test by name</span></code></pre>
   <ul>
-    <li><strong><code>make</code></strong> creates the <code>build/</code> folder and the executable inside it. Run <code>make</code> a second time: it should report everything is <em>up to date</em> and compile nothing.</li>
-    <li><strong><code>make run</code></strong> launches the game. Play through a win (e.g. X on cells 1, 2, 3) and a draw to confirm the logic works.</li>
-    <li><strong><code>make clean</code></strong> removes <code>build/</code> entirely, so <code>git status</code> shows only your source files and the <code>Makefile</code>.</li>
+    <li>A passing run is <span style="color:var(--green);font-weight:700">green</span> and ends with <code>N passed</code>.</li>
+    <li>To see a failure, temporarily change an expected value in a test (or break <code>board.py</code>): pytest turns <span style="color:var(--coral);font-weight:700">red</span> and shows the actual vs. expected value. Undo the change to go green again.</li>
+    <li>Running <code>pytest</code> creates a <code>.pytest_cache/</code> folder and <code>__pycache__/</code>, which you'll git-ignore below.</li>
   </ul>
 
   <h3>4 · Log your work &amp; commit via a PR</h3>
@@ -1965,11 +1751,11 @@ Board::Board() {
     <span class="tag">Open this lab in a new tab first</span>
     <p>The box in Section 2 and the log below are typed directly into this page and are <strong>not saved</strong>: navigating away will erase them. Open this page in a new tab, then use the print button at the end to save a PDF when you're done.</p>
   </div>
-  <p>Take the finished project through the Git workflow from Lab 3, and log every step below. <strong>Steps 1 and 2 are given as examples.</strong> Using the <strong>+ Add step</strong> button, add the remaining steps you take to reach the final state. Your steps <strong>must</strong> include:</p>
+  <p>Take the tested project through the Git workflow from Lab 3, and log every step below. <strong>Steps 1 and 2 are given as examples.</strong> Using the <strong>+ Add step</strong> button, add the remaining steps you take to reach the final state. Your steps <strong>must</strong> include:</p>
   <ul>
-    <li>doing all the new work on a <strong>task branch</strong> (you created <code>feature/make</code> in Step 1) — never commit directly to <code>master</code>;</li>
-    <li>adding your <code>Makefile</code> to the project;</li>
-    <li>editing <code>.gitignore</code> so the generated <code>build/</code> folder is excluded from version control;</li>
+    <li>doing all the new work on a <strong>task branch</strong> (you created <code>refactor</code> in Step 1), never committing directly to <code>master</code>;</li>
+    <li>adding your <code>test_board.py</code> to the project;</li>
+    <li>editing <code>.gitignore</code> so <code>__pycache__/</code> and <code>.pytest_cache/</code> are excluded;</li>
     <li>committing and pushing the task branch to Gitee;</li>
     <li>opening a <strong>Pull Request</strong> to merge the task branch into <code>master</code>;</li>
     <li>after the merge, <strong>deleting the task branch</strong> on Gitee and locally.</li>
@@ -1980,14 +1766,14 @@ Board::Board() {
 
   <div id="lab4-steps">
     <div class="step">
-      <div class="head"><span class="badge">Step 1</span><span class="instr">Create a feature branch <code>feature/make</code> off <code>master</code> and switch to it.</span></div>
-      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">git switch -c feature/make</span></p>
+      <div class="head"><span class="badge">Step 1</span><span class="instr">Create a refactor branch <code>refactor</code> off <code>master</code> and switch to it.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">git switch -c refactor</span></p>
       <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">N/A</span></p>
     </div>
     <div class="step">
-      <div class="head"><span class="badge">Step 2</span><span class="instr">Add the project's source files to your workspace.</span></div>
+      <div class="head"><span class="badge">Step 2</span><span class="instr">Refactor the project: split the game into <code>board.py</code> (logic) and <code>tictactoe.py</code> (the loop), move them into <code>src/</code>, and add <code>pyproject.toml</code> as shown in Section 1.</span></div>
       <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">N/A</span></p>
-      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">Create the <code>include/</code> and <code>src/</code> folders and add the five source files (Board.h, Game.h, Board.cpp, Game.cpp, main.cpp) at the paths shown in Section 1.</span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">Create <code>src/board.py</code>, <code>src/tictactoe.py</code>, and <code>pyproject.toml</code>; confirm <code>python src/tictactoe.py</code> still plays the game.</span></p>
     </div>
   </div>
   <button class="btn-add" data-addstep="#lab4-steps" data-tpl="#lab4-step-tpl">+ Add step</button>
@@ -2001,9 +1787,9 @@ Board::Board() {
     </div>
   </template>
 
-  <div class="callout"><span class="tag">Done when</span><p>A single <code>make</code> builds a working <code>tictactoe</code> in the <code>build/</code> folder, <code>make run</code> plays the game, <code>make clean</code> removes <code>build/</code>, the generated folder is gitignored (but the <code>Makefile</code> and sources are committed), and the project is merged into <code>master</code> via a PR.</p></div>
+  <div class="callout"><span class="tag">Done when</span><p>The rules live in <code>src/board.py</code>, your tests live in <code>tests/</code>, <code>pytest</code> runs your suite green (covering wins in every direction, no-winner, draw, and move validation), the generated folders are gitignored, and the work is merged into <code>master</code> via a PR.</p></div>
 
-  <div class="callout tip"><span class="tag">Submit</span><p>Save this page as a PDF for submission. It should show your finished <strong>Makefile pasted in Section 2</strong> and the completed <strong>work log in Section 4</strong>.</p></div>
+  <div class="callout tip"><span class="tag">Submit</span><p>Save this page as a PDF for submission. It should show your finished <strong>test_board.py pasted in Section 2</strong> and the completed <strong>work log in Section 4</strong>.</p></div>
   <div class="ws-bar"><span class="label">// Lab 4 submission</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
 
   <div class="next-prev">
@@ -2015,34 +1801,91 @@ Board::Board() {
 <!-- ============================== M6 LECTURE ============================== -->
 <section class="page" id="m6-lecture">
   <div class="eyebrow">Module 6 · Lecture · Class 11</div>
-  <h2 class="page-title">CI/CD Configuration</h2>
-  <p class="sub-meta">Automating the build and tests on every change with Gitee Go.</p>
+  <h2 class="page-title">Pipeline Configuration</h2>
+  <p class="sub-meta">Configuring a Gitee Go pipeline that tests every change automatically — and then delivers it.</p>
 
-  <p class="lead">We now connect everything: a build system (Make), tests, and a remote host (Gitee) become an automated <strong>pipeline</strong> that runs on every push and protects <code>master</code> from broken code.</p>
+  <p class="lead">You can already run your tests with one command, <code>pytest</code>. A <strong>pipeline</strong> hands that command to a server so it runs on <em>every</em> change, on a clean machine, with no one having to remember. <strong>Continuous Integration (CI)</strong> automatically tests every change the moment it arrives; <strong>Continuous Delivery (CD)</strong> automatically packages the verified result so it's always ready to ship. We build both on Gitee with <strong>Gitee Go</strong>.</p>
 
-  <h3>Testing pure functions</h3>
-  <p>Because Lab 4 separated the game logic into <code>board.cpp</code>, we can test it directly: no keyboard required. A test program calls functions like <code>checkWinner</code> with known inputs and verifies the outputs. Crucially, it signals success or failure through its <strong>exit code</strong>: <code>0</code> means all tests passed, non-zero means something failed. That exit code is what the pipeline watches.</p>
-
-  <h3>A test target in the Makefile</h3>
-  <p>We add a rule that compiles the test program against <code>board.cpp</code>, and a <code>test</code> rule that runs it:</p>
-  <pre><code>test_board: tests/test_board.cpp src/board.cpp
-	$(CXX) $(CXXFLAGS) -o test_board tests/test_board.cpp src/board.cpp
-
-test: test_board
-	./test_board</code></pre>
-  <p>Then <code>make test</code> builds and runs the tests. Because the test program returns a non-zero exit code on failure, <code>make test</code> itself fails too, which is exactly the signal CI needs.</p>
-
-  <h3>Gitee Go</h3>
-  <p>Gitee Go is Gitee's built-in CI/CD. You enable it on the repository, and it stores pipeline definitions as YAML files in a <code>.workflow/</code> folder. A typical pipeline has stages that run on every push:</p>
-  <pre><code><span class="k">checkout</span> → <span class="k">install tools</span> → <span class="k">make</span> → <span class="k">make test</span></code></pre>
+  <h3>1 · The CI loop: pull → test → report</h3>
+  <p>On a shared repository, many people push commits. Without automation, a broken change can slip onto <code>master</code> and block the whole team ("but it worked on my machine!"). CI removes that risk: every time someone pushes (or opens a Pull Request), a fresh, clean machine runs the same steps you do:</p>
+  <pre><code><span class="k">checkout</span>  (pull the new commit)
+   → <span class="k">install</span>   (get the tools: <span class="k">pip install pytest</span>)
+   → <span class="k">test</span>      (run the suite: <span class="k">pytest</span>)
+   → <span class="k">report</span>    (green = passed, red = a test failed)</code></pre>
   <ul>
-    <li>Each push triggers the pipeline; you watch it run and read the logs.</li>
-    <li>A passing run is <span style="color:var(--green);font-weight:700">green</span>; a failing one is <span style="color:var(--coral);font-weight:700">red</span>.</li>
-    <li>Gitee Go provides free build minutes, generous for a class, so every student can run pipelines.</li>
-    <li>A <strong>PR pipeline</strong> can <em>gate</em> merges: a Pull Request whose tests fail cannot be merged.</li>
+    <li>It runs on a <strong>clean machine</strong>, so it catches "works on my machine" problems — uncommitted files, a missing dependency, a test that only passed because of leftover state.</li>
+    <li>The result is instant feedback: a <span style="color:var(--green);font-weight:700">green</span> check or a <span style="color:var(--coral);font-weight:700">red</span> X next to the commit, with logs you can read.</li>
+    <li>Wired to Pull Requests, it becomes a <strong>gate</strong>: a PR whose pipeline is red cannot be merged, so broken code never reaches <code>master</code>.</li>
   </ul>
+  <p>This works only because the tests are <strong>scriptable</strong> — one command, <code>pytest</code>, that the robot can run exactly as you do.</p>
 
-  <div class="callout tip"><span class="tag">This is CD too</span><p>Without Docker, "delivery" here means the pipeline produces a verified, runnable build (an artifact) and you tag a release on Gitee: a reliable, automated path from commit to shippable program.</p></div>
+  <h3>2 · Configuring the pipeline on Gitee</h3>
+  <p><strong>On gitee.com:</strong></p>
+  <ol>
+    <li>Open your repository → the <strong>Services</strong> (服务) tab → enable <strong>Gitee Go</strong> (码云流水线). Free build minutes are generous for a class.</li>
+    <li>Choose <strong>Create pipeline</strong> and start from the <strong>Python</strong> template. Gitee stores the pipeline as a YAML file under a <code>.workflow/</code> folder in your repo, so it is versioned with your code.</li>
+    <li>Edit the YAML so its steps match what you run locally, commit it, and the pipeline starts firing on every push.</li>
+  </ol>
+  <p>Here is the whole pipeline file for our project, with every key explained (Gitee's template editor supplies the exact key names, which evolve — map these concepts onto it):</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># .workflow/master-pipeline.yml</span>
+version: '1.0'
+name: master-pipeline
+displayName: TicTacToe
+triggers:                            <span class="c"># WHEN the pipeline runs</span>
+  trigger: auto                      <span class="c"># automatically, with no manual click</span>
+  push:
+    branches:
+      include:
+        - master                     <span class="c"># any push to master fires it</span>
+stages:                              <span class="c"># ordered phases; each runs only if the previous passed</span>
+  - name: test
+    displayName: Test
+    strategy: naturally               <span class="c"># run this stage's steps in their listed order</span>
+    trigger: auto
+    steps:
+      - step: build@python            <span class="c"># a Python environment, version of your choice</span>
+        name: run_tests
+        displayName: Run pytest
+        pythonVersion: '3.12'
+        commands:                     <span class="c"># the same commands you run locally</span>
+          - pip install pytest        <span class="c">#   get the test runner</span>
+          - pytest                    <span class="c">#   discover &amp; run every test_*.py</span></code></pre>
+  </div>
+  <ul>
+    <li><code>version</code> / <code>name</code> / <code>displayName</code> — the file-format version, the pipeline's id, and the label shown in the Gitee Go UI.</li>
+    <li><code>triggers</code> — when it runs. <code>trigger: auto</code> means run automatically; <code>push.branches.include: [master]</code> limits it to pushes to <code>master</code>. (You can add a <code>pull_request</code> trigger to also gate merges.)</li>
+    <li><code>stages</code> — ordered phases, <strong>fail-fast</strong>: if the <code>test</code> stage fails the pipeline stops and goes red. <code>strategy: naturally</code> runs a stage's steps in their listed order.</li>
+    <li><code>step: build@python</code> — the step's <em>type</em>: Gitee Go's Python environment. <code>pythonVersion</code> picks the interpreter (like the Maven template's <code>jdkVersion</code>), so you don't install Python — you just list <code>commands</code>.</li>
+    <li><code>commands</code> — the shell commands, top to bottom: <code>pip install pytest</code> to get the runner, then <code>pytest</code>. <code>pytest</code> returns a non-zero exit code if any test fails, which fails the step and reddens the pipeline.</li>
+  </ul>
+  <p>Push, then watch it run: green on success, red on failure with the failing assertion in the logs. Break a test on purpose to see red, fix it to see green.</p>
+
+  <h3>3 · Adding CD: delivering the verified code</h3>
+  <p>CI proves the change is <em>good</em>. <strong>CD</strong> takes the next step: it automatically turns that verified change into something you can ship. With a server you would <em>deploy</em> (Continuous Deployment); without one, we <em>deliver</em> (Continuous Delivery) — the pipeline publishes a tested, versioned <strong>release</strong> of the code, so a release is always one step away.</p>
+  <p>You "update the pipeline accordingly" by adding a <strong>stage after</strong> <code>test</code>. Because stages are sequential and fail-fast, this <code>release</code> stage only runs when the tests have already passed:</p>
+  <pre><code>stages:
+  - name: test                 <span class="c"># (the CI stage from section 2)</span>
+    <span class="c"># ... build@python: pip install pytest, pytest ...</span>
+
+  - name: release              <span class="c"># the CD stage — runs only if test was green</span>
+    displayName: Publish
+    strategy: naturally
+    trigger: auto
+    steps:
+      - step: publish@release_artifacts    <span class="c"># publish a versioned release</span>
+        name: publish_release_artifacts
+        displayName: Publish
+        version: 1.0.0.0
+        autoIncrement: true                <span class="c"># bump the version automatically each release</span></code></pre>
+  <ul>
+    <li>Putting <code>release</code> <em>after</em> <code>test</code> is the gate: stages are fail-fast, so an untested or failing change never reaches this stage.</li>
+    <li><code>step: publish@release_artifacts</code> — publishes the verified code as a numbered release on Gitee.</li>
+    <li><code>version</code> + <code>autoIncrement</code> — the release version (<code>1.0.0.0</code>), bumped automatically each run so every delivery is uniquely versioned.</li>
+    <li>The pipeline is now the full loop: <strong>pull → test → release</strong>. Every push to <code>master</code> yields a tested, versioned release with no manual steps.</li>
+  </ul>
+  <div class="callout tip"><span class="tag">Delivery vs deployment</span><p>This is Continuous <em>Delivery</em>: the pipeline publishes a verified, versioned release that is always ready to ship. With a server, the same final stage would instead <em>deploy</em> the code to production automatically — full Continuous <em>Deployment</em>. You'll publish a <code>v1.0</code> release this way in the final project.</p></div>
 
   <div class="next-prev">
     <a href="#m5-lab">← Lab 4</a>
@@ -2053,64 +1896,65 @@ test: test_board
 <!-- ============================== M6 LAB (LAB 5) ============================== -->
 <section class="page" id="m6-lab">
   <div class="eyebrow">Module 6 · Lab 5 · Class 12</div>
-  <h2 class="page-title">Lab 5: Build &amp; Test Pipeline on Gitee Go</h2>
-  <p class="sub-meta">Add unit tests, wire them into a Makefile <code>test</code> target, then automate everything in a pipeline. Watch it go red, then green.</p>
+  <h2 class="page-title">Lab 5: Test Pipeline on Gitee Go</h2>
+  <p class="sub-meta">Automate your pytest suite in a Gitee Go pipeline. Watch it go red, then green.</p>
 
-  <h3>1 · Write a test program</h3>
-  <p>Create <code>tests/test_board.cpp</code>: a tiny, dependency-free harness (no external framework needed, which avoids download problems):</p>
-  <pre><code><span class="k">#include</span> <span class="s">"board.h"</span>
-<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
-<span class="k">static int</span> failures = 0;
-<span class="k">#define</span> CHECK(c) <span class="k">do</span>{ <span class="k">if</span>(!(c)){ std::cerr&lt;&lt;<span class="s">"FAIL: "</span> #c &lt;&lt;<span class="s">" @"</span>&lt;&lt;__LINE__&lt;&lt;<span class="s">"\n"</span>; ++failures; } }<span class="k">while</span>(0)
+  <p>This lab uses the tested project from Lab 4 (<code>board.py</code>, <code>tictactoe.py</code>, and your <code>test_board.py</code>). You'll put <code>pytest</code> behind an automated pipeline that runs on every push.</p>
 
-<span class="k">int</span> main(){
-  Board top{{'X','X','X',' ',' ',' ',' ',' ',' '}};
-  CHECK(checkWinner(top)=='X');                 <span class="c">// row win</span>
-  Board col{{'O',' ',' ','O',' ',' ','O',' ',' '}};
-  CHECK(checkWinner(col)=='O');                 <span class="c">// column win</span>
-  Board diag{{'X',' ',' ',' ','X',' ',' ',' ','X'}};
-  CHECK(checkWinner(diag)=='X');                <span class="c">// diagonal win</span>
-  Board none{{'X','O','X',' ',' ',' ',' ',' ',' '}};
-  CHECK(checkWinner(none)==' ');                <span class="c">// no winner</span>
-  Board draw{{'X','O','X','X','O','O','O','X','X'}};
-  CHECK(isFull(draw) &amp;&amp; checkWinner(draw)==' '); <span class="c">// draw</span>
-  Board g{{'X',' ',' ',' ',' ',' ',' ',' ',' '}};
-  CHECK(!isValidMove(g,0)); CHECK(isValidMove(g,1));
+  <h3>1 · Confirm the tests pass locally</h3>
+  <p>From the project root, make sure the suite is green before automating it — the pipeline can only run what already works on your machine:</p>
+  <pre><code><span class="k">pytest</span></code></pre>
+  <p>If <code>pytest</code> isn't found, install it with <code>pip install pytest</code> (see Module 1). It's good practice to record the dependency so the pipeline installs the same thing — create a <code>requirements.txt</code> with one line:</p>
+  <pre><code><span class="c"># requirements.txt</span>
+pytest</code></pre>
 
-  <span class="k">if</span>(failures==0){ std::cout&lt;&lt;<span class="s">"All tests passed!\n"</span>; <span class="k">return</span> 0; }
-  std::cerr&lt;&lt;failures&lt;&lt;<span class="s">" test(s) failed.\n"</span>; <span class="k">return</span> 1;
-}</code></pre>
-
-  <h3>2 · Add a test target to the Makefile</h3>
-  <p>Add these rules to your <code>Makefile</code> (recipe lines start with a <kbd>Tab</kbd>), then verify locally with <code>make test</code>:</p>
-  <pre><code>test_board: tests/test_board.cpp src/board.cpp
-	$(CXX) $(CXXFLAGS) -o test_board tests/test_board.cpp src/board.cpp
-
-test: test_board
-	./test_board</code></pre>
-  <pre><code><span class="k">make</span> test               <span class="c"># builds test_board, then runs it</span></code></pre>
-
-  <h3>3 · Create the Gitee Go pipeline</h3>
-  <p>Enable Gitee Go on your repo and add a pipeline. Start from Gitee's shell/build template and set its steps to the commands below (the exact YAML keys come from the template editor: adjust to match the current Gitee Go interface). The pipeline should run the same steps your machine does:</p>
-  <pre><code><span class="c"># .workflow/ - illustrative shape; build the real one from Gitee's template</span>
-name: build-and-test
-trigger: [push, pull_request]
+  <h3>2 · Create the Gitee Go pipeline</h3>
+  <p>Enable Gitee Go on your repo (the <strong>Services</strong> tab), create a pipeline from the <strong>Python</strong> template, and replace it with the file below — Gitee stores it under <code>.workflow/</code> in your repo. It installs pytest, runs the tests, then publishes a versioned release (see Class 11 for a key-by-key explanation):</p>
+  <div class="code-block"><button class="btn-copy" data-copy>⧉ Copy</button>
+  <pre><code><span class="c"># .workflow/master-pipeline.yml</span>
+version: '1.0'
+name: master-pipeline
+displayName: TicTacToe
+triggers:
+  trigger: auto
+  push:
+    branches:
+      include:
+        - master
 stages:
-  - name: build-test
+  - name: test
+    displayName: Test
+    strategy: naturally
+    trigger: auto
     steps:
-      - <span class="k">apt-get install -y make g++</span>      <span class="c"># ensure tools</span>
-      - <span class="k">make</span>                          <span class="c"># build the game</span>
-      - <span class="k">make test</span>                     <span class="c"># build &amp; run the tests</span></code></pre>
+      - step: build@python            <span class="c"># Python environment</span>
+        name: run_tests
+        displayName: Run pytest
+        pythonVersion: '3.12'
+        commands:
+          - pip install pytest        <span class="c"># or: pip install -r requirements.txt</span>
+          - pytest
+  - name: release                     <span class="c"># runs only if test is green</span>
+    displayName: Publish
+    strategy: naturally
+    trigger: auto
+    steps:
+      - step: publish@release_artifacts
+        name: publish_release_artifacts
+        displayName: Publish
+        version: 1.0.0.0
+        autoIncrement: true</code></pre></div>
+  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">The exact step type and field names come from Gitee Go's template editor and can change; keep the <em>shape</em> (a <code>test</code> stage that installs pytest and runs it, then a <code>release</code> stage) and map it onto the current interface.</p>
 
-  <h3>4 · Make it go red, then green</h3>
+  <h3>3 · Make it go red, then green</h3>
   <ol>
-    <li>Push your work and watch the pipeline turn <span style="color:var(--green);font-weight:700">green</span>.</li>
-    <li>Deliberately break a test (e.g. change an expected winner) and push: watch it turn <span style="color:var(--coral);font-weight:700">red</span> and read the failure in the logs.</li>
+    <li>Commit and push the <code>.workflow/</code> file (and <code>requirements.txt</code>), then watch the pipeline turn <span style="color:var(--green);font-weight:700">green</span>.</li>
+    <li>Deliberately break a test (e.g. change an expected winner) and push: watch it turn <span style="color:var(--coral);font-weight:700">red</span> and read the failing assertion in the logs.</li>
     <li>Fix it and push again → green.</li>
-    <li><em>(Optional)</em> Configure the PR pipeline so a Pull Request can't merge while tests fail.</li>
+    <li><em>(Optional)</em> Add a <code>pull_request</code> trigger so a Pull Request can't merge while tests fail.</li>
   </ol>
 
-  <div class="callout"><span class="tag">Done when</span><p>Every push to your repository automatically builds the project and runs the tests on Gitee Go, and you have seen a full red → green cycle.</p></div>
+  <div class="callout"><span class="tag">Done when</span><p>Every push to your repository automatically runs <code>pytest</code> on Gitee Go, you have seen a full red → green cycle, and a passing run on <code>master</code> publishes a versioned release.</p></div>
 
   <div class="next-prev">
     <a href="#m6-lecture">← Lecture</a>
@@ -2122,9 +1966,9 @@ stages:
 <section class="page" id="m7">
   <div class="eyebrow">Module 7 · Capstone · Classes 13–16</div>
   <h2 class="page-title">Final Project</h2>
-  <p class="sub-meta">In teams, extend the game through the full workflow you've learned: from issue to released, tested build.</p>
+  <p class="sub-meta">In teams, extend the game through the full workflow you've learned: from issue to released, tested code.</p>
 
-  <p class="lead">Everything so far has built the machinery: version control, a clean repo, branches, a Make build, and an automated test pipeline. Now you put it to work. In teams of 2–3, add <strong>one feature</strong> to Tic-Tac-Toe and take it through the complete professional loop.</p>
+  <p class="lead">Everything so far has built the machinery: version control, a clean repo, branches, automated tests, and a CI/CD pipeline. Now you put it to work. In teams of 2–3, add <strong>one feature</strong> to Tic-Tac-Toe and take it through the complete professional loop.</p>
 
   <h3>Schedule</h3>
   <div class="timing"><span class="t">Class 13</span><span><strong>Discussion &amp; planning.</strong> Form teams, choose a feature, open issues on Gitee, assign owners, plan branches, agree on "done."</span></div>

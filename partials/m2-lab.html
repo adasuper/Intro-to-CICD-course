@@ -9,51 +9,40 @@
     <p>Your worksheet answers are typed directly into this page and are <strong>not saved</strong>: navigating away (for example, back to the lecture notes to look something up) will <strong>erase everything you've entered</strong>. Before you start, right-click this page and choose <em>"Open in new tab/window"</em> (or press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> and click a nav link) so you can read the lecture in one tab and keep your log safe in another. When you're done, use the print button to save a PDF.</p>
   </div>
 
-  <p>You will create the seed of the course project, a single file <code>tictactoe.cpp</code>, and version it. <strong>For every step, record the equivalent Git command and the contents of each location after the command runs.</strong> If a step needs no Git command, write <code>N/A</code>; if it needs several, put them on one line separated by <code>|</code>. Steps 0–2 are filled in for you as examples. Type directly into the cells; use the print button to save your completed worksheet as a PDF to submit.</p>
+  <p>You will create the seed of the course project, a single file <code>tictactoe.py</code>, and version it. <strong>For every step, record the equivalent Git command and the contents of each location after the command runs.</strong> If a step needs no Git command, write <code>N/A</code>; if it needs several, put them on one line separated by <code>|</code>. Steps 0–2 are filled in for you as examples. Type directly into the cells; use the print button to save your completed worksheet as a PDF to submit.</p>
 
   <div class="callout tip">
     <span class="tag">The file you will track</span>
-    <p>When a step says to create <code>tictactoe.cpp</code>, paste the seed game below (a two-player hot-seat board; win detection arrives in Lab 2). For tracking purposes, write it in the table as <code>tictactoe.cpp ("seed")</code>.</p>
+    <p>When a step says to create <code>tictactoe.py</code>, paste the seed game below (a two-player hot-seat board; win detection arrives in Lab 2). For tracking purposes, write it in the table as <code>tictactoe.py ("seed")</code>.</p>
   </div>
   <div class="code-block">
     <button class="btn-copy" data-copy>⧉ Copy</button>
-    <pre><code><span class="c">// tictactoe.cpp: seed (hot-seat, no win detection yet)</span>
-<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
-<span class="k">#include</span> <span class="s">&lt;array&gt;</span>
+    <pre><code><span class="c"># tictactoe.py: seed (hot-seat, no win detection yet)</span>
 
-<span class="k">int</span> main() {
-    std::array&lt;<span class="k">char</span>, 9&gt; board = {<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>};
-    <span class="k">char</span> player = <span class="s">'X'</span>;
-    <span class="k">int</span>  filled = 0;
+board = [<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>]
+player = <span class="s">'X'</span>
+filled = 0
 
-    <span class="k">auto</span> draw = [&amp;] {
-        <span class="k">for</span> (<span class="k">int</span> r = 0; r &lt; 3; ++r) {
-            std::cout &lt;&lt; <span class="s">' '</span> &lt;&lt; board[r * 3]
-                      &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r * 3 + 1]
-                      &lt;&lt; <span class="s">'|'</span> &lt;&lt; board[r * 3 + 2] &lt;&lt; <span class="s">'\n'</span>;
-        }
-    };
 
-    <span class="k">while</span> (filled &lt; 9) {
-        draw();
-        std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">", cell 1-9: "</span>;
+<span class="k">def</span> draw():
+    <span class="k">for</span> r <span class="k">in</span> range(3):
+        print(<span class="s">f" {board[r*3]}|{board[r*3+1]}|{board[r*3+2]}"</span>)
 
-        <span class="k">int</span> cell;
-        std::cin &gt;&gt; cell;
 
-        <span class="k">if</span> (cell &lt; 1 || cell &gt; 9 || board[cell - 1] == <span class="s">'X'</span> || board[cell - 1] == <span class="s">'O'</span>) {
-            std::cout &lt;&lt; <span class="s">"invalid\n"</span>;
-            <span class="k">continue</span>;
-        }
+<span class="k">while</span> filled &lt; 9:
+    draw()
+    cell = input(<span class="s">f"Player {player}, cell 1-9: "</span>)
 
-        board[cell - 1] = player;
-        ++filled;
-        player = (player == <span class="s">'X'</span>) ? <span class="s">'O'</span> : <span class="s">'X'</span>;
-    }
+    <span class="k">if</span> <span class="k">not</span> cell.isdigit() <span class="k">or</span> <span class="k">not</span> (1 &lt;= int(cell) &lt;= 9) <span class="k">or</span> board[int(cell) - 1] <span class="k">in</span> (<span class="s">'X'</span>, <span class="s">'O'</span>):
+        print(<span class="s">"invalid"</span>)
+        <span class="k">continue</span>
 
-    draw();
-    std::cout &lt;&lt; <span class="s">"Board full - draw (win detection in Lab 2)\n"</span>;
-}</code></pre>
+    board[int(cell) - 1] = player
+    filled += 1
+    player = <span class="s">'O'</span> <span class="k">if</span> player == <span class="s">'X'</span> <span class="k">else</span> <span class="s">'X'</span>
+
+draw()
+print(<span class="s">"Board full - draw (win detection in Lab 2)"</span>)</code></pre>
   </div>
 
   <div class="ws-bar">
@@ -79,15 +68,15 @@
 
   <!-- STEP 2 (given) -->
   <div class="step">
-    <div class="head"><span class="badge">Step 2</span><span class="instr">Create <code>tictactoe.cpp</code> in your workspace with the seed game above.</span></div>
+    <div class="head"><span class="badge">Step 2</span><span class="instr">Create <code>tictactoe.py</code> in your workspace with the seed game above.</span></div>
     <div class="cmd-line">Command: <b>N/A</b></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
-    <tbody><tr><td><div class="fill given">tictactoe.cpp ("seed")</div></td><td><div class="fill given"></div></td><td><div class="fill given"></div></td><td><div class="fill given"></div></td></tr></tbody></table>
+    <tbody><tr><td><div class="fill given">tictactoe.py ("seed")</div></td><td><div class="fill given"></div></td><td><div class="fill given"></div></td><td><div class="fill given"></div></td></tr></tbody></table>
   </div>
 
   <!-- STEPS 3-14 (blank) -->
   <div class="step">
-    <div class="head"><span class="badge">Step 3</span><span class="instr">Add <strong>only</strong> <code>tictactoe.cpp</code> to the staging area: name the file explicitly (don't use <code>git add .</code>) so nothing else slips in.</span></div>
+    <div class="head"><span class="badge">Step 3</span><span class="instr">Add <strong>only</strong> <code>tictactoe.py</code> to the staging area: name the file explicitly (don't use <code>git add .</code>) so nothing else slips in.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
@@ -101,7 +90,7 @@
   </div>
 
   <div class="step">
-    <div class="head"><span class="badge">Step 5</span><span class="instr">Add <strong>only</strong> <code>tictactoe.cpp</code> to the staging area again, again naming the file explicitly, not <code>git add .</code>, so you stage just this one file.</span></div>
+    <div class="head"><span class="badge">Step 5</span><span class="instr">Add <strong>only</strong> <code>tictactoe.py</code> to the staging area again, again naming the file explicitly, not <code>git add .</code>, so you stage just this one file.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
@@ -115,21 +104,35 @@
   </div>
 
   <div class="step">
-    <div class="head"><span class="badge">Step 7</span><span class="instr">Undo the commit, keeping the change staged.</span></div>
+    <div class="head"><span class="badge">Step 7</span><span class="instr">Add or delete a blank line in <code>tictactoe.py</code>, save the file, and stage the change. (This second commit gives Step 9 a previous commit to undo.)</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
 
   <div class="step">
-    <div class="head"><span class="badge">Step 8</span><span class="instr">Commit the file to the local repository again.</span></div>
+    <div class="head"><span class="badge">Step 8</span><span class="instr">Commit the change to the local repository.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
 
   <div class="step">
-    <div class="head"><span class="badge">Step 9</span><span class="instr">Push the file to the remote repository.</span></div>
+    <div class="head"><span class="badge">Step 9</span><span class="instr">Undo the commit, keeping the change staged.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 10</span><span class="instr">Commit the file to the local repository again.</span></div>
+    <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
+    <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
+    <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
+  </div>
+
+  <div class="step">
+    <div class="head"><span class="badge">Step 11</span><span class="instr">Push the file to the remote repository.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
@@ -137,25 +140,25 @@
 
   <h4>Part II: modifying a tracked file</h4>
   <div class="step">
-    <div class="head"><span class="badge">Step 10</span><span class="instr">Change the code in your workspace (e.g. edit the prompt text).</span></div>
+    <div class="head"><span class="badge">Step 12</span><span class="instr">Change the code in your workspace (e.g. edit the prompt text).</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)">N/A</span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
   <div class="step">
-    <div class="head"><span class="badge">Step 11</span><span class="instr">Add the changed file to the staging area.</span></div>
+    <div class="head"><span class="badge">Step 13</span><span class="instr">Add the changed file to the staging area.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
   <div class="step">
-    <div class="head"><span class="badge">Step 12</span><span class="instr">Commit the change to the local repository.</span></div>
+    <div class="head"><span class="badge">Step 14</span><span class="instr">Commit the change to the local repository.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>
   </div>
   <div class="step">
-    <div class="head"><span class="badge">Step 13</span><span class="instr">Push the change to the remote repository.</span></div>
+    <div class="head"><span class="badge">Step 15</span><span class="instr">Push the change to the remote repository.</span></div>
     <div class="cmd-line">Command: <span contenteditable="true" class="fill" style="display:block;min-width:200px;min-height:auto;border-bottom:1px solid var(--line)"></span></div>
     <table class="loc"><thead><tr><th>Workspace</th><th>Staging Area</th><th>Local Repository</th><th>Remote Repository</th></tr></thead>
     <tbody><tr><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td><td><div class="fill" contenteditable="true"></div></td></tr></tbody></table>

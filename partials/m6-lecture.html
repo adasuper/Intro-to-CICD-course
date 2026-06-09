@@ -1,34 +1,91 @@
 <!-- ============================== M6 LECTURE ============================== -->
 <section class="page" id="m6-lecture">
   <div class="eyebrow">Module 6 · Lecture · Class 11</div>
-  <h2 class="page-title">CI/CD Configuration</h2>
-  <p class="sub-meta">Automating the build and tests on every change with Gitee Go.</p>
+  <h2 class="page-title">Pipeline Configuration</h2>
+  <p class="sub-meta">Configuring a Gitee Go pipeline that tests every change automatically — and then delivers it.</p>
 
-  <p class="lead">We now connect everything: a build system (Make), tests, and a remote host (Gitee) become an automated <strong>pipeline</strong> that runs on every push and protects <code>master</code> from broken code.</p>
+  <p class="lead">You can already run your tests with one command, <code>pytest</code>. A <strong>pipeline</strong> hands that command to a server so it runs on <em>every</em> change, on a clean machine, with no one having to remember. <strong>Continuous Integration (CI)</strong> automatically tests every change the moment it arrives; <strong>Continuous Delivery (CD)</strong> automatically packages the verified result so it's always ready to ship. We build both on Gitee with <strong>Gitee Go</strong>.</p>
 
-  <h3>Testing pure functions</h3>
-  <p>Because Lab 4 separated the game logic into <code>board.cpp</code>, we can test it directly: no keyboard required. A test program calls functions like <code>checkWinner</code> with known inputs and verifies the outputs. Crucially, it signals success or failure through its <strong>exit code</strong>: <code>0</code> means all tests passed, non-zero means something failed. That exit code is what the pipeline watches.</p>
-
-  <h3>A test target in the Makefile</h3>
-  <p>We add a rule that compiles the test program against <code>board.cpp</code>, and a <code>test</code> rule that runs it:</p>
-  <pre><code>test_board: tests/test_board.cpp src/board.cpp
-	$(CXX) $(CXXFLAGS) -o test_board tests/test_board.cpp src/board.cpp
-
-test: test_board
-	./test_board</code></pre>
-  <p>Then <code>make test</code> builds and runs the tests. Because the test program returns a non-zero exit code on failure, <code>make test</code> itself fails too, which is exactly the signal CI needs.</p>
-
-  <h3>Gitee Go</h3>
-  <p>Gitee Go is Gitee's built-in CI/CD. You enable it on the repository, and it stores pipeline definitions as YAML files in a <code>.workflow/</code> folder. A typical pipeline has stages that run on every push:</p>
-  <pre><code><span class="k">checkout</span> → <span class="k">install tools</span> → <span class="k">make</span> → <span class="k">make test</span></code></pre>
+  <h3>1 · The CI loop: pull → test → report</h3>
+  <p>On a shared repository, many people push commits. Without automation, a broken change can slip onto <code>master</code> and block the whole team ("but it worked on my machine!"). CI removes that risk: every time someone pushes (or opens a Pull Request), a fresh, clean machine runs the same steps you do:</p>
+  <pre><code><span class="k">checkout</span>  (pull the new commit)
+   → <span class="k">install</span>   (get the tools: <span class="k">pip install pytest</span>)
+   → <span class="k">test</span>      (run the suite: <span class="k">pytest</span>)
+   → <span class="k">report</span>    (green = passed, red = a test failed)</code></pre>
   <ul>
-    <li>Each push triggers the pipeline; you watch it run and read the logs.</li>
-    <li>A passing run is <span style="color:var(--green);font-weight:700">green</span>; a failing one is <span style="color:var(--coral);font-weight:700">red</span>.</li>
-    <li>Gitee Go provides free build minutes, generous for a class, so every student can run pipelines.</li>
-    <li>A <strong>PR pipeline</strong> can <em>gate</em> merges: a Pull Request whose tests fail cannot be merged.</li>
+    <li>It runs on a <strong>clean machine</strong>, so it catches "works on my machine" problems — uncommitted files, a missing dependency, a test that only passed because of leftover state.</li>
+    <li>The result is instant feedback: a <span style="color:var(--green);font-weight:700">green</span> check or a <span style="color:var(--coral);font-weight:700">red</span> X next to the commit, with logs you can read.</li>
+    <li>Wired to Pull Requests, it becomes a <strong>gate</strong>: a PR whose pipeline is red cannot be merged, so broken code never reaches <code>master</code>.</li>
   </ul>
+  <p>This works only because the tests are <strong>scriptable</strong> — one command, <code>pytest</code>, that the robot can run exactly as you do.</p>
 
-  <div class="callout tip"><span class="tag">This is CD too</span><p>Without Docker, "delivery" here means the pipeline produces a verified, runnable build (an artifact) and you tag a release on Gitee: a reliable, automated path from commit to shippable program.</p></div>
+  <h3>2 · Configuring the pipeline on Gitee</h3>
+  <p><strong>On gitee.com:</strong></p>
+  <ol>
+    <li>Open your repository → the <strong>Services</strong> (服务) tab → enable <strong>Gitee Go</strong> (码云流水线). Free build minutes are generous for a class.</li>
+    <li>Choose <strong>Create pipeline</strong> and start from the <strong>Python</strong> template. Gitee stores the pipeline as a YAML file under a <code>.workflow/</code> folder in your repo, so it is versioned with your code.</li>
+    <li>Edit the YAML so its steps match what you run locally, commit it, and the pipeline starts firing on every push.</li>
+  </ol>
+  <p>Here is the whole pipeline file for our project, with every key explained (Gitee's template editor supplies the exact key names, which evolve — map these concepts onto it):</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># .workflow/master-pipeline.yml</span>
+version: '1.0'
+name: master-pipeline
+displayName: TicTacToe
+triggers:                            <span class="c"># WHEN the pipeline runs</span>
+  trigger: auto                      <span class="c"># automatically, with no manual click</span>
+  push:
+    branches:
+      include:
+        - master                     <span class="c"># any push to master fires it</span>
+stages:                              <span class="c"># ordered phases; each runs only if the previous passed</span>
+  - name: test
+    displayName: Test
+    strategy: naturally               <span class="c"># run this stage's steps in their listed order</span>
+    trigger: auto
+    steps:
+      - step: build@python            <span class="c"># a Python environment, version of your choice</span>
+        name: run_tests
+        displayName: Run pytest
+        pythonVersion: '3.12'
+        commands:                     <span class="c"># the same commands you run locally</span>
+          - pip install pytest        <span class="c">#   get the test runner</span>
+          - pytest                    <span class="c">#   discover &amp; run every test_*.py</span></code></pre>
+  </div>
+  <ul>
+    <li><code>version</code> / <code>name</code> / <code>displayName</code> — the file-format version, the pipeline's id, and the label shown in the Gitee Go UI.</li>
+    <li><code>triggers</code> — when it runs. <code>trigger: auto</code> means run automatically; <code>push.branches.include: [master]</code> limits it to pushes to <code>master</code>. (You can add a <code>pull_request</code> trigger to also gate merges.)</li>
+    <li><code>stages</code> — ordered phases, <strong>fail-fast</strong>: if the <code>test</code> stage fails the pipeline stops and goes red. <code>strategy: naturally</code> runs a stage's steps in their listed order.</li>
+    <li><code>step: build@python</code> — the step's <em>type</em>: Gitee Go's Python environment. <code>pythonVersion</code> picks the interpreter (like the Maven template's <code>jdkVersion</code>), so you don't install Python — you just list <code>commands</code>.</li>
+    <li><code>commands</code> — the shell commands, top to bottom: <code>pip install pytest</code> to get the runner, then <code>pytest</code>. <code>pytest</code> returns a non-zero exit code if any test fails, which fails the step and reddens the pipeline.</li>
+  </ul>
+  <p>Push, then watch it run: green on success, red on failure with the failing assertion in the logs. Break a test on purpose to see red, fix it to see green.</p>
+
+  <h3>3 · Adding CD: delivering the verified code</h3>
+  <p>CI proves the change is <em>good</em>. <strong>CD</strong> takes the next step: it automatically turns that verified change into something you can ship. With a server you would <em>deploy</em> (Continuous Deployment); without one, we <em>deliver</em> (Continuous Delivery) — the pipeline publishes a tested, versioned <strong>release</strong> of the code, so a release is always one step away.</p>
+  <p>You "update the pipeline accordingly" by adding a <strong>stage after</strong> <code>test</code>. Because stages are sequential and fail-fast, this <code>release</code> stage only runs when the tests have already passed:</p>
+  <pre><code>stages:
+  - name: test                 <span class="c"># (the CI stage from section 2)</span>
+    <span class="c"># ... build@python: pip install pytest, pytest ...</span>
+
+  - name: release              <span class="c"># the CD stage — runs only if test was green</span>
+    displayName: Publish
+    strategy: naturally
+    trigger: auto
+    steps:
+      - step: publish@release_artifacts    <span class="c"># publish a versioned release</span>
+        name: publish_release_artifacts
+        displayName: Publish
+        version: 1.0.0.0
+        autoIncrement: true                <span class="c"># bump the version automatically each release</span></code></pre>
+  <ul>
+    <li>Putting <code>release</code> <em>after</em> <code>test</code> is the gate: stages are fail-fast, so an untested or failing change never reaches this stage.</li>
+    <li><code>step: publish@release_artifacts</code> — publishes the verified code as a numbered release on Gitee.</li>
+    <li><code>version</code> + <code>autoIncrement</code> — the release version (<code>1.0.0.0</code>), bumped automatically each run so every delivery is uniquely versioned.</li>
+    <li>The pipeline is now the full loop: <strong>pull → test → release</strong>. Every push to <code>master</code> yields a tested, versioned release with no manual steps.</li>
+  </ul>
+  <div class="callout tip"><span class="tag">Delivery vs deployment</span><p>This is Continuous <em>Delivery</em>: the pipeline publishes a verified, versioned release that is always ready to ship. With a server, the same final stage would instead <em>deploy</em> the code to production automatically — full Continuous <em>Deployment</em>. You'll publish a <code>v1.0</code> release this way in the final project.</p></div>
 
   <div class="next-prev">
     <a href="#m5-lab">← Lab 4</a>

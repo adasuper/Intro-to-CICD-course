@@ -6,8 +6,8 @@
 
   <h3>How a conflict arises</h3>
   <p>Git merges most parallel work automatically. A conflict happens only in one specific situation: <strong>two people change the same lines of the same file</strong>, based on the same starting point, and both try to share their version. Git cannot know which one is "right", so it stops and asks a human to decide.</p>
-  <p>Let's walk through it concretely with two teammates, <strong>Alice</strong> and <strong>Bob</strong>, who each cloned the same <code>hello</code> repository. Both start from the same commit, in which <code>hello.cpp</code>'s greeting line reads:</p>
-  <pre><code>std::cout &lt;&lt; <span class="s">"toolchain OK\n"</span>;</code></pre>
+  <p>Let's walk through it concretely with two teammates, <strong>Alice</strong> and <strong>Bob</strong>, who each cloned the same <code>hello</code> repository. Both start from the same commit, in which <code>hello.py</code>'s greeting line reads:</p>
+  <pre><code>print(<span class="s">"toolchain OK"</span>)</code></pre>
 
   <h3>Setup: add your teammate to the repository</h3>
   <p>For two people to push to the <em>same</em> repository, the owner must first grant the other access. A freshly created Gitee repo is private to its owner, so Bob couldn't push to Alice's <code>hello</code> repo until she adds him as a member. Here is how Alice (the owner) does it:</p>
@@ -31,23 +31,23 @@
 
   <ol class="conflict-steps">
     <li><strong>Both edit the same line.</strong> Independently, each rewrites the greeting to their own taste:
-      <pre style="margin:8px 0"><code><span class="c">// Alice changes it to:</span>
-std::cout &lt;&lt; <span class="s">"Hello, world!\n"</span>;
+      <pre style="margin:8px 0"><code><span class="c"># Alice changes it to:</span>
+print(<span class="s">"Hello, world!"</span>)
 
-<span class="c">// Bob changes it to:</span>
-std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
+<span class="c"># Bob changes it to:</span>
+print(<span class="s">"Hi there!"</span>)</code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill chg">"Hello, world!"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill chg">"Hi there!"</div></td></tr></tbody></table></li>
     <li><strong>Alice ships first.</strong> Her push succeeds because nobody else has pushed since she cloned:
       <pre style="margin:8px 0"><code><span class="c"># Alice (Repo1)</span>
-<span class="k">git</span> add hello.cpp
+<span class="k">git</span> add hello.py
 <span class="k">git</span> commit -m <span class="s">"reword the greeting"</span>
 <span class="k">git</span> push                     <span class="c"># ✓ remote now has Alice's line</span></code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill chg">"Hello, world!"</div></td><td><div class="fill chg">"Hello, world!"</div></td><td><div class="fill given">"toolchain OK"</div></td><td><div class="fill given">"Hi there!"</div></td></tr></tbody></table></li>
     <li><strong>Bob's push is rejected.</strong> Bob committed locally too, but the remote moved ahead of him, so Git refuses the push:
       <pre style="margin:8px 0"><code><span class="c"># Bob (Repo2)</span>
-<span class="k">git</span> add hello.cpp
+<span class="k">git</span> add hello.py
 <span class="k">git</span> commit -m <span class="s">"shorten the greeting"</span>
 <span class="k">git</span> push
 <span class="c"># ! [rejected]  (non-fast-forward)</span>
@@ -58,24 +58,24 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
       <p style="margin:6px 0 0;font-size:13px;color:var(--ink-2,#555)">The push changed nothing on the remote (it was rejected), so Bob's commit lives only in his local repository, one step behind the remote.</p></li>
     <li><strong>Bob pulls, and the conflict surfaces.</strong> The pull downloads Alice's commit and tries to merge it with Bob's. Because they touched the same line, Git can't auto-merge:
       <pre style="margin:8px 0"><code><span class="k">git</span> pull
-<span class="c"># Auto-merging hello.cpp</span>
-<span class="c"># CONFLICT (content): Merge conflict in hello.cpp</span>
+<span class="c"># Auto-merging hello.py</span>
+<span class="c"># CONFLICT (content): Merge conflict in hello.py</span>
 <span class="c"># Automatic merge failed; fix conflicts and then commit the result.</span>
 
 <span class="k">git</span> status
 <span class="c"># Unmerged paths:</span>
-<span class="c">#   both modified:   hello.cpp</span></code></pre>
+<span class="c">#   both modified:   hello.py</span></code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hi there!"</div></td><td><div class="fill cflct">⚠ conflict (both)</div></td></tr></tbody></table>
       <p style="margin:6px 0 0;font-size:13px;color:var(--ink-2,#555)">The merge isn't committed yet, so Bob's local repository still holds his own commit; only his <em>workspace</em> file now carries the conflict markers.</p></li>
   </ol>
 
   <h3>Reading the conflict markers</h3>
-  <p>Git rewrites the conflicting region of <code>hello.cpp</code> in place, wrapping <em>both</em> versions in markers. Bob opens the file and sees:</p>
+  <p>Git rewrites the conflicting region of <code>hello.py</code> in place, wrapping <em>both</em> versions in markers. Bob opens the file and sees:</p>
   <pre><code><span class="k">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> HEAD
-  std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;        <span class="c">// Bob's version (his local HEAD)</span>
+  print(<span class="s">"Hi there!"</span>)             <span class="c"># Bob's version (his local HEAD)</span>
 <span class="k">=======</span>
-  std::cout &lt;&lt; <span class="s">"Hello, world!\n"</span>;     <span class="c">// Alice's version (from the remote)</span>
+  print(<span class="s">"Hello, world!"</span>)         <span class="c"># Alice's version (from the remote)</span>
 <span class="k">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> origin/master</code></pre>
   <ul>
     <li><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> begins <em>your</em> side (Bob's current commit).</li>
@@ -86,12 +86,12 @@ std::cout &lt;&lt; <span class="s">"Hi there!\n"</span>;</code></pre>
   <h3>Resolving it</h3>
   <ol class="conflict-steps">
     <li><strong>Edit the file to the single correct result</strong>, deleting all three marker lines. Bob talks to Alice and they agree on one wording:
-      <pre style="margin:8px 0"><code>  std::cout &lt;&lt; <span class="s">"Hello there!\n"</span>;</code></pre>
+      <pre style="margin:8px 0"><code>  print(<span class="s">"Hello there!"</span>)</code></pre>
       <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">In VS Code, the merge editor shows <em>Accept Current</em> / <em>Accept Incoming</em> / <em>Accept Both</em> buttons above the conflict, but you can always just type the final line by hand, which is often clearest.</p>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hi there!"</div></td><td><div class="fill chg">"Hello there!"</div></td></tr></tbody></table></li>
     <li><strong>Mark it resolved</strong> by staging the file:
-      <pre style="margin:8px 0"><code><span class="k">git</span> add hello.cpp</code></pre>
+      <pre style="margin:8px 0"><code><span class="k">git</span> add hello.py</code></pre>
       <table class="loc status"><thead><tr><th>Repo A Workspace</th><th>Repo A Local Repository</th><th>Remote Repository</th><th>Repo B Local Repository</th><th>Repo B Workspace</th></tr></thead>
       <tbody><tr><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hello, world!"</div></td><td><div class="fill given">"Hi there!"</div></td><td><div class="fill given">"Hello there!"</div></td></tr></tbody></table>
       <p style="margin:6px 0 0;font-size:13px;color:var(--ink-2,#555)">Staging records the resolved file in the index. None of these five locations change yet, that happens at the commit.</p></li>

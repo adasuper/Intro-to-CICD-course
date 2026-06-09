@@ -1,173 +1,135 @@
 <!-- ============================== M5 LAB (LAB 4) ============================== -->
 <section class="page" id="m5-lab">
   <div class="eyebrow">Module 5 · Lab 4 · Class 10</div>
-  <h2 class="page-title">Lab 4: Build the Game with a Makefile</h2>
-  <p class="sub-meta">Split the game into logic, I/O, and an entry point, then write your own Makefile that builds it into a <code>build/</code> folder.</p>
+  <h2 class="page-title">Lab 4: Test the Game</h2>
+  <p class="sub-meta">Make the game's rules testable, then write a pytest suite that proves they work.</p>
 
-  <h3>1 · Split the game into source files</h3>
-  <p>The whole point of this lab is to write the <strong>Makefile</strong>, so all the C++ is given. Split the seed game into three layers, with headers in <code>include/</code> and sources in <code>src/</code>:</p>
+  <h3>1 · Make the logic testable</h3>
+  <p>To test the rules, they must be callable without running the input loop. Split the single <code>tictactoe.py</code> into two files: the <strong>logic</strong> in a <code>Board</code> class (no I/O), and the <strong>game loop</strong> that uses it. Then organise the project into <code>src/</code> and <code>tests/</code> as you saw in the lecture:</p>
   <pre><code>tictactoe/
-├── include/
-│   ├── Board.h     <span class="c"># pure logic: board state + rules + win detection</span>
-│   └── Game.h      <span class="c"># I/O: drawing the board, reading moves, the loop</span>
 ├── src/
-│   ├── Board.cpp
-│   ├── Game.cpp
-│   └── main.cpp    <span class="c"># entry point</span>
-└── Makefile        <span class="c"># you write this in Section 2</span></code></pre>
-  <p>Create each file at the path shown and paste in the code below.</p>
+│   ├── board.py        <span class="c"># the rules: a Board class, no input/print (given)</span>
+│   └── tictactoe.py    <span class="c"># the game loop, imports Board (given)</span>
+├── tests/
+│   └── test_board.py   <span class="c"># YOUR pytest tests (Section 2)</span>
+└── pyproject.toml      <span class="c"># tells pytest where the code lives</span></code></pre>
+  <p>The <code>pyproject.toml</code> at the root puts <code>src/</code> on the import path, so the imports below stay simple (<code>from board import Board</code>) even though the code now lives in a sub-folder:</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># pyproject.toml</span>
+[tool.pytest.ini_options]
+pythonpath = [<span class="s">"src"</span>]</code></pre>
+  </div>
 
-  <p><strong><code>include/Board.h</code></strong> — the pure logic (no I/O, so it can be tested without a keyboard later):</p>
-  <pre><code><span class="c">// include/Board.h</span>
-<span class="k">#ifndef</span> BOARD_H
-<span class="k">#define</span> BOARD_H
-<span class="k">#include</span> <span class="s">&lt;array&gt;</span>
+  <p><strong><code>board.py</code></strong> holds the pure logic, with the anti-diagonal bug already fixed:</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># board.py - pure game logic, no I/O</span>
+<span class="k">class</span> Board:
+    <span class="k">def</span> __init__(self):
+        self.cells = [<span class="s">'1'</span>, <span class="s">'2'</span>, <span class="s">'3'</span>, <span class="s">'4'</span>, <span class="s">'5'</span>, <span class="s">'6'</span>, <span class="s">'7'</span>, <span class="s">'8'</span>, <span class="s">'9'</span>]
 
-<span class="k">class</span> Board {
-<span class="k">public</span>:
-    Board();                                <span class="c">// empty board, cells labelled '1'..'9'</span>
-    <span class="k">bool</span> isValidMove(<span class="k">int</span> cell) <span class="k">const</span>;       <span class="c">// cell in 1..9 and not already taken</span>
-    <span class="k">void</span> applyMove(<span class="k">int</span> cell, <span class="k">char</span> player);  <span class="c">// place 'X' or 'O' at cell</span>
-    <span class="k">bool</span> isFull() <span class="k">const</span>;                    <span class="c">// all nine cells taken</span>
-    <span class="k">char</span> winner() <span class="k">const</span>;                    <span class="c">// 'X', 'O', or ' ' if none yet</span>
-    <span class="k">char</span> cellMark(<span class="k">int</span> cell) <span class="k">const</span>;          <span class="c">// what to display for cell 1..9</span>
-<span class="k">private</span>:
-    std::array&lt;<span class="k">char</span>, 9&gt; cells;
-};
-<span class="k">#endif</span></code></pre>
+    <span class="k">def</span> is_valid_move(self, cell):
+        <span class="k">return</span> 1 &lt;= cell &lt;= 9 <span class="k">and</span> self.cells[cell - 1] <span class="k">not in</span> (<span class="s">'X'</span>, <span class="s">'O'</span>)
 
-  <p><strong><code>src/Board.cpp</code></strong> — the implementation of that logic:</p>
-  <pre><code><span class="c">// src/Board.cpp</span>
-<span class="k">#include</span> <span class="s">"Board.h"</span>
+    <span class="k">def</span> apply_move(self, cell, player):
+        self.cells[cell - 1] = player
 
-Board::Board() {
-    cells = {<span class="s">'1'</span>,<span class="s">'2'</span>,<span class="s">'3'</span>,<span class="s">'4'</span>,<span class="s">'5'</span>,<span class="s">'6'</span>,<span class="s">'7'</span>,<span class="s">'8'</span>,<span class="s">'9'</span>};
-}
+    <span class="k">def</span> is_full(self):
+        <span class="k">return</span> all(c <span class="k">in</span> (<span class="s">'X'</span>, <span class="s">'O'</span>) <span class="k">for</span> c <span class="k">in</span> self.cells)
 
-<span class="k">bool</span> Board::isValidMove(<span class="k">int</span> cell) <span class="k">const</span> {
-    <span class="k">if</span> (cell &lt; 1 || cell &gt; 9) <span class="k">return</span> <span class="k">false</span>;
-    <span class="k">char</span> c = cells[cell - 1];
-    <span class="k">return</span> c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>;
-}
+    <span class="k">def</span> winner(self):
+        lines = [
+            (0, 1, 2), (3, 4, 5), (6, 7, 8),
+            (0, 3, 6), (1, 4, 7), (2, 5, 8),
+            (0, 4, 8), (2, 4, 6),
+        ]
+        <span class="k">for</span> a, b, c <span class="k">in</span> lines:
+            <span class="k">if</span> self.cells[a] <span class="k">in</span> (<span class="s">'X'</span>, <span class="s">'O'</span>) <span class="k">and</span> self.cells[a] == self.cells[b] == self.cells[c]:
+                <span class="k">return</span> self.cells[a]
+        <span class="k">return</span> <span class="s">' '</span>
 
-<span class="k">void</span> Board::applyMove(<span class="k">int</span> cell, <span class="k">char</span> player) {
-    cells[cell - 1] = player;
-}
+    <span class="k">def</span> cell_mark(self, cell):
+        <span class="k">return</span> self.cells[cell - 1]</code></pre>
+  </div>
 
-<span class="k">bool</span> Board::isFull() <span class="k">const</span> {
-    <span class="k">for</span> (<span class="k">char</span> c : cells)
-        <span class="k">if</span> (c != <span class="s">'X'</span> &amp;&amp; c != <span class="s">'O'</span>) <span class="k">return</span> <span class="k">false</span>;
-    <span class="k">return</span> <span class="k">true</span>;
-}
+  <p><strong><code>tictactoe.py</code></strong> is the input/output, importing <code>Board</code>. The <code>if __name__ == "__main__"</code> guard means importing this file does <em>not</em> start the game (so it never blocks a test):</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># tictactoe.py - the game's input/output, using the Board logic</span>
+<span class="k">from</span> board <span class="k">import</span> Board
 
-<span class="k">char</span> Board::winner() <span class="k">const</span> {
-    <span class="k">const</span> <span class="k">int</span> lines[8][3] = {
-        {0,1,2}, {3,4,5}, {6,7,8},
-        {0,3,6}, {1,4,7}, {2,5,8},
-        {0,4,8}, {2,4,6}
-    };
-    <span class="k">for</span> (<span class="k">auto</span>&amp; l : lines) {
-        <span class="k">char</span> a = cells[l[0]];
-        <span class="k">if</span> ((a == <span class="s">'X'</span> || a == <span class="s">'O'</span>) &amp;&amp; a == cells[l[1]] &amp;&amp; a == cells[l[2]])
-            <span class="k">return</span> a;
-    }
-    <span class="k">return</span> <span class="s">' '</span>;
-}
 
-<span class="k">char</span> Board::cellMark(<span class="k">int</span> cell) <span class="k">const</span> {
-    <span class="k">return</span> cells[cell - 1];
-}</code></pre>
+<span class="k">def</span> draw(board):
+    <span class="k">for</span> r <span class="k">in</span> range(3):
+        print(<span class="s">f" {board.cell_mark(r*3+1)}|{board.cell_mark(r*3+2)}|{board.cell_mark(r*3+3)}"</span>)
 
-  <p><strong><code>include/Game.h</code></strong> — the I/O layer, which owns a <code>Board</code>:</p>
-  <pre><code><span class="c">// include/Game.h</span>
-<span class="k">#ifndef</span> GAME_H
-<span class="k">#define</span> GAME_H
-<span class="k">#include</span> <span class="s">"Board.h"</span>
 
-<span class="k">class</span> Game {
-<span class="k">public</span>:
-    <span class="k">void</span> run();          <span class="c">// play one game to the end</span>
-<span class="k">private</span>:
-    <span class="k">void</span> draw() <span class="k">const</span>;   <span class="c">// print the board</span>
-    Board board;
-    <span class="k">char</span> player = <span class="s">'X'</span>;
-};
-<span class="k">#endif</span></code></pre>
+<span class="k">def</span> main():
+    board = Board()
+    player = <span class="s">'X'</span>
+    <span class="k">while</span> <span class="k">True</span>:
+        draw(board)
+        cell = input(<span class="s">f"Player {player}, cell 1-9: "</span>)
+        <span class="k">if</span> <span class="k">not</span> cell.isdigit() <span class="k">or</span> <span class="k">not</span> board.is_valid_move(int(cell)):
+            print(<span class="s">"invalid"</span>)
+            <span class="k">continue</span>
+        board.apply_move(int(cell), player)
+        <span class="k">if</span> board.winner() != <span class="s">' '</span>:
+            draw(board)
+            print(<span class="s">f"Player {player} wins!"</span>)
+            <span class="k">break</span>
+        <span class="k">if</span> board.is_full():
+            draw(board)
+            print(<span class="s">"Draw"</span>)
+            <span class="k">break</span>
+        player = <span class="s">'O'</span> <span class="k">if</span> player == <span class="s">'X'</span> <span class="k">else</span> <span class="s">'X'</span>
 
-  <p><strong><code>src/Game.cpp</code></strong> — drawing the board and the game loop:</p>
-  <pre><code><span class="c">// src/Game.cpp</span>
-<span class="k">#include</span> <span class="s">"Game.h"</span>
-<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
 
-<span class="k">void</span> Game::draw() <span class="k">const</span> {
-    <span class="k">for</span> (<span class="k">int</span> r = 0; r &lt; 3; ++r) {
-        std::cout &lt;&lt; <span class="s">' '</span> &lt;&lt; board.cellMark(r * 3 + 1)
-                  &lt;&lt; <span class="s">'|'</span> &lt;&lt; board.cellMark(r * 3 + 2)
-                  &lt;&lt; <span class="s">'|'</span> &lt;&lt; board.cellMark(r * 3 + 3) &lt;&lt; <span class="s">'\n'</span>;
-    }
-}
+<span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
+    main()</code></pre>
+  </div>
 
-<span class="k">void</span> Game::run() {
-    <span class="k">while</span> (<span class="k">true</span>) {
-        draw();
-        std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">", cell 1-9: "</span>;
-        <span class="k">int</span> cell;
-        std::cin &gt;&gt; cell;
-        <span class="k">if</span> (!board.isValidMove(cell)) {
-            std::cout &lt;&lt; <span class="s">"invalid\n"</span>;
-            <span class="k">continue</span>;
-        }
-        board.applyMove(cell, player);
-        <span class="k">if</span> (board.winner() != <span class="s">' '</span>) {
-            draw();
-            std::cout &lt;&lt; <span class="s">"Player "</span> &lt;&lt; player &lt;&lt; <span class="s">" wins!\n"</span>;
-            <span class="k">return</span>;
-        }
-        <span class="k">if</span> (board.isFull()) {
-            draw();
-            std::cout &lt;&lt; <span class="s">"Draw\n"</span>;
-            <span class="k">return</span>;
-        }
-        player = (player == <span class="s">'X'</span>) ? <span class="s">'O'</span> : <span class="s">'X'</span>;
-    }
-}</code></pre>
+  <h3>2 · Write your own tests</h3>
+  <p>Create <code>test_board.py</code> in <code>tests/</code> and write pytest tests for the <code>Board</code> class, modelled on the lecture (Class 9). Don't copy a finished file: build it from the requirements below. Two tests are given to show the shape: <em>arrange</em> a board with <code>apply_move</code>, then <em>assert</em> on <code>winner()</code> / <code>is_full()</code> / <code>is_valid_move()</code>:</p>
+  <div class="code-block">
+    <button class="btn-copy" data-copy>⧉ Copy</button>
+    <pre><code><span class="c"># test_board.py</span>
+<span class="k">from</span> board <span class="k">import</span> Board
 
-  <p><strong><code>src/main.cpp</code></strong> — the entry point, just three lines:</p>
-  <pre><code><span class="c">// src/main.cpp</span>
-<span class="k">#include</span> <span class="s">"Game.h"</span>
 
-<span class="k">int</span> main() {
-    Game game;
-    game.run();
-}</code></pre>
+<span class="k">def</span> test_row_win():
+    b = Board()
+    b.apply_move(1, <span class="s">'X'</span>); b.apply_move(2, <span class="s">'X'</span>); b.apply_move(3, <span class="s">'X'</span>)
+    <span class="k">assert</span> b.winner() == <span class="s">'X'</span>
 
-  <h3>2 · Write your own Makefile</h3>
-  <p>Now write the <code>Makefile</code> yourself, in the project root, modelled on the lecture (Class 9, Sections 9–10). Do not copy a finished file: build it from the requirements below. Remember that every recipe line must start with a real <kbd>Tab</kbd>.</p>
-  <div class="callout"><span class="tag">Your Makefile must</span>
+
+<span class="k">def</span> test_anti_diagonal_win():   <span class="c"># regression test for the Lab 3 bug</span>
+    b = Board()
+    b.apply_move(3, <span class="s">'X'</span>); b.apply_move(5, <span class="s">'X'</span>); b.apply_move(7, <span class="s">'X'</span>)
+    <span class="k">assert</span> b.winner() == <span class="s">'X'</span></code></pre>
+  </div>
+  <div class="callout"><span class="tag">Your suite must also test</span>
   <ol style="margin:0">
-    <li>Define variables: <code>CXX = g++</code>, <code>CXXFLAGS = -std=c++17 -Wall -Iinclude</code>, and <code>BUILD = build</code>.</li>
-    <li>Detect the shell with the <code>uname</code> check from the lecture, setting <code>EXE</code> (the program: <code>build/tictactoe</code>, or <code>build/tictactoe.exe</code> on Windows), <code>MKDIR</code>, <code>RMDIR</code>, and <code>RUN</code>.</li>
-    <li>Have a <strong>default target</strong> that links the three object files (<code>build/Board.o build/Game.o build/main.o</code>) into <code>$(EXE)</code>.</li>
-    <li>Have a <strong>pattern rule</strong> that compiles each <code>src/%.cpp</code> into <code>build/%.o</code>, listing the headers in <code>include/</code> as prerequisites so editing a header triggers a rebuild.</li>
-    <li>Have a rule that <strong>creates the <code>build/</code> folder</strong> before anything is compiled into it.</li>
-    <li>Declare <code>.PHONY</code> targets <code>run</code> (build, then run <code>$(EXE)</code>) and <code>clean</code> (delete the <code>build/</code> folder).</li>
+    <li>A <strong>column win</strong> (e.g. O on cells 1, 4, 7) is detected.</li>
+    <li><strong>No winner yet</strong>: a board with a couple of moves returns <code>' '</code> from <code>winner()</code>.</li>
+    <li>A <strong>full board</strong> makes <code>is_full()</code> return <code>True</code> (and an empty one returns <code>False</code>).</li>
+    <li><strong>Move validation</strong>: <code>is_valid_move</code> rejects a taken cell and an out-of-range cell (0 or 10), and accepts a free one.</li>
   </ol>
   </div>
-  <p>The only differences from the lecture's <code>hello</code> Makefile are the names: the program is <code>tictactoe</code>, and there are <em>three</em> source files instead of two.</p>
-
-  <p>Once your Makefile builds and runs the game, <strong>paste the finished file in the box below</strong> for submission:</p>
-  <div class="ws-bar"><span class="label">// paste your finished Makefile here</span></div>
+  <p>Once your tests pass, <strong>paste the finished <code>test_board.py</code> in the box below</strong> for submission:</p>
+  <div class="ws-bar"><span class="label">// paste your finished test_board.py here</span></div>
   <div class="fill" contenteditable="true" spellcheck="false" style="display:block;white-space:pre-wrap;min-height:260px;border:1px solid var(--line);border-radius:8px;padding:14px;font-size:12.5px;line-height:1.55"></div>
 
-  <h3>3 · Test your Makefile</h3>
-  <p>From the project root, run these three commands and check each behaves as described:</p>
-  <pre><code><span class="k">make</span>           <span class="c"># compiles src/*.cpp into build/*.o, links build/tictactoe</span>
-<span class="k">make</span> run       <span class="c"># builds if needed, then starts the game</span>
-<span class="k">make</span> clean     <span class="c"># deletes the whole build/ folder</span></code></pre>
+  <h3>3 · Run the tests</h3>
+  <p>From the project root:</p>
+  <pre><code><span class="k">python</span> src/tictactoe.py   <span class="c"># play the game (Ctrl+C to quit)</span>
+<span class="k">pytest</span>                  <span class="c"># discover &amp; run every test_*.py under tests/</span>
+<span class="k">pytest</span> -v               <span class="c"># the same, listing each test by name</span></code></pre>
   <ul>
-    <li><strong><code>make</code></strong> creates the <code>build/</code> folder and the executable inside it. Run <code>make</code> a second time: it should report everything is <em>up to date</em> and compile nothing.</li>
-    <li><strong><code>make run</code></strong> launches the game. Play through a win (e.g. X on cells 1, 2, 3) and a draw to confirm the logic works.</li>
-    <li><strong><code>make clean</code></strong> removes <code>build/</code> entirely, so <code>git status</code> shows only your source files and the <code>Makefile</code>.</li>
+    <li>A passing run is <span style="color:var(--green);font-weight:700">green</span> and ends with <code>N passed</code>.</li>
+    <li>To see a failure, temporarily change an expected value in a test (or break <code>board.py</code>): pytest turns <span style="color:var(--coral);font-weight:700">red</span> and shows the actual vs. expected value. Undo the change to go green again.</li>
+    <li>Running <code>pytest</code> creates a <code>.pytest_cache/</code> folder and <code>__pycache__/</code>, which you'll git-ignore below.</li>
   </ul>
 
   <h3>4 · Log your work &amp; commit via a PR</h3>
@@ -175,11 +137,11 @@ Board::Board() {
     <span class="tag">Open this lab in a new tab first</span>
     <p>The box in Section 2 and the log below are typed directly into this page and are <strong>not saved</strong>: navigating away will erase them. Open this page in a new tab, then use the print button at the end to save a PDF when you're done.</p>
   </div>
-  <p>Take the finished project through the Git workflow from Lab 3, and log every step below. <strong>Steps 1 and 2 are given as examples.</strong> Using the <strong>+ Add step</strong> button, add the remaining steps you take to reach the final state. Your steps <strong>must</strong> include:</p>
+  <p>Take the tested project through the Git workflow from Lab 3, and log every step below. <strong>Steps 1 and 2 are given as examples.</strong> Using the <strong>+ Add step</strong> button, add the remaining steps you take to reach the final state. Your steps <strong>must</strong> include:</p>
   <ul>
-    <li>doing all the new work on a <strong>task branch</strong> (you created <code>feature/make</code> in Step 1) — never commit directly to <code>master</code>;</li>
-    <li>adding your <code>Makefile</code> to the project;</li>
-    <li>editing <code>.gitignore</code> so the generated <code>build/</code> folder is excluded from version control;</li>
+    <li>doing all the new work on a <strong>task branch</strong> (you created <code>refactor</code> in Step 1), never committing directly to <code>master</code>;</li>
+    <li>adding your <code>test_board.py</code> to the project;</li>
+    <li>editing <code>.gitignore</code> so <code>__pycache__/</code> and <code>.pytest_cache/</code> are excluded;</li>
     <li>committing and pushing the task branch to Gitee;</li>
     <li>opening a <strong>Pull Request</strong> to merge the task branch into <code>master</code>;</li>
     <li>after the merge, <strong>deleting the task branch</strong> on Gitee and locally.</li>
@@ -190,14 +152,14 @@ Board::Board() {
 
   <div id="lab4-steps">
     <div class="step">
-      <div class="head"><span class="badge">Step 1</span><span class="instr">Create a feature branch <code>feature/make</code> off <code>master</code> and switch to it.</span></div>
-      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">git switch -c feature/make</span></p>
+      <div class="head"><span class="badge">Step 1</span><span class="instr">Create a refactor branch <code>refactor</code> off <code>master</code> and switch to it.</span></div>
+      <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">git switch -c refactor</span></p>
       <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">N/A</span></p>
     </div>
     <div class="step">
-      <div class="head"><span class="badge">Step 2</span><span class="instr">Add the project's source files to your workspace.</span></div>
+      <div class="head"><span class="badge">Step 2</span><span class="instr">Refactor the project: split the game into <code>board.py</code> (logic) and <code>tictactoe.py</code> (the loop), move them into <code>src/</code>, and add <code>pyproject.toml</code> as shown in Section 1.</span></div>
       <p style="margin:0 0 6px"><strong>Git command(s) used:</strong> <span class="fill given" style="display:block;min-width:240px">N/A</span></p>
-      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">Create the <code>include/</code> and <code>src/</code> folders and add the five source files (Board.h, Game.h, Board.cpp, Game.cpp, main.cpp) at the paths shown in Section 1.</span></p>
+      <p style="margin:0"><strong>Non-git operations:</strong> <span class="fill given" style="display:block">Create <code>src/board.py</code>, <code>src/tictactoe.py</code>, and <code>pyproject.toml</code>; confirm <code>python src/tictactoe.py</code> still plays the game.</span></p>
     </div>
   </div>
   <button class="btn-add" data-addstep="#lab4-steps" data-tpl="#lab4-step-tpl">+ Add step</button>
@@ -211,9 +173,9 @@ Board::Board() {
     </div>
   </template>
 
-  <div class="callout"><span class="tag">Done when</span><p>A single <code>make</code> builds a working <code>tictactoe</code> in the <code>build/</code> folder, <code>make run</code> plays the game, <code>make clean</code> removes <code>build/</code>, the generated folder is gitignored (but the <code>Makefile</code> and sources are committed), and the project is merged into <code>master</code> via a PR.</p></div>
+  <div class="callout"><span class="tag">Done when</span><p>The rules live in <code>src/board.py</code>, your tests live in <code>tests/</code>, <code>pytest</code> runs your suite green (covering wins in every direction, no-winner, draw, and move validation), the generated folders are gitignored, and the work is merged into <code>master</code> via a PR.</p></div>
 
-  <div class="callout tip"><span class="tag">Submit</span><p>Save this page as a PDF for submission. It should show your finished <strong>Makefile pasted in Section 2</strong> and the completed <strong>work log in Section 4</strong>.</p></div>
+  <div class="callout tip"><span class="tag">Submit</span><p>Save this page as a PDF for submission. It should show your finished <strong>test_board.py pasted in Section 2</strong> and the completed <strong>work log in Section 4</strong>.</p></div>
   <div class="ws-bar"><span class="label">// Lab 4 submission</span><button class="btn-print" data-print>⎙ Print / Save as PDF</button></div>
 
   <div class="next-prev">

@@ -6,7 +6,7 @@
 
   <div class="callout tip">
     <span class="tag">Goal</span>
-    <p>By the end of this lab you have a working C++ toolchain, a Gitee account with SSH access, and you have successfully pushed a small program to a Gitee repository.</p>
+    <p>By the end of this lab you have a working Python toolchain, a Gitee account with SSH access, and you have successfully pushed a small program to a Gitee repository.</p>
   </div>
 
   <div class="callout">
@@ -38,71 +38,43 @@
 <span class="k">git</span> config --global user.name <span class="s">"Your Name"</span>
 <span class="k">git</span> config --global user.email <span class="s">"you@example.com"</span></code></pre>
 
-  <h3>2 · Install a C++ compiler (g++)</h3>
-  <p>You need the GCC / g++ compiler. On Windows, pick <strong>one</strong> of the two options below: Option A is the simplest for beginners.</p>
-
+  <h3>2 · Install Python 3</h3>
+  <p>You need <strong>Python 3</strong> (3.10 or newer). On Windows, install it from python.org and be sure to add it to your PATH.</p>
   <div class="os">
-    <div class="os-h">Windows · Option A: WinLibs (easiest: download &amp; unzip)</div>
-    <div class="dl-row"><a class="dl" href="https://winlibs.com/" target="_blank" rel="noopener"><span class="arr">⇣</span> winlibs.com</a></div>
+    <div class="os-h">Windows</div>
+    <div class="dl-row"><a class="dl" href="https://www.python.org/downloads/" target="_blank" rel="noopener"><span class="arr">⇣</span> python.org/downloads</a></div>
     <ol>
-      <li>On WinLibs, under the newest release download the <strong>UCRT runtime · Win64 · Zip archive</strong> (the "GCC + MinGW-w64 (UCRT)" build).</li>
-      <li>Extract the zip to <code>C:\mingw64</code>: you should end up with a <code>C:\mingw64\bin</code> folder.</li>
-      <li>Add <code>C:\mingw64\bin</code> to your <strong>PATH</strong>: press <kbd>Win</kbd>+<kbd>R</kbd>, run <code>sysdm.cpl</code> → <em>Advanced</em> → <em>Environment Variables</em> → select <em>Path</em> → <em>Edit</em> → <em>New</em> → paste the folder → OK.</li>
+      <li>Download the latest <strong>Windows installer (64-bit)</strong> from the link.</li>
+      <li>Run it and, on the first screen, <strong>tick "Add python.exe to PATH"</strong> before clicking <em>Install Now</em>. This is the step people forget; without it the <code>python</code> command isn't found.</li>
       <li>Close and reopen Git Bash so the new PATH takes effect.</li>
     </ol>
   </div>
-
-  <div class="os">
-    <div class="os-h">Windows · Option B: MSYS2 (a full toolchain manager)</div>
-    <div class="dl-row"><a class="dl" href="https://www.msys2.org/" target="_blank" rel="noopener"><span class="arr">⇣</span> msys2.org</a></div>
-    <ol>
-      <li>Download and run the installer; keep the default location <code>C:\msys64</code>.</li>
-      <li>When it finishes, open <strong>"MSYS2 UCRT64"</strong> from the Start menu.</li>
-      <li>Update the package database: run this, let the window close if asked, reopen it and run again until it reports "nothing to do":
-        <pre style="margin:8px 0"><code><span class="k">pacman</span> -Syu</code></pre></li>
-      <li>Install the compiler toolchain (press <kbd>Enter</kbd> to accept all packages):
-        <pre style="margin:8px 0"><code><span class="k">pacman</span> -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain</code></pre></li>
-      <li>Add <code>C:\msys64\ucrt64\bin</code> to your Windows <strong>PATH</strong> (same steps as Option A), then reopen Git Bash.</li>
-    </ol>
-    <div class="mirror">In China, set MSYS2 to a domestic mirror <em>first</em>: it is far faster. Follow the Tsinghua guide at <a href="https://mirrors.tuna.tsinghua.edu.cn/help/msys2/" target="_blank" rel="noopener">mirrors.tuna.tsinghua.edu.cn/help/msys2/</a>: add the <code>tuna</code> <code>Server&nbsp;=</code> lines to the top of the <code>mirrorlist.*</code> files in <code>C:\msys64\etc\pacman.d\</code>, then run <code>pacman -Syu</code>.</div>
-  </div>
-
   <div class="os">
     <div class="os-h">macOS / Linux</div>
-    <p style="margin:6px 0 0">macOS: <code>xcode-select --install</code> (installs clang/g++ and git). Linux: <code>sudo apt install build-essential</code>.</p>
+    <p style="margin:6px 0 0">macOS: <code>brew install python</code>, or use the python.org installer. Linux: <code>sudo apt install python3 python3-pip</code>. On macOS/Linux the commands are usually <code>python3</code> and <code>pip3</code>.</p>
   </div>
+  <p>Verify in a fresh terminal (both the interpreter and its package installer, pip):</p>
+  <pre><code><span class="k">python</span> --version
+<span class="k">pip</span> --version</code></pre>
+  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">If <code>python</code> isn't found on Windows, reopen the terminal; if it still fails, re-run the installer and confirm "Add python.exe to PATH" was ticked. On macOS/Linux use <code>python3</code>/<code>pip3</code>.</p>
 
-  <p>Verify in a fresh terminal:</p>
-  <pre><code><span class="k">g++</span> --version</code></pre>
+  <h3>3 · Install pytest (the test runner)</h3>
+  <p><strong>pytest</strong> is the testing framework used from Module 5 onward. It installs with <code>pip</code>, Python's package manager, which came with Python in Step 2:</p>
+  <pre><code><span class="k">pip</span> install pytest</code></pre>
+  <div class="mirror">In China, PyPI can be slow. Use the Tsinghua mirror: <code>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pytest</code> (or set it as your default, per the <a href="https://mirrors.tuna.tsinghua.edu.cn/help/pypi/" target="_blank" rel="noopener">Tsinghua PyPI guide</a>).</div>
+  <p style="margin:10px 0 0">Verify:</p>
+  <pre><code><span class="k">pytest</span> --version</code></pre>
+  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">If <code>pytest</code> isn't found directly, run it via the module form <code>python -m pytest --version</code> (and use <code>pip3</code>/<code>python3</code> on macOS/Linux).</p>
 
-  <h3>3 · Make (your build tool)</h3>
-  <p><strong>Make</strong> is the build system used from Module 5 onward. You do <em>not</em> need a separate download: it ships with the compiler toolchain you just installed.</p>
-  <div class="os">
-    <div class="os-h">Windows</div>
-    <p style="margin:6px 0 0">Both compiler options from Step 2 ship the tool as <code>mingw32-make.exe</code>, inside the same <code>bin</code> folder you already added to your PATH. To be able to type plain <code>make</code> (as this course does), copy that file to <code>make.exe</code> in the same folder:</p>
-    <ul style="margin:6px 0 0">
-      <li><strong>Option A (WinLibs):</strong> copy <code>C:\mingw64\bin\mingw32-make.exe</code> → <code>C:\mingw64\bin\make.exe</code></li>
-      <li><strong>Option B (MSYS2):</strong> copy <code>C:\msys64\ucrt64\bin\mingw32-make.exe</code> → <code>C:\msys64\ucrt64\bin\make.exe</code></li>
-    </ul>
-    <p style="margin:6px 0 0">(Just copy and rename, keeping the original <code>mingw32-make.exe</code> in place. Then reopen Git Bash so it picks up the new name.)</p>
-  </div>
-  <div class="os">
-    <div class="os-h">macOS / Linux</div>
-    <p style="margin:6px 0 0">macOS: <code>make</code> comes with the Xcode command-line tools from Step 2. Linux: it is part of <code>build-essential</code>.</p>
-  </div>
-  <p>Verify:</p>
-  <pre><code><span class="k">make</span> --version</code></pre>
-
-  <h3>4 · Install VS Code &amp; extensions</h3>
-  <p>VS Code is the editor. Install it, then add two Microsoft extensions from inside VS Code.</p>
+  <h3>4 · Install VS Code &amp; the Python extension</h3>
+  <p>VS Code is the editor. Install it, then add Microsoft's Python extension from inside VS Code.</p>
   <div class="dl-row"><a class="dl" href="https://code.visualstudio.com/Download" target="_blank" rel="noopener"><span class="arr">⇣</span> code.visualstudio.com</a></div>
   <ol>
     <li>Download and install VS Code for your operating system.</li>
     <li>Open VS Code → click the <strong>Extensions</strong> icon in the left bar (or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>).</li>
-    <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools" target="_blank" rel="noopener">C/C++</a></strong> (by Microsoft).</li>
-    <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.makefile-tools" target="_blank" rel="noopener">Makefile Tools</a></strong> (by Microsoft).</li>
+    <li>Search for and install <strong><a class="inline" href="https://marketplace.visualstudio.com/items?itemName=ms-python.python" target="_blank" rel="noopener">Python</a></strong> (by Microsoft) — it bundles Pylance plus run/debug and test support.</li>
   </ol>
-  <div class="callout tip"><span class="tag">Tip</span><p>The first time you build a C++ file, VS Code may ask which compiler to use: choose the <code>g++</code> you installed in Step 2.</p></div>
+  <div class="callout tip"><span class="tag">Tip</span><p>The first time you run a Python file, VS Code may ask which interpreter to use: choose the <strong>Python 3</strong> you installed in Step 2 (Command Palette with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <em>Python: Select Interpreter</em>).</p></div>
 
   <h3>5 · Create a Gitee account &amp; SSH key</h3>
   <p>Gitee hosts your repositories and runs the CI pipeline. To push your commits up to Gitee, your computer has to prove <em>who it is</em> every time it connects. There are two ways to do that, <strong>HTTPS</strong> and <strong>SSH</strong>, and it is worth understanding the difference before you set one up.</p>
@@ -146,27 +118,25 @@
   <div class="callout"><span class="tag">"Does not provide shell access" is success</span><p>A correct test prints something like <em>"Hi user(@user)! You've successfully authenticated, but GITEE.COM does not provide shell access."</em> That is <strong>not an error</strong>. The first half means your key worked and Gitee knows who you are. The second half is normal: the <code>git</code> account exists only to handle <code>push</code>/<code>pull</code>, not to give you a command prompt, so it logs you out instead of opening a shell (which is why we pass <code>-T</code>). A real failure looks different: <code>Permission denied (publickey)</code>.</p></div>
 
   <h3>6 · Smoke test (the checkpoint)</h3>
-  <p>Prove the whole toolchain works end-to-end. First, pick a folder to work in and create the file you'll compile.</p>
+  <p>Prove the whole toolchain works end-to-end. First, pick a folder to work in and create the file you'll run.</p>
   <ol>
     <li>Choose a home for your project: somewhere easy to find, <em>not</em> inside a synced folder like OneDrive or Desktop. A path with no spaces or non-English characters avoids headaches later. For example:
       <pre style="margin:8px 0"><code><span class="c"># create the folder and move into it</span>
 <span class="k">mkdir</span> -p ~/dev/hello
 <span class="k">cd</span> ~/dev/hello</code></pre>
       <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)"><code>mkdir -p ~/dev/hello</code> makes a <code>dev/hello</code> folder in your home directory (<code>-p</code> creates parents as needed and won't complain if it already exists); <code>cd</code> moves your terminal <em>into</em> that folder, so every command after this runs there.</p></li>
-    <li>Create <code>hello.cpp</code> in this folder. Either run the <code>echo</code> command in the block below, or, if you prefer, open the folder in VS Code (<code>code .</code>) and create <code>hello.cpp</code> by hand with the same contents.</li>
+    <li>Create <code>hello.py</code> in this folder. Either run the <code>echo</code> command in the block below, or, if you prefer, open the folder in VS Code (<code>code .</code>) and create <code>hello.py</code> by hand with the same contents.</li>
     <li>Create the remote repository on Gitee so you have somewhere to push to. On <a class="inline" href="https://gitee.com/" target="_blank" rel="noopener">gitee.com</a>: <strong>+</strong> (top-right) → <strong>New Repository</strong>. Set <strong>Repository name</strong> to <code>hello</code>, and, importantly, leave it <strong>empty</strong>: do <em>not</em> tick "Initialize this repository", and don't add a README, <code>.gitignore</code>, or licence. An empty repo lets your local commits push cleanly without conflicts. Click <strong>Create</strong>.</li>
   </ol>
-  <div class="callout"><span class="tag">This folder is your workspace</span><p>The folder you just made is your <strong>local workspace</strong>: the actual files on your disk that you edit and compile. When you run <code>git init</code> below, Git starts tracking changes <em>inside</em> this folder. How a file moves from your workspace all the way to Gitee (workspace → staging → local repo → remote) is the core of the <strong>next class</strong>, so don't worry about the <code>git</code> commands' details yet: just run them and watch it work.</p></div>
+  <div class="callout"><span class="tag">This folder is your workspace</span><p>The folder you just made is your <strong>local workspace</strong>: the actual files on your disk that you edit and run. When you run <code>git init</code> below, Git starts tracking changes <em>inside</em> this folder. How a file moves from your workspace all the way to Gitee (workspace → staging → local repo → remote) is the core of the <strong>next class</strong>, so don't worry about the <code>git</code> commands' details yet: just run them and watch it work.</p></div>
   <p>Now run the full sequence from inside that folder:</p>
-  <pre><code><span class="c"># compile and run a hello program</span>
-<span class="k">echo</span> <span class="s">'#include &lt;iostream&gt;
-int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
-<span class="k">g++</span> hello.cpp -o hello
-./hello
+  <pre><code><span class="c"># write and run a hello program</span>
+<span class="k">echo</span> <span class="s">'print("toolchain OK")'</span> &gt; hello.py
+<span class="k">python</span> hello.py
 
 <span class="c"># version it and push to a new empty Gitee repo</span>
 <span class="k">git</span> init
-<span class="k">git</span> add hello.cpp
+<span class="k">git</span> add hello.py
 <span class="k">git</span> commit -m <span class="s">"first commit: hello"</span>
 <span class="k">git</span> remote add origin git@gitee.com:&lt;your-user&gt;/hello.git
 <span class="k">git</span> push -u origin master</code></pre>
@@ -174,7 +144,7 @@ int main(){ std::cout &lt;&lt; "toolchain OK\n"; }'</span> &gt; hello.cpp
 
   <div class="callout">
     <span class="tag">Done when</span>
-    <p>You can run <code>./hello</code>, and <code>hello.cpp</code> appears in your repository on the Gitee website.</p>
+    <p>You can run <code>python hello.py</code>, and <code>hello.py</code> appears in your repository on the Gitee website.</p>
   </div>
 
   <div class="next-prev">

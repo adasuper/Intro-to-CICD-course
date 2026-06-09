@@ -7,38 +7,38 @@
   <h3>Why ignore files at all?</h3>
   <p>A repository should hold <strong>source</strong>, the files a human writes, and nothing that can be <em>regenerated</em> from that source or that only makes sense on one person's machine. Committing everything else causes four concrete problems:</p>
   <ul>
-    <li><strong>Bloat.</strong> Compiled binaries and build folders are large and change on every build, inflating the repository and slowing down every clone.</li>
+    <li><strong>Bloat.</strong> Generated caches and dependency folders are large or numerous and change constantly, inflating the repository and slowing down every clone.</li>
     <li><strong>Noise.</strong> Generated files flood <code>git status</code> and <code>git diff</code>, burying the real source changes you actually want to review.</li>
-    <li><strong>Non-portability.</strong> A binary you compiled won't run on a teammate's different OS, it is useless to them, yet still downloaded on every pull.</li>
+    <li><strong>Non-portability.</strong> A <code>.pyc</code> bytecode file is tied to your exact Python version, so it is useless to a teammate on a different setup, yet still downloaded on every pull.</li>
     <li><strong>Needless conflicts.</strong> Files that differ <em>per machine</em> (editor settings, build output) get rewritten by everyone, so they collide constantly, even though nobody meaningfully changed the project.</li>
   </ul>
-  <p>The fix is a <code>.gitignore</code> file: a list of patterns telling Git which paths to leave untracked. Crucially, <code>.gitignore</code> itself <em>is</em> committed, so the whole team automatically shares the same rules. A typical one for this course's C++ project:</p>
-  <pre><code><span class="c"># .gitignore for a C++ project</span>
-*.o             <span class="c"># object files</span>
-*.exe           <span class="c"># Windows executables</span>
-*.out           <span class="c"># a.out-style binaries</span>
-ttt             <span class="c"># our compiled game binary</span>
+  <p>The fix is a <code>.gitignore</code> file: a list of patterns telling Git which paths to leave untracked. Crucially, <code>.gitignore</code> itself <em>is</em> committed, so the whole team automatically shares the same rules. A typical one for this course's Python project:</p>
+  <pre><code><span class="c"># .gitignore for a Python project</span>
+__pycache__/    <span class="c"># compiled-bytecode cache folders</span>
+*.pyc           <span class="c"># individual bytecode files</span>
+.pytest_cache/  <span class="c"># pytest's cache</span>
+.venv/          <span class="c"># virtual environment</span>
 .vscode/        <span class="c"># per-developer editor settings</span></code></pre>
 
   <h3>What should you ignore?</h3>
   <p>A good rule of thumb: <strong>if a file can be regenerated, is specific to one machine, or should stay secret, ignore it.</strong> In practice the things you exclude fall into a few categories:</p>
   <ul>
-    <li><strong>Build output and compiled artifacts.</strong> Anything your compiler or build tool produces from the source: executables and object files: <code>*.o</code>, <code>*.exe</code>, <code>*.out</code>, <code>a.out</code>, and our game binary <code>ttt</code>.</li>
+    <li><strong>Generated and cached files.</strong> Anything Python or your tools produce from the source: the <code>__pycache__/</code> bytecode-cache folders, <code>*.pyc</code> files, and <code>.pytest_cache/</code>.</li>
     <li><strong>Editor and IDE settings.</strong> Per-developer configuration that differs from machine to machine: <code>.vscode/</code>, JetBrains' <code>.idea/</code>, Vim swap files (<code>*.swp</code>).</li>
     <li><strong>Operating-system junk.</strong> Files the OS sprinkles into folders: <code>.DS_Store</code> on macOS, <code>Thumbs.db</code> on Windows.</li>
-    <li><strong>Downloaded dependencies.</strong> Packages a tool can fetch again on demand, so there is no need to store them: e.g. <code>vcpkg_installed/</code>, or <code>node_modules/</code> in a JavaScript project.</li>
+    <li><strong>Downloaded dependencies.</strong> Packages a tool can fetch again on demand, so there is no need to store them: e.g. a Python virtual environment <code>.venv/</code>, or <code>node_modules/</code> in a JavaScript project.</li>
     <li><strong>Logs and temporary files.</strong> Throwaway output such as <code>*.log</code> and <code>*.tmp</code>.</li>
     <li><strong>Secrets and local-only config.</strong> Anything with passwords, API keys, or tokens: <code>.env</code> files, credential files. <em>Never</em> commit these, even by accident.</li>
   </ul>
-  <p>By contrast, you should <strong>always commit</strong> the things a teammate genuinely needs: your source files (<code>*.cpp</code>, <code>*.h</code>), the build <em>instructions</em> (<code>Makefile</code>), tests, the <code>README.md</code>, and <code>.gitignore</code> itself. The test is simple: <em>could a teammate rebuild this from what's committed?</em> If yes, the generated result doesn't belong in the repo.</p>
+  <p>By contrast, you should <strong>always commit</strong> the things a teammate genuinely needs: your source files (<code>*.py</code>), the tests, the dependency list (<code>requirements.txt</code>), the <code>README.md</code>, and <code>.gitignore</code> itself. The test is simple: <em>could a teammate re-create everything else from what's committed?</em> If yes, the generated result doesn't belong in the repo.</p>
 
   <h3>A cautionary tale: committing <code>.vscode/</code></h3>
-  <p>It is tempting to <code>git add .</code> and commit <em>everything</em>, including the <code>.vscode/</code> folder VS Code creates. Here is why that bites you. The folder holds <strong>machine-specific</strong> settings: for example each developer's <code>.vscode/settings.json</code> records the absolute path to <em>their</em> compiler:</p>
+  <p>It is tempting to <code>git add .</code> and commit <em>everything</em>, including the <code>.vscode/</code> folder VS Code creates. Here is why that bites you. The folder holds <strong>machine-specific</strong> settings: for example each developer's <code>.vscode/settings.json</code> records the absolute path to <em>their</em> Python interpreter:</p>
   <pre><code><span class="c">// Alice's .vscode/settings.json</span>
-{ <span class="s">"C_Cpp.default.compilerPath"</span>: <span class="s">"C:/msys64/ucrt64/bin/g++.exe"</span> }
+{ <span class="s">"python.defaultInterpreterPath"</span>: <span class="s">"C:/Users/Alice/AppData/Local/Programs/Python/Python312/python.exe"</span> }
 
 <span class="c">// Bob's .vscode/settings.json (different machine!)</span>
-{ <span class="s">"C_Cpp.default.compilerPath"</span>: <span class="s">"/usr/local/bin/g++"</span> }</code></pre>
+{ <span class="s">"python.defaultInterpreterPath"</span>: <span class="s">"/usr/local/bin/python3"</span> }</code></pre>
   <p>Now watch what happens once that file is tracked:</p>
   <ol>
     <li>Alice opens the project; VS Code rewrites <code>settings.json</code> with <em>her</em> path. She commits and pushes it.</li>
@@ -60,9 +60,9 @@ ttt             <span class="c"># our compiled game binary</span>
     <thead><tr><th>Pattern</th><th>Meaning</th><th>Example match</th></tr></thead>
     <tbody>
       <tr><td><code># text</code></td><td>A <strong>comment</strong>. Blank lines are ignored too, so you can group rules.</td><td class="desc">n/a</td></tr>
-      <tr><td><code>ttt</code></td><td>Matches a file <em>or</em> folder named <code>ttt</code> anywhere in the tree.</td><td class="desc"><code>ttt</code>, <code>src/ttt</code></td></tr>
-      <tr><td><code>build/</code></td><td>Trailing <code>/</code> matches <strong>directories only</strong> (and everything inside).</td><td class="desc"><code>build/</code>, not a file named <code>build</code></td></tr>
-      <tr><td><code>*.o</code></td><td><code>*</code> matches any run of characters <em>except</em> <code>/</code>. Great for extensions.</td><td class="desc"><code>main.o</code>, <code>board.o</code></td></tr>
+      <tr><td><code>notes.txt</code></td><td>Matches a file <em>or</em> folder named <code>notes.txt</code> anywhere in the tree.</td><td class="desc"><code>notes.txt</code>, <code>src/notes.txt</code></td></tr>
+      <tr><td><code>__pycache__/</code></td><td>Trailing <code>/</code> matches <strong>directories only</strong> (and everything inside).</td><td class="desc"><code>__pycache__/</code>, not a file of that name</td></tr>
+      <tr><td><code>*.pyc</code></td><td><code>*</code> matches any run of characters <em>except</em> <code>/</code>. Great for extensions.</td><td class="desc"><code>board.pyc</code>, <code>game.pyc</code></td></tr>
       <tr><td><code>/secret.txt</code></td><td>A leading <code>/</code> <strong>anchors</strong> the pattern to the folder of the <code>.gitignore</code>, so only the root one matches.</td><td class="desc"><code>secret.txt</code> at root, not <code>sub/secret.txt</code></td></tr>
       <tr><td><code>logs/**/*.log</code></td><td><code>**</code> matches across <strong>nested directories</strong>.</td><td class="desc"><code>logs/a/b/run.log</code></td></tr>
       <tr><td><code>file?.txt</code></td><td><code>?</code> matches exactly <strong>one</strong> character.</td><td class="desc"><code>file1.txt</code>, not <code>file10.txt</code></td></tr>

@@ -94,23 +94,23 @@
   <h4><code>git status</code></h4>
   <p><strong>When</strong>: constantly, before and after almost every other command. It is your map of where each file currently lives.</p>
   <p><strong>How</strong>: it needs no arguments and changes nothing; it lists files that are modified but unstaged, files staged for the next commit, and files Git isn't tracking yet.</p>
-  <p><strong>Example</strong>: after editing <code>hello.cpp</code> to print a friendlier message:</p>
+  <p><strong>Example</strong>: after editing <code>hello.py</code> to print a friendlier message:</p>
   <pre style="margin:8px 0"><code><span class="k">git</span> status
 <span class="c"># Changes not staged for commit:</span>
-<span class="c">#   modified:   hello.cpp</span></code></pre>
+<span class="c">#   modified:   hello.py</span></code></pre>
 
   <h4><code>git add &lt;file&gt;</code></h4>
   <p><strong>When</strong>: after editing, to mark exactly which changes belong in your next commit (<em>workspace → staging</em>).</p>
   <p><strong>How</strong>: name specific files to stage them deliberately, or use <code>.</code> to stage everything changed. Staging is what lets you commit two edits separately even if you made them at the same time.</p>
-  <p><strong>Example</strong>: stage your edited <code>hello.cpp</code>:</p>
-  <pre style="margin:8px 0"><code><span class="k">git</span> add hello.cpp         <span class="c"># just this file</span>
+  <p><strong>Example</strong>: stage your edited <code>hello.py</code>:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> add hello.py         <span class="c"># just this file</span>
 <span class="k">git</span> add .                  <span class="c"># everything changed in the hello folder</span></code></pre>
 
   <h4><code>git reset &lt;file&gt;</code></h4>
   <p><strong>When</strong>: you staged something by mistake and want to take it back out of the next commit (<em>staging → workspace</em>).</p>
   <p><strong>How</strong>: it unstages the file while <strong>keeping your edits</strong>: your file on disk is untouched, it just won't be in the next commit. It is the exact undo of <code>git add</code> (which is why Lab 1 has you add then unstage).</p>
-  <p><strong>Example</strong>: you staged <code>hello.cpp</code> but realise you aren't done editing it:</p>
-  <pre style="margin:8px 0"><code><span class="k">git</span> reset hello.cpp        <span class="c"># back to unstaged; your edits remain</span></code></pre>
+  <p><strong>Example</strong>: you staged <code>hello.py</code> but realise you aren't done editing it:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> reset hello.py        <span class="c"># back to unstaged; your edits remain</span></code></pre>
 
   <h4><code>git reset --soft</code> vs <code>git reset --hard</code></h4>
   <p><code>git reset</code> can also rewind a whole <em>commit</em> by pointing the branch at an earlier one. The mode flag decides how far the undo reaches across the three locations, and this is where you can lose work, so understand it before using it.</p>
@@ -141,8 +141,8 @@
   <p><strong>When</strong>: before you start working, and whenever a teammate has pushed to <code>hello</code>, to bring their commits into your copy.</p>
   <p><strong>How</strong>: run it with a clean workspace (commit or stash your own changes first) to avoid merge conflicts. The distinction matters: <code>git fetch</code> only <em>downloads</em> new commits into your local repository (<em>remote → local repo</em>) and leaves your working files untouched, so you can inspect what changed first. <code>git pull</code> is <code>fetch</code> followed by <code>merge</code>: it goes one step further and updates the files on your disk too (<em>remote → local repo → workspace</em>).</p>
   <p><strong>Example</strong>: sync the <code>hello</code> repo before adding your next change:</p>
-  <pre style="margin:8px 0"><code><span class="k">git</span> fetch                   <span class="c"># download new commits, hello.cpp on disk unchanged</span>
-<span class="k">git</span> pull                    <span class="c"># download AND update hello.cpp on disk</span></code></pre>
+  <pre style="margin:8px 0"><code><span class="k">git</span> fetch                   <span class="c"># download new commits, hello.py on disk unchanged</span>
+<span class="k">git</span> pull                    <span class="c"># download AND update hello.py on disk</span></code></pre>
 
   <h4><code>git log</code></h4>
   <p><strong>When</strong>: any time you need to see the history of a repository: what was changed, by whom, and when.</p>
@@ -155,8 +155,8 @@
   <h4><code>git diff</code></h4>
   <p><strong>When</strong>: to review the exact line-by-line changes you've made, typically right before <code>git add</code> or <code>git commit</code>.</p>
   <p><strong>How</strong>: <code>git diff</code> alone shows unstaged edits (workspace vs. staging); <code>git diff --staged</code> shows what's already staged for the next commit (staging vs. last commit).</p>
-  <p><strong>Example</strong>: check what you changed in <code>hello.cpp</code> before staging it:</p>
-  <pre style="margin:8px 0"><code><span class="k">git</span> diff                    <span class="c"># unstaged edits to hello.cpp</span>
+  <p><strong>Example</strong>: check what you changed in <code>hello.py</code> before staging it:</p>
+  <pre style="margin:8px 0"><code><span class="k">git</span> diff                    <span class="c"># unstaged edits to hello.py</span>
 <span class="k">git</span> diff --staged           <span class="c"># what the next commit will record</span></code></pre>
 
   <h3>The journey of a change</h3>

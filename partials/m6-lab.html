@@ -1,64 +1,65 @@
 <!-- ============================== M6 LAB (LAB 5) ============================== -->
 <section class="page" id="m6-lab">
   <div class="eyebrow">Module 6 · Lab 5 · Class 12</div>
-  <h2 class="page-title">Lab 5: Build &amp; Test Pipeline on Gitee Go</h2>
-  <p class="sub-meta">Add unit tests, wire them into a Makefile <code>test</code> target, then automate everything in a pipeline. Watch it go red, then green.</p>
+  <h2 class="page-title">Lab 5: Test Pipeline on Gitee Go</h2>
+  <p class="sub-meta">Automate your pytest suite in a Gitee Go pipeline. Watch it go red, then green.</p>
 
-  <h3>1 · Write a test program</h3>
-  <p>Create <code>tests/test_board.cpp</code>: a tiny, dependency-free harness (no external framework needed, which avoids download problems):</p>
-  <pre><code><span class="k">#include</span> <span class="s">"board.h"</span>
-<span class="k">#include</span> <span class="s">&lt;iostream&gt;</span>
-<span class="k">static int</span> failures = 0;
-<span class="k">#define</span> CHECK(c) <span class="k">do</span>{ <span class="k">if</span>(!(c)){ std::cerr&lt;&lt;<span class="s">"FAIL: "</span> #c &lt;&lt;<span class="s">" @"</span>&lt;&lt;__LINE__&lt;&lt;<span class="s">"\n"</span>; ++failures; } }<span class="k">while</span>(0)
+  <p>This lab uses the tested project from Lab 4 (<code>board.py</code>, <code>tictactoe.py</code>, and your <code>test_board.py</code>). You'll put <code>pytest</code> behind an automated pipeline that runs on every push.</p>
 
-<span class="k">int</span> main(){
-  Board top{{'X','X','X',' ',' ',' ',' ',' ',' '}};
-  CHECK(checkWinner(top)=='X');                 <span class="c">// row win</span>
-  Board col{{'O',' ',' ','O',' ',' ','O',' ',' '}};
-  CHECK(checkWinner(col)=='O');                 <span class="c">// column win</span>
-  Board diag{{'X',' ',' ',' ','X',' ',' ',' ','X'}};
-  CHECK(checkWinner(diag)=='X');                <span class="c">// diagonal win</span>
-  Board none{{'X','O','X',' ',' ',' ',' ',' ',' '}};
-  CHECK(checkWinner(none)==' ');                <span class="c">// no winner</span>
-  Board draw{{'X','O','X','X','O','O','O','X','X'}};
-  CHECK(isFull(draw) &amp;&amp; checkWinner(draw)==' '); <span class="c">// draw</span>
-  Board g{{'X',' ',' ',' ',' ',' ',' ',' ',' '}};
-  CHECK(!isValidMove(g,0)); CHECK(isValidMove(g,1));
+  <h3>1 · Confirm the tests pass locally</h3>
+  <p>From the project root, make sure the suite is green before automating it — the pipeline can only run what already works on your machine:</p>
+  <pre><code><span class="k">pytest</span></code></pre>
+  <p>If <code>pytest</code> isn't found, install it with <code>pip install pytest</code> (see Module 1). It's good practice to record the dependency so the pipeline installs the same thing — create a <code>requirements.txt</code> with one line:</p>
+  <pre><code><span class="c"># requirements.txt</span>
+pytest</code></pre>
 
-  <span class="k">if</span>(failures==0){ std::cout&lt;&lt;<span class="s">"All tests passed!\n"</span>; <span class="k">return</span> 0; }
-  std::cerr&lt;&lt;failures&lt;&lt;<span class="s">" test(s) failed.\n"</span>; <span class="k">return</span> 1;
-}</code></pre>
-
-  <h3>2 · Add a test target to the Makefile</h3>
-  <p>Add these rules to your <code>Makefile</code> (recipe lines start with a <kbd>Tab</kbd>), then verify locally with <code>make test</code>:</p>
-  <pre><code>test_board: tests/test_board.cpp src/board.cpp
-	$(CXX) $(CXXFLAGS) -o test_board tests/test_board.cpp src/board.cpp
-
-test: test_board
-	./test_board</code></pre>
-  <pre><code><span class="k">make</span> test               <span class="c"># builds test_board, then runs it</span></code></pre>
-
-  <h3>3 · Create the Gitee Go pipeline</h3>
-  <p>Enable Gitee Go on your repo and add a pipeline. Start from Gitee's shell/build template and set its steps to the commands below (the exact YAML keys come from the template editor: adjust to match the current Gitee Go interface). The pipeline should run the same steps your machine does:</p>
-  <pre><code><span class="c"># .workflow/ - illustrative shape; build the real one from Gitee's template</span>
-name: build-and-test
-trigger: [push, pull_request]
+  <h3>2 · Create the Gitee Go pipeline</h3>
+  <p>Enable Gitee Go on your repo (the <strong>Services</strong> tab), create a pipeline from the <strong>Python</strong> template, and replace it with the file below — Gitee stores it under <code>.workflow/</code> in your repo. It installs pytest, runs the tests, then publishes a versioned release (see Class 11 for a key-by-key explanation):</p>
+  <div class="code-block"><button class="btn-copy" data-copy>⧉ Copy</button>
+  <pre><code><span class="c"># .workflow/master-pipeline.yml</span>
+version: '1.0'
+name: master-pipeline
+displayName: TicTacToe
+triggers:
+  trigger: auto
+  push:
+    branches:
+      include:
+        - master
 stages:
-  - name: build-test
+  - name: test
+    displayName: Test
+    strategy: naturally
+    trigger: auto
     steps:
-      - <span class="k">apt-get install -y make g++</span>      <span class="c"># ensure tools</span>
-      - <span class="k">make</span>                          <span class="c"># build the game</span>
-      - <span class="k">make test</span>                     <span class="c"># build &amp; run the tests</span></code></pre>
+      - step: build@python            <span class="c"># Python environment</span>
+        name: run_tests
+        displayName: Run pytest
+        pythonVersion: '3.12'
+        commands:
+          - pip install pytest        <span class="c"># or: pip install -r requirements.txt</span>
+          - pytest
+  - name: release                     <span class="c"># runs only if test is green</span>
+    displayName: Publish
+    strategy: naturally
+    trigger: auto
+    steps:
+      - step: publish@release_artifacts
+        name: publish_release_artifacts
+        displayName: Publish
+        version: 1.0.0.0
+        autoIncrement: true</code></pre></div>
+  <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-2,#555)">The exact step type and field names come from Gitee Go's template editor and can change; keep the <em>shape</em> (a <code>test</code> stage that installs pytest and runs it, then a <code>release</code> stage) and map it onto the current interface.</p>
 
-  <h3>4 · Make it go red, then green</h3>
+  <h3>3 · Make it go red, then green</h3>
   <ol>
-    <li>Push your work and watch the pipeline turn <span style="color:var(--green);font-weight:700">green</span>.</li>
-    <li>Deliberately break a test (e.g. change an expected winner) and push: watch it turn <span style="color:var(--coral);font-weight:700">red</span> and read the failure in the logs.</li>
+    <li>Commit and push the <code>.workflow/</code> file (and <code>requirements.txt</code>), then watch the pipeline turn <span style="color:var(--green);font-weight:700">green</span>.</li>
+    <li>Deliberately break a test (e.g. change an expected winner) and push: watch it turn <span style="color:var(--coral);font-weight:700">red</span> and read the failing assertion in the logs.</li>
     <li>Fix it and push again → green.</li>
-    <li><em>(Optional)</em> Configure the PR pipeline so a Pull Request can't merge while tests fail.</li>
+    <li><em>(Optional)</em> Add a <code>pull_request</code> trigger so a Pull Request can't merge while tests fail.</li>
   </ol>
 
-  <div class="callout"><span class="tag">Done when</span><p>Every push to your repository automatically builds the project and runs the tests on Gitee Go, and you have seen a full red → green cycle.</p></div>
+  <div class="callout"><span class="tag">Done when</span><p>Every push to your repository automatically runs <code>pytest</code> on Gitee Go, you have seen a full red → green cycle, and a passing run on <code>master</code> publishes a versioned release.</p></div>
 
   <div class="next-prev">
     <a href="#m6-lecture">← Lecture</a>

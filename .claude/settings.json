@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash build.sh)",
+      "Bash(python \"C:\\\\Users\\\\adasu\\\\AppData\\\\Local\\\\Temp\\\\md2docx.py\")",
+      "Bash(PYTHONIOENCODING=utf-8 python -)"
+    ]
+  }
+}
